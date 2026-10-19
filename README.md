@@ -45,7 +45,6 @@
 
 ## 🔗 Links Úteis
 
-- 🌐 **Site publicado:** [SEU-PROJETO.vercel.app](https://SEU-PROJETO.vercel.app) <!-- TODO: link real do deploy -->
 - 🎨 **Protótipos no Figma:** [Abrir wireframes](https://www.figma.com/) <!-- TODO: link real do Figma -->
 - 🗂️ **Repositório:** [github.com/lucasdiasmz/portfolio](https://github.com/lucasdiasmz/portfolio) <!-- TODO -->
 
