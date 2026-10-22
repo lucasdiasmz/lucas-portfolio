@@ -1,52 +1,155 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { translations } from './translations.js'
-
-const STORAGE_KEY = 'portfolio-lang'
-const LanguageContext = createContext(null)
-
-function getInitialLanguage() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved === 'pt' || saved === 'en') return saved
-  } catch {
-    // localStorage indisponível (modo privado, etc.): segue para o idioma do navegador
-  }
-  return navigator.language?.toLowerCase().startsWith('pt') ? 'pt' : 'en'
-}
-
-export function LanguageProvider({ children }) {
-  const [lang, setLangState] = useState(getInitialLanguage)
-
-  const setLang = useCallback((next) => {
-    setLangState(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, next)
-    } catch {
-      // ignora: a preferência só não será lembrada
-    }
-  }, [])
-
-  useEffect(() => {
-    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en'
-  }, [lang])
-
-  const value = useMemo(
-    () => ({
-      lang,
-      setLang,
-      t: translations[lang],
-      // Escolhe o texto no idioma atual a partir de um objeto { pt, en }
-      pick: (field) => (field && typeof field === 'object' ? field[lang] ?? field.pt : field),
-    }),
-    [lang, setLang],
-  )
-
-  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function useLanguage() {
-  const ctx = useContext(LanguageContext)
-  if (!ctx) throw new Error('useLanguage precisa estar dentro de <LanguageProvider>')
-  return ctx
+// Textos fixos da interface em português e inglês.
+// Os textos de conteúdo (sobre, projetos, experiências) ficam em src/data/profile.js.
+export const translations = {
+  pt: {
+    nav: {
+      about: 'Sobre mim',
+      projects: 'Projetos',
+      experiences: 'Experiências',
+      contact: 'Contato',
+      menu: 'Abrir menu',
+      language: 'Idioma',
+      skip: 'Pular para o conteúdo',
+    },
+    about: {
+      greeting: 'Olá, eu sou',
+      title: 'Sobre mim',
+      education: 'Formação',
+      focus: 'Área de atuação',
+      interests: 'Interesses',
+      goals: 'Objetivos profissionais',
+      skills: 'Tecnologias que estudo e uso',
+      ctaProjects: 'Ver projetos',
+      ctaContact: 'Entrar em contato',
+    },
+    projects: {
+      title: 'Projetos',
+      subtitle: 'Linha do tempo dos meus projetos, do mais antigo ao mais recente.',
+      filterAll: 'Todos',
+      filterLabel: 'Filtrar por tecnologia',
+      technologies: 'Tecnologias',
+      role: 'Meu papel',
+      inProgress: 'Em desenvolvimento',
+      repo: 'Repositório no GitHub',
+      privateRepo: 'Repositório privado',
+      empty: 'Nenhum projeto com essa tecnologia.',
+    },
+    experiences: {
+      title: 'Experiências',
+      subtitle: 'Estágios, projetos de extensão, eventos e outras vivências técnicas.',
+      empty:
+        'Ainda não tenho experiências profissionais para mostrar. Por enquanto, minha trajetória está nos projetos que desenvolvi durante a graduação.',
+      emptyCta: 'Ver projetos',
+    },
+    contact: {
+      title: 'Contato',
+      subtitle: 'Fale comigo por um dos canais abaixo ou mande uma mensagem pelo formulário.',
+      channels: 'Canais',
+      formTitle: 'Envie uma mensagem',
+      name: 'Nome',
+      email: 'E-mail',
+      message: 'Mensagem',
+      namePlaceholder: 'Seu nome',
+      emailPlaceholder: 'voce@exemplo.com',
+      messagePlaceholder: 'Escreva sua mensagem...',
+      send: 'Enviar mensagem',
+      sending: 'Enviando...',
+      success: 'Mensagem enviada! Responderei assim que possível.',
+      error: 'Não foi possível enviar agora. Tente novamente ou use um dos canais ao lado.',
+      notConfigured:
+        'O envio de e-mail ainda não foi configurado (variáveis do EmailJS ausentes).',
+      validation: {
+        nameRequired: 'Informe seu nome.',
+        nameShort: 'O nome precisa ter ao menos 2 caracteres.',
+        emailRequired: 'Informe seu e-mail.',
+        emailInvalid: 'Digite um e-mail válido.',
+        messageRequired: 'Escreva uma mensagem.',
+        messageShort: 'A mensagem precisa ter ao menos 10 caracteres.',
+      },
+    },
+    footer: {
+      rights: 'Todos os direitos reservados.',
+      built: 'Feito com React, Vite e Tailwind CSS.',
+    },
+    notFound: {
+      title: 'Página não encontrada',
+      text: 'O endereço que você tentou acessar não existe.',
+      back: 'Voltar ao início',
+    },
+  },
+  en: {
+    nav: {
+      about: 'About me',
+      projects: 'Projects',
+      experiences: 'Experience',
+      contact: 'Contact',
+      menu: 'Open menu',
+      language: 'Language',
+      skip: 'Skip to content',
+    },
+    about: {
+      greeting: "Hi, I'm",
+      title: 'About me',
+      education: 'Education',
+      focus: 'Area of work',
+      interests: 'Interests',
+      goals: 'Professional goals',
+      skills: 'Technologies I study and use',
+      ctaProjects: 'See projects',
+      ctaContact: 'Get in touch',
+    },
+    projects: {
+      title: 'Projects',
+      subtitle: 'A timeline of my projects, from oldest to most recent.',
+      filterAll: 'All',
+      filterLabel: 'Filter by technology',
+      technologies: 'Technologies',
+      role: 'My role',
+      inProgress: 'In progress',
+      repo: 'GitHub repository',
+      privateRepo: 'Private repository',
+      empty: 'No projects with this technology.',
+    },
+    experiences: {
+      title: 'Experience',
+      subtitle: 'Internships, outreach projects, events and other hands-on experience.',
+      empty:
+        "I don't have professional experience to show yet. For now, my journey is in the projects I built during my degree.",
+      emptyCta: 'See projects',
+    },
+    contact: {
+      title: 'Contact',
+      subtitle: 'Reach me through one of the channels below or send a message with the form.',
+      channels: 'Channels',
+      formTitle: 'Send a message',
+      name: 'Name',
+      email: 'Email',
+      message: 'Message',
+      namePlaceholder: 'Your name',
+      emailPlaceholder: 'you@example.com',
+      messagePlaceholder: 'Write your message...',
+      send: 'Send message',
+      sending: 'Sending...',
+      success: "Message sent! I'll get back to you as soon as I can.",
+      error: "Couldn't send right now. Please try again or use one of the channels next to the form.",
+      notConfigured: 'Email sending is not configured yet (missing EmailJS variables).',
+      validation: {
+        nameRequired: 'Please enter your name.',
+        nameShort: 'Name must have at least 2 characters.',
+        emailRequired: 'Please enter your email.',
+        emailInvalid: 'Please enter a valid email.',
+        messageRequired: 'Please write a message.',
+        messageShort: 'Message must have at least 10 characters.',
+      },
+    },
+    footer: {
+      rights: 'All rights reserved.',
+      built: 'Built with React, Vite and Tailwind CSS.',
+    },
+    notFound: {
+      title: 'Page not found',
+      text: "The address you tried to open doesn't exist.",
+      back: 'Back to home',
+    },
+  },
 }

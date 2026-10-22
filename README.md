@@ -178,8 +178,7 @@ Outros comandos:
 
 ### ✏️ Como editar o conteúdo
 
-Abra `src/data/profile.js` e troque nome, textos de "Sobre mim", projetos, experiências e links de contato. Para mostrar uma imagem ou GIF em um projeto, coloque o arquivo em `public/projetos/` e use `image: '/projetos/nome-do-arquivo.png'`.
-
+Abra `src/data/profile.js` e troque nome, textos de "Sobre mim", projetos, experiências e links de contato.
 ---
 
 ## 🚀 Deploy

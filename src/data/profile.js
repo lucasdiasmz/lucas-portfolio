@@ -51,8 +51,6 @@ export const profile = {
 //  PROJETOS — a linha do tempo ordena por `date` (do mais antigo ao mais recente).
 //  `date` ('AAAA-MM') só serve para ordenar. O que aparece no card é `period`
 //  (ex.: '2026/1' = 1º semestre de 2026); sem `period`, aparece mês e ano de `date`.
-//  Para adicionar imagem/GIF: coloque o arquivo em public/projetos/ e use
-//  image: '/projetos/nome-do-arquivo.png' (ou .gif).
 // -----------------------------------------------------------------------------
 export const projects = [
   {
@@ -70,7 +68,6 @@ export const projects = [
     },
     technologies: ['Python', 'Pygame'],
     repo: 'https://github.com/lucasdiasmz/-Overengeneering-',
-    image: null, // TODO: print ou GIF do jogo rodando (ex.: '/projetos/overengineering.gif')
   },
   {
     id: 'primeira-rest-api',
@@ -83,7 +80,6 @@ export const projects = [
     },
     technologies: ['Java', 'Spring Boot'],
     repo: 'https://github.com/lucasdiasmz/firstRestAPI-Spring',
-    image: null, // TODO: print das requisições (Postman/Insomnia) ou do código rodando
   },
   {
     id: 'acessa-mob',
@@ -97,7 +93,6 @@ export const projects = [
     status: 'in-progress', // mostra a etiqueta "Em desenvolvimento"
     technologies: ['HTML', 'CSS', 'JavaScript', 'Java'],
     repo: 'https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2026-2-ti2-8183100-acessa-mob',
-    image: null, // TODO: print das telas do site
   },
 ]
 
