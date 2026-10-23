@@ -1,6 +1,6 @@
 // =============================================================================
 //  CONTEÚDO DO PORTFÓLIO — edite este arquivo para trocar textos, projetos,
-//  experiências e links de contato. Nenhuma outra parte do código precisa mudar.
+//  currículo e links de contato. Nenhuma outra parte do código precisa mudar.
 //
 //  Campos de texto em { pt, en } aparecem no idioma escolhido no site.
 //  Procure por "TODO" para achar o que ainda precisa de ajuste.
@@ -113,19 +113,15 @@ export const projects = [
 ]
 
 // -----------------------------------------------------------------------------
-//  EXPERIÊNCIAS — estágios, freelas, open source, eventos, projetos de extensão.
-//  Hoje está vazia. Para adicionar, siga o modelo (descomente e preencha):
-//
-//  {
-//    id: 'exemplo',
-//    organization: { pt: 'Nome da instituição', en: 'Institution name' },
-//    role: { pt: 'Cargo ou atividade', en: 'Role or activity' },
-//    start: '2026-08',   // 'AAAA-MM'
-//    end: null,          // 'AAAA-MM' ou null para "atual"
-//    description: { pt: 'Descrição curta.', en: 'Short description.' },
-//  },
+//  CURRÍCULO — salve o PDF em public/ (ex.: public/curriculo.pdf) e coloque o
+//  caminho em `file` (ex.: '/curriculo.pdf'). Enquanto `file` for null, a página
+//  mostra um aviso de que o currículo será publicado em breve.
+//  `updated` ('AAAA-MM') é a data da última versão do currículo.
 // -----------------------------------------------------------------------------
-export const experiences = []
+export const resume = {
+  file: null, // TODO: adicionar o PDF do currículo
+  updated: null,
+}
 
 // -----------------------------------------------------------------------------
 //  CONTATO — `type` define o ícone; `href` é o link aberto ao clicar.

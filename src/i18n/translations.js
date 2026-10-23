@@ -1,11 +1,11 @@
 // Textos fixos da interface em português e inglês.
-// Os textos de conteúdo (sobre, projetos, experiências) ficam em src/data/profile.js.
+// Os textos de conteúdo (sobre, projetos, currículo) ficam em src/data/profile.js.
 export const translations = {
   pt: {
     nav: {
       about: 'Sobre mim',
       projects: 'Projetos',
-      experiences: 'Experiências',
+      resume: 'Currículo',
       contact: 'Contato',
       menu: 'Abrir menu',
       language: 'Idioma',
@@ -41,12 +41,17 @@ export const translations = {
       empty: 'Nenhum projeto com essa tecnologia.',
       imageAlt: 'Projeto em funcionamento',
     },
-    experiences: {
-      title: 'Experiências',
-      subtitle: 'Estágios, projetos de extensão, eventos e outras vivências técnicas.',
-      empty:
-        'Ainda não tenho experiências profissionais para mostrar. Por enquanto, minha trajetória está nos projetos que desenvolvi durante a graduação.',
-      emptyCta: 'Ver projetos',
+    resume: {
+      title: 'Currículo',
+      subtitle: 'Minha formação, habilidades e trajetória em um só documento.',
+      download: 'Baixar currículo (PDF)',
+      open: 'Abrir em nova aba',
+      updated: 'Versão de',
+      preview: 'Visualização do currículo',
+      previewFallback: 'Seu navegador não mostra PDFs aqui. Use os botões acima para abrir ou baixar.',
+      empty: 'Meu currículo será publicado aqui em breve. Enquanto isso, veja meus projetos ou fale comigo.',
+      emptyProjects: 'Ver projetos',
+      emptyContact: 'Entrar em contato',
     },
     contact: {
       title: 'Contato',
@@ -88,7 +93,7 @@ export const translations = {
     nav: {
       about: 'About me',
       projects: 'Projects',
-      experiences: 'Experience',
+      resume: 'Résumé',
       contact: 'Contact',
       menu: 'Open menu',
       language: 'Language',
@@ -124,12 +129,17 @@ export const translations = {
       empty: 'No projects with this technology.',
       imageAlt: 'Project in action',
     },
-    experiences: {
-      title: 'Experience',
-      subtitle: 'Internships, outreach projects, events and other hands-on experience.',
-      empty:
-        "I don't have professional experience to show yet. For now, my journey is in the projects I built during my degree.",
-      emptyCta: 'See projects',
+    resume: {
+      title: 'Résumé',
+      subtitle: 'My education, skills and journey in a single document.',
+      download: 'Download résumé (PDF)',
+      open: 'Open in a new tab',
+      updated: 'Version from',
+      preview: 'Résumé preview',
+      previewFallback: "Your browser can't show PDFs here. Use the buttons above to open or download it.",
+      empty: "My résumé will be published here soon. In the meantime, take a look at my projects or get in touch.",
+      emptyProjects: 'See projects',
+      emptyContact: 'Get in touch',
     },
     contact: {
       title: 'Contact',

@@ -2,7 +2,7 @@
 
 # 💼 Portfólio Profissional — Lucas Dias Melo 👨‍💻
 
-> Website de portfólio profissional bilíngue (PT/EN) que apresenta minha trajetória, projetos, experiências e formas de contato de maneira moderna, responsiva e acessível.
+> Website de portfólio profissional bilíngue (PT/EN) que apresenta minha trajetória, projetos, currículo e formas de contato de maneira moderna, responsiva e acessível.
 
 [![React](https://img.shields.io/badge/React-19-007ec6?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8-007ec6?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
@@ -21,7 +21,7 @@
 | Sprint | Entrega | Status |
 | ------ | ------- | ------ |
 | S01 | Repositório, README inicial, wireframes (Figma), protótipo, navegação e layout | ✅ |
-| S02 | Páginas Sobre Mim (PT/EN), Projetos (timeline), Experiências e Contato (formulário) | ✅ |
+| S02 | Páginas Sobre Mim (PT/EN), Projetos (timeline), Currículo e Contato (formulário) | ✅ |
 | S03 | Deploy na nuvem, ajustes finais, imagens/GIFs e README final | ✅ |
 
 ---
@@ -58,17 +58,17 @@ Este projeto é o meu **portfólio profissional**, desenvolvido como trabalho do
 
 - **Por que existe:** apresentar minha trajetória e meus projetos de forma organizada e acessível, e servir de vitrine para oportunidades de estágio e trabalho (inclusive no exterior, por isso o site é bilíngue).
 - **Contexto:** acadêmico (PUC Minas, Engenharia de Software) e profissional.
-- **Decisão de design:** tema escuro, tipografia Inter, cores índigo/ciano e layout enxuto, para passar uma identidade técnica e limpa sem distrair do conteúdo.
+- **Decisão de design:** o site imita uma folha de desenho técnico, ligada à engenharia. Usa fundo claro de prancheta com quadriculado leve, tinta azul-marinho, cobalto nos links e destaques e amarelo de marca-texto só em detalhes pontuais. A tipografia é uma única família, a Archivo, condensada nos títulos e normal no texto. O topo da página inicial traz a foto com anotações ligadas por linhas e um quadro de identificação, como o carimbo de uma folha técnica. O objetivo é ser marcante sem deixar de ser profissional para recrutadores.
 
 ---
 
 ## ✨ Funcionalidades Principais
 
-- 🧭 **Navegação por menu** entre quatro páginas (Sobre mim, Projetos, Experiências e Contato), com menu responsivo no celular.
+- 🧭 **Navegação por menu** entre quatro páginas (Sobre mim, Projetos, Currículo e Contato), com menu responsivo no celular.
 - 🌐 **Internacionalização (i18n) PT/EN:** a troca de idioma vale para o site inteiro e é lembrada no navegador. O idioma inicial segue o do navegador.
 - 🕒 **Linha do tempo dinâmica de projetos**, ordenada do mais antigo ao mais recente, gerada a partir de um único arquivo de dados.
 - 🔎 **Filtro por tecnologia** na página de projetos.
-- 💼 **Experiências** com instituição, cargo/atividade, período e descrição.
+- 📄 **Currículo** em PDF, com botão para baixar, opção de abrir em nova aba e visualização na própria página.
 - 📨 **Formulário de contato funcional** com envio por e-mail (EmailJS), validação de campos, mensagens de erro acessíveis e proteção simples contra robôs (honeypot).
 - 🔗 **Ícones clicáveis** para e-mail, WhatsApp, LinkedIn e GitHub.
 - 📱 **Design responsivo** (mobile first) e acessível (link "pular para o conteúdo", foco visível, `aria-*`, respeito a `prefers-reduced-motion`).
@@ -114,7 +114,7 @@ Este projeto é o meu **portfólio profissional**, desenvolvido como trabalho do
 
 Aplicação **SPA (Single Page Application)** somente de front-end, sem back-end próprio: o envio de e-mail é delegado ao EmailJS, e o conteúdo vem de um arquivo de dados local.
 
-- **Camada de dados (`src/data`):** `profile.js` guarda perfil, projetos, experiências e contatos. Textos em `{ pt, en }`.
+- **Camada de dados (`src/data`):** `profile.js` guarda perfil, projetos, currículo e contatos. Textos em `{ pt, en }`.
 - **Camada de i18n (`src/i18n`):** `LanguageContext` expõe `t` (textos fixos da interface), `pick()` (escolhe `pt` ou `en` em objetos de conteúdo) e `setLang()`.
 - **Camada de apresentação:** `pages/` (uma por rota) compostas por `components/` reutilizáveis (`Timeline`, `ProjectCard`, `Navbar`...).
 - **Roteamento:** `BrowserRouter` com um `Layout` comum (navbar, rodapé, `<Outlet />`). O `vercel.json` redireciona qualquer rota para `index.html`, para que o acesso direto a `/projetos` funcione.
@@ -180,7 +180,7 @@ Outros comandos:
 
 ### ✏️ Como editar o conteúdo
 
-Abra `src/data/profile.js` e troque nome, textos de "Sobre mim", projetos, experiências e links de contato.
+Abra `src/data/profile.js` e troque nome, textos de "Sobre mim", projetos, currículo (caminho do PDF) e links de contato.
 ---
 
 ## 🚀 Deploy
@@ -211,6 +211,7 @@ O arquivo `vercel.json` já configura o redirecionamento das rotas para o `index
 ├── vite.config.js            # ⚙️ Configuração do Vite (React + Tailwind)
 ├── public/
 │   ├── favicon.svg           # 🖼️ Ícone do site
+│   ├── foto.jpg              # 🖼️ Foto da página inicial
 │   └── projetos/             # 🖼️ Imagens/GIFs dos projetos (adicione aqui)
 ├── docs/
 │   └── wireframes/           # 🎨 Exportações do Figma usadas neste README
@@ -222,14 +223,15 @@ O arquivo `vercel.json` já configura o redirecionamento das rotas para o `index
     │   ├── Layout.jsx        #    Estrutura comum às páginas
     │   ├── Navbar.jsx        #    Menu de navegação e troca de idioma
     │   ├── Footer.jsx        #    Rodapé com ícones de contato
-    │   ├── Timeline.jsx      #    Linha do tempo vertical
-    │   ├── ProjectCard.jsx   #    Card de projeto
+    │   ├── Sheet.jsx         #    Moldura de "folha técnica" com marcas de canto
+    │   ├── Timeline.jsx      #    Linha do tempo em linhas (data à esquerda)
+    │   ├── ProjectCard.jsx   #    Conteúdo de um projeto na linha do tempo
     │   ├── ContactIcon.jsx   #    Mapa tipo de contato → ícone
     │   └── PageHeader.jsx    #    Título e subtítulo das páginas
     ├── pages/                # 📄 Uma página por rota
     │   ├── About.jsx         #    /              Sobre mim
     │   ├── Projects.jsx      #    /projetos      Timeline de projetos
-    │   ├── Experiences.jsx   #    /experiencias  Experiências
+    │   ├── Resume.jsx        #    /curriculo     Currículo (PDF)
     │   ├── Contact.jsx       #    /contato       Canais e formulário
     │   └── NotFound.jsx      #    *              Página 404
     ├── data/
@@ -252,8 +254,8 @@ O arquivo `vercel.json` já configura o redirecionamento das rotas para o `index
 | Sobre mim | Projetos |
 | --------- | -------- |
 | ![Wireframe Sobre mim](docs/wireframes/sobre-mim.png) | ![Wireframe Projetos](docs/wireframes/projetos.png) |
-| **Experiências** | **Contato** |
-| ![Wireframe Experiências](docs/wireframes/experiencias.png) | ![Wireframe Contato](docs/wireframes/contato.png) |
+| **Currículo** | **Contato** |
+| ![Wireframe Currículo](docs/wireframes/curriculo.png) | ![Wireframe Contato](docs/wireframes/contato.png) |
 
 ### 🌐 Site em funcionamento
 

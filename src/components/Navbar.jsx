@@ -7,7 +7,7 @@ import { profile } from '../data/profile.js'
 const links = [
   { to: '/', key: 'about', end: true },
   { to: '/projetos', key: 'projects' },
-  { to: '/experiencias', key: 'experiences' },
+  { to: '/curriculo', key: 'resume' },
   { to: '/contato', key: 'contact' },
 ]
 
