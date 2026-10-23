@@ -1,4 +1,4 @@
-> 👋 Oi! (anotação de teste adicionada pelo Claude)
+
 
 # 💼 Portfólio Profissional — Lucas Dias Melo 👨‍💻
 
