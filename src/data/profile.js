@@ -21,6 +21,22 @@ export const profile = {
   // o site mostra a inicial do nome no lugar da foto.
   photo: '/foto.jpg',
 
+  // Quadro de identificação no topo da página inicial (como o carimbo de uma
+  // folha de desenho técnico). `revision` ('AAAA-MM') é a data da última atualização.
+  sheet: {
+    course: { pt: 'Engenharia de Software', en: 'Software Engineering' },
+    institution: 'PUC Minas',
+    term: { pt: '2º período', en: '2nd semester' },
+    languages: { pt: 'Português e inglês', en: 'Portuguese and English' },
+    revision: '2026-10',
+  },
+  // Anotações que apontam para a foto na página inicial. Use frases curtas (até 3).
+  callouts: [
+    { pt: 'Back-end com Java e Spring Boot', en: 'Back-end with Java and Spring Boot' },
+    { pt: 'Front-end com React', en: 'Front-end with React' },
+    { pt: 'Orientação a objetos e código limpo', en: 'Object-oriented design and clean code' },
+  ],
+
   about: {
     summary: {
       pt: 'Sou estudante de Engenharia de Software na PUC Minas, no 2º período. Gosto de entender o porquê das decisões de design por trás do código, não só de fazer funcionar. Já passei por Python, orientação a objetos e desenvolvimento web, e hoje aprofundo meus estudos em Java, Spring Boot e React.',

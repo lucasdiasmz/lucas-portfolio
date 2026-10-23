@@ -8,15 +8,15 @@ export default function Footer() {
   const { t } = useLanguage()
 
   return (
-    <footer className="border-t border-ink-800">
-      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-ink-300 sm:flex-row sm:px-6">
-        <div className="text-center sm:text-left">
+    <footer className="border-t border-rule">
+      <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-4 py-8 text-sm text-graphite sm:flex-row sm:items-center sm:px-8">
+        <div>
           <p>
             © {year} {profile.name}. {t.footer.rights}
           </p>
-          <p className="text-xs text-ink-300/70">{t.footer.built}</p>
+          <p>{t.footer.built}</p>
         </div>
-        <ul className="flex items-center gap-2">
+        <ul className="-ml-2 flex items-center gap-1 sm:ml-0">
           {contacts.map((c) => (
             <li key={c.type}>
               <a
@@ -24,7 +24,7 @@ export default function Footer() {
                 target={c.type === 'email' ? undefined : '_blank'}
                 rel="noopener noreferrer"
                 aria-label={c.label}
-                className="grid h-9 w-9 place-items-center rounded-md text-ink-300 transition-colors hover:bg-ink-800 hover:text-white"
+                className="grid size-10 place-items-center text-lg text-graphite transition-colors hover:text-cobalt"
               >
                 <ContactIcon type={c.type} />
               </a>

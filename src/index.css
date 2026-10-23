@@ -1,32 +1,67 @@
 @import "tailwindcss";
 
+/*
+  Identidade visual: "folha de desenho técnico".
+  Papel frio de prancheta, tinta azul-marinho, cobalto para cotas e links
+  e um marca-texto amarelo usado só em destaques pontuais.
+  Uma única família (Archivo) com eixo de largura: condensada nos títulos,
+  normal no texto e um pouco expandida nos rótulos.
+*/
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink-950: #0b1020;
-  --color-ink-900: #11172b;
-  --color-ink-800: #1a2240;
-  --color-ink-700: #27315a;
-  --color-ink-300: #a9b4d6;
-  --color-ink-100: #e6eaf8;
+  --color-paper: #edf1f5;
+  --color-sheet: #f8fafc;
+  --color-ink: #13203a;
+  --color-graphite: #4e5a70;
+  --color-rule: #c3ccd9;
+  --color-cobalt: #1f45c4;
+  --color-marker: #ffd84d;
 
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-accent-400: #22d3ee;
+  --color-danger: #b42318;
+  --color-success: #146c43;
+  --color-warning: #8a5a00;
 
-  --animate-fade-up: fade-up 0.6s ease-out both;
+  /* Linhas de cota que "se desenham" ao abrir a página inicial */
+  --animate-draw: draw 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-appear: appear 0.5s ease-out both;
 
-  @keyframes fade-up {
+  @keyframes draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes appear {
     from {
       opacity: 0;
-      transform: translateY(14px);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
     }
   }
+}
+
+/* Larguras do Archivo (eixo wdth da fonte variável) */
+@utility type-condensed {
+  font-stretch: 62%;
+}
+@utility type-semicondensed {
+  font-stretch: 82%;
+}
+@utility type-wide {
+  font-stretch: 112%;
+}
+
+/* Quadriculado leve de prancheta, usado só dentro das "folhas" */
+@utility drafting-grid {
+  background-image:
+    linear-gradient(to right, rgb(195 204 217 / 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(195 204 217 / 0.35) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 html {
@@ -35,18 +70,22 @@ html {
 
 body {
   margin: 0;
-  background-color: var(--color-ink-950);
-  color: var(--color-ink-100);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  background-image:
-    radial-gradient(60rem 30rem at 85% -10%, rgb(99 102 241 / 0.18), transparent 60%),
-    radial-gradient(45rem 25rem at -10% 20%, rgb(34 211 238 / 0.1), transparent 60%);
-  background-attachment: fixed;
 }
 
 ::selection {
-  background: rgb(99 102 241 / 0.4);
+  background: var(--color-marker);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cobalt);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import PageHeader from '../components/PageHeader.jsx'
 import ContactIcon from '../components/ContactIcon.jsx'
+import Sheet from '../components/Sheet.jsx'
 import { contacts } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
@@ -39,12 +40,12 @@ const fields = ['name', 'email', 'message']
 function Field({ id, label, error, children }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-ink-100">
+      <label htmlFor={id} className="mb-1.5 block font-semibold">
         {label}
       </label>
       {children}
       {error && (
-        <p id={`${id}-erro`} role="alert" className="mt-1.5 text-sm text-rose-400">
+        <p id={`${id}-erro`} role="alert" className="mt-1.5 text-sm font-medium text-danger">
           {error}
         </p>
       )}
@@ -54,9 +55,9 @@ function Field({ id, label, error, children }) {
 
 const inputClass = (hasError) =>
   [
-    'w-full rounded-lg border bg-ink-900 px-3.5 py-2.5 text-sm text-white placeholder:text-ink-300/50',
-    'focus:outline-none focus:ring-2 focus:ring-brand-500',
-    hasError ? 'border-rose-500' : 'border-ink-700',
+    'w-full border bg-white px-3.5 py-2.5 text-ink placeholder:text-graphite/60',
+    'focus:border-cobalt focus:outline-none focus:ring-1 focus:ring-cobalt',
+    hasError ? 'border-danger' : 'border-ink/40',
   ].join(' ')
 
 export default function Contact() {
@@ -134,26 +135,28 @@ export default function Contact() {
     <>
       <PageHeader title={t.contact.title} subtitle={t.contact.subtitle} />
 
-      <div className="grid gap-8 lg:grid-cols-5">
+      <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
         <section className="lg:col-span-2" aria-labelledby="canais">
-          <h2 id="canais" className="mb-4 text-sm font-semibold uppercase tracking-wider text-accent-400">
+          <h2 id="canais" className="type-condensed mb-4 text-[2rem] font-bold leading-tight">
             {t.contact.channels}
           </h2>
-          <ul className="grid gap-3">
+          <ul className="border-t border-ink">
             {contacts.map((c) => (
-              <li key={c.type}>
+              <li key={c.type} className="border-b border-rule">
                 <a
                   href={c.href}
                   target={c.type === 'email' ? undefined : '_blank'}
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-4 rounded-xl border border-ink-800 bg-ink-900/70 p-4 transition-colors hover:border-brand-500"
+                  className="group flex items-center gap-4 py-4"
                 >
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-ink-800 text-xl text-brand-400 transition-colors group-hover:bg-brand-500 group-hover:text-white">
+                  <span className="text-xl text-cobalt">
                     <ContactIcon type={c.type} />
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-sm font-semibold">{c.label}</span>
-                    <span className="block truncate text-sm text-ink-300">{c.value}</span>
+                    <span className="block font-semibold">{c.label}</span>
+                    <span className="block truncate text-graphite group-hover:text-ink group-hover:underline group-hover:underline-offset-4">
+                      {c.value}
+                    </span>
                   </span>
                 </a>
               </li>
@@ -162,16 +165,12 @@ export default function Contact() {
         </section>
 
         <section className="lg:col-span-3" aria-labelledby="formulario">
-          <form
-            onSubmit={handleSubmit}
-            noValidate
-            className="rounded-2xl border border-ink-800 bg-ink-900/70 p-5 sm:p-6"
-          >
-            <h2 id="formulario" className="mb-5 text-lg font-bold">
+          <Sheet as="form" onSubmit={handleSubmit} noValidate className="p-5 sm:p-8">
+            <h2 id="formulario" className="type-condensed mb-6 text-[2rem] font-bold leading-tight">
               {t.contact.formTitle}
             </h2>
 
-            <div className="grid gap-4">
+            <div className="grid gap-5">
               <Field id="name" label={t.contact.name} error={errorText('name')}>
                 <input
                   id="name"
@@ -237,17 +236,17 @@ export default function Contact() {
             <button
               type="submit"
               disabled={sending}
-              className="mt-6 w-full rounded-lg bg-brand-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+              className="mt-7 w-full bg-ink px-6 py-3 font-semibold text-paper transition-colors hover:bg-cobalt disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {sending ? t.contact.sending : t.contact.send}
             </button>
 
-            <div aria-live="polite" className="mt-4 min-h-6 text-sm">
-              {status === 'success' && <p className="text-emerald-400">{t.contact.success}</p>}
-              {status === 'error' && <p className="text-rose-400">{t.contact.error}</p>}
-              {status === 'notConfigured' && <p className="text-amber-400">{t.contact.notConfigured}</p>}
+            <div aria-live="polite" className="mt-4 min-h-6 font-medium">
+              {status === 'success' && <p className="text-success">{t.contact.success}</p>}
+              {status === 'error' && <p className="text-danger">{t.contact.error}</p>}
+              {status === 'notConfigured' && <p className="text-warning">{t.contact.notConfigured}</p>}
             </div>
-          </form>
+          </Sheet>
         </section>
       </div>
     </>

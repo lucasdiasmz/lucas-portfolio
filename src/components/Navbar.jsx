@@ -13,21 +13,15 @@ const links = [
 
 function linkClass({ isActive }) {
   return [
-    'rounded-md px-3 py-2 text-sm font-medium transition-colors',
-    isActive
-      ? 'bg-ink-800 text-white'
-      : 'text-ink-300 hover:bg-ink-800/60 hover:text-white',
+    'border-b-2 py-1 text-[0.95rem] font-medium transition-colors',
+    isActive ? 'border-cobalt text-ink' : 'border-transparent text-graphite hover:text-ink',
   ].join(' ')
 }
 
 function LanguageSwitch() {
   const { lang, setLang, t } = useLanguage()
   return (
-    <div
-      role="group"
-      aria-label={t.nav.language}
-      className="inline-flex rounded-md border border-ink-700 p-0.5 text-xs font-semibold"
-    >
+    <div role="group" aria-label={t.nav.language} className="inline-flex border border-ink text-xs font-semibold">
       {['pt', 'en'].map((code) => (
         <button
           key={code}
@@ -35,8 +29,8 @@ function LanguageSwitch() {
           onClick={() => setLang(code)}
           aria-pressed={lang === code}
           className={[
-            'rounded px-2.5 py-1 uppercase transition-colors',
-            lang === code ? 'bg-brand-500 text-white' : 'text-ink-300 hover:text-white',
+            'type-wide px-2.5 py-1 uppercase transition-colors',
+            lang === code ? 'bg-ink text-paper' : 'text-graphite hover:text-ink',
           ].join(' ')}
         >
           {code}
@@ -51,47 +45,54 @@ export default function Navbar() {
   const { t } = useLanguage()
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/80 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2 font-bold tracking-tight" onClick={() => setOpen(false)}>
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-accent-400 font-mono text-sm text-ink-950">
-            {profile.shortName.charAt(0)}
-          </span>
-          <span>{profile.shortName}</span>
+    <header className="sticky top-0 z-40 border-b border-rule bg-paper/90 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8">
+        <Link
+          to="/"
+          className="type-condensed text-[1.4rem] font-extrabold leading-none tracking-tight"
+          onClick={() => setOpen(false)}
+        >
+          {profile.name}
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Principal">
-          {links.map((l) => (
-            <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
-              {t.nav[l.key]}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <LanguageSwitch />
-          <button
-            type="button"
-            className="grid h-9 w-9 place-items-center rounded-md text-ink-300 hover:bg-ink-800 hover:text-white md:hidden"
-            aria-label={t.nav.menu}
-            aria-expanded={open}
-            aria-controls="menu-mobile"
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? <FaXmark /> : <FaBars />}
-          </button>
+        <div className="flex items-center gap-8">
+          <nav className="hidden items-center gap-7 md:flex" aria-label="Principal">
+            {links.map((l) => (
+              <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
+                {t.nav[l.key]}
+              </NavLink>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2">
+            <LanguageSwitch />
+            <button
+              type="button"
+              className="grid size-9 place-items-center text-ink md:hidden"
+              aria-label={t.nav.menu}
+              aria-expanded={open}
+              aria-controls="menu-mobile"
+              onClick={() => setOpen((v) => !v)}
+            >
+              {open ? <FaXmark /> : <FaBars />}
+            </button>
+          </div>
         </div>
       </div>
 
       {open && (
-        <nav id="menu-mobile" className="border-t border-ink-800 px-4 py-3 md:hidden" aria-label="Principal">
-          <ul className="flex flex-col gap-1">
+        <nav id="menu-mobile" className="border-t border-rule px-4 pb-4 md:hidden" aria-label="Principal">
+          <ul className="flex flex-col">
             {links.map((l) => (
-              <li key={l.to}>
+              <li key={l.to} className="border-b border-rule">
                 <NavLink
                   to={l.to}
                   end={l.end}
-                  className={(state) => `block ${linkClass(state)}`}
+                  className={({ isActive }) =>
+                    [
+                      'type-semicondensed block py-3 text-xl font-bold',
+                      isActive ? 'text-cobalt' : 'text-ink',
+                    ].join(' ')
+                  }
                   onClick={() => setOpen(false)}
                 >
                   {t.nav[l.key]}
