@@ -1,3 +1,5 @@
+> 👋 Oi! (anotação de teste adicionada pelo Claude)
+
 # 💼 Portfólio Profissional — Lucas Dias Melo 👨‍💻
 
 > Website de portfólio profissional bilíngue (PT/EN) que apresenta minha trajetória, projetos, experiências e formas de contato de maneira moderna, responsiva e acessível.
