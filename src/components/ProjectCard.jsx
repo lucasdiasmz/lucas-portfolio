@@ -1,5 +1,8 @@
-import { FaArrowUpRightFromSquare, FaGithub, FaLock } from 'react-icons/fa6'
+import { FaArrowUpRightFromSquare, FaGithub, FaGlobe, FaLock } from 'react-icons/fa6'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+
+const linkClass =
+  'inline-flex items-center gap-2 font-semibold text-cobalt underline decoration-1 underline-offset-4 hover:decoration-2'
 
 // Conteúdo de um projeto dentro da linha do tempo (a data fica na coluna da Timeline)
 export default function ProjectCard({ project }) {
@@ -33,25 +36,29 @@ export default function ProjectCard({ project }) {
           ))}
         </ul>
 
-        {project.repo ? (
-          <a
-            href={project.repo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-semibold text-cobalt underline decoration-1 underline-offset-4 hover:decoration-2"
-          >
-            <FaGithub aria-hidden="true" />
-            {t.projects.repo}
-            <FaArrowUpRightFromSquare aria-hidden="true" className="text-xs" />
-          </a>
-        ) : (
-          project.repoPrivate && (
-            <span className="inline-flex items-center gap-2 text-graphite">
-              <FaLock aria-hidden="true" />
-              {t.projects.privateRepo}
-            </span>
-          )
-        )}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {project.site && (
+            <a href={project.site} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              <FaGlobe aria-hidden="true" />
+              {t.projects.site}
+              <FaArrowUpRightFromSquare aria-hidden="true" className="text-xs" />
+            </a>
+          )}
+          {project.repo ? (
+            <a href={project.repo} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              <FaGithub aria-hidden="true" />
+              {t.projects.repo}
+              <FaArrowUpRightFromSquare aria-hidden="true" className="text-xs" />
+            </a>
+          ) : (
+            project.repoPrivate && (
+              <span className="inline-flex items-center gap-2 text-graphite">
+                <FaLock aria-hidden="true" />
+                {t.projects.privateRepo}
+              </span>
+            )
+          )}
+        </div>
       </div>
     </article>
   )

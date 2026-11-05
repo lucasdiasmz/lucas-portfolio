@@ -110,6 +110,23 @@ export const projects = [
     technologies: ['HTML', 'CSS', 'JavaScript', 'Java'],
     repo: 'https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2026-2-ti2-8183100-acessa-mob',
   },
+  {
+    id: 'lp-luizadiasmakeup',
+    date: '2026-11',
+    period: '2026/2',
+    name: { pt: 'Luiza Dias Makeup', en: 'Luiza Dias Makeup' },
+    description: {
+      pt: 'Landing page da Luiza Dias, maquiadora de noivas em Divinópolis-MG. Página única com vídeo de fundo, portfólio, depoimentos e agendamento pelo WhatsApp, com a mensagem já preenchida com nome, telefone e data do evento.',
+      en: 'Landing page for Luiza Dias, a bridal makeup artist in Divinópolis, Brazil. A single page with a background video, portfolio, testimonials and WhatsApp booking, with the message already filled in with name, phone and event date.',
+    },
+    role: {
+      pt: 'Projeto individual: design system, desenvolvimento e publicação.',
+      en: 'Solo project: design system, development and deployment.',
+    },
+    technologies: ['HTML', 'CSS', 'JavaScript'],
+    repo: 'https://github.com/lucasdiasmz/lp-luizadiasmakeup',
+    site: 'https://luizadiasmakeup.vercel.app', // opcional: link do site publicado
+  },
 ]
 
 // -----------------------------------------------------------------------------
