@@ -27,10 +27,14 @@ export const translations = {
       term: 'Período',
       languages: 'Idiomas',
       revision: 'Atualizado em',
+      featured: 'Projetos recentes',
+      allProjects: 'Todos os projetos',
+      composition: 'Composição nº',
+      shuffle: 'Remontar',
     },
     projects: {
       title: 'Projetos',
-      subtitle: 'Linha do tempo dos meus projetos, do mais antigo ao mais recente.',
+      subtitle: 'O que já construí, do mais recente ao mais antigo.',
       filterAll: 'Todos',
       filterLabel: 'Filtrar por tecnologia',
       technologies: 'Tecnologias',
@@ -81,7 +85,9 @@ export const translations = {
       },
     },
     footer: {
-      rights: 'Todos os direitos reservados.',
+      title: 'Vamos conversar?',
+      text: 'Estou em busca da minha primeira oportunidade de estágio. Respondo rápido por e-mail, WhatsApp ou LinkedIn.',
+      cta: 'Entrar em contato',
       built: 'Feito com React, Vite e Tailwind CSS.',
     },
     notFound: {
@@ -116,10 +122,14 @@ export const translations = {
       term: 'Semester',
       languages: 'Languages',
       revision: 'Last updated',
+      featured: 'Recent projects',
+      allProjects: 'All projects',
+      composition: 'Composition no.',
+      shuffle: 'Rearrange',
     },
     projects: {
       title: 'Projects',
-      subtitle: 'A timeline of my projects, from oldest to most recent.',
+      subtitle: "What I've built so far, from newest to oldest.",
       filterAll: 'All',
       filterLabel: 'Filter by technology',
       technologies: 'Technologies',
@@ -169,7 +179,9 @@ export const translations = {
       },
     },
     footer: {
-      rights: 'All rights reserved.',
+      title: "Let's talk?",
+      text: "I'm looking for my first internship opportunity. I reply quickly by email, WhatsApp or LinkedIn.",
+      cta: 'Get in touch',
       built: 'Built with React, Vite and Tailwind CSS.',
     },
     notFound: {

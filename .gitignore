@@ -27,3 +27,10 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Arquivos de trabalho do impeccable e do Claude
+.impeccable/review/
+.impeccable/decision/
+.impeccable/questions/
+.impeccable/hook.cache.json
+.claude/

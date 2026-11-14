@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T12:00:00Z",
+  "title": "Design System: Lucas Dias Melo — Portfólio",
+  "extensions": {
+    "colorMeta": {
+      "red": { "role": "primary", "displayName": "Vermelhão de Ação", "canonical": "#d23a16", "tonalRamp": ["oklch(15% 0.05 35)", "oklch(25% 0.09 35)", "oklch(35% 0.13 35)", "oklch(45% 0.16 35)", "oklch(58% 0.19 35)", "oklch(68% 0.15 35)", "oklch(80% 0.09 35)", "oklch(95% 0.02 35)"] },
+      "blue": { "role": "secondary", "displayName": "Ultramar Industrial", "canonical": "#2337c6", "tonalRamp": ["oklch(15% 0.06 268)", "oklch(25% 0.11 268)", "oklch(35% 0.17 268)", "oklch(44% 0.21 268)", "oklch(55% 0.18 268)", "oklch(65% 0.14 268)", "oklch(80% 0.08 268)", "oklch(95% 0.02 268)"] },
+      "sky": { "role": "secondary", "displayName": "Céu Diluído", "canonical": "#c9d3ff", "tonalRamp": ["oklch(15% 0.03 275)", "oklch(25% 0.05 275)", "oklch(35% 0.07 275)", "oklch(45% 0.08 275)", "oklch(55% 0.09 275)", "oklch(65% 0.09 275)", "oklch(87% 0.06 275)", "oklch(95% 0.02 275)"] },
+      "sun": { "role": "tertiary", "displayName": "Amarelo-Sol", "canonical": "#f5b31a", "tonalRamp": ["oklch(15% 0.03 78)", "oklch(25% 0.05 78)", "oklch(35% 0.07 78)", "oklch(48% 0.10 78)", "oklch(62% 0.13 78)", "oklch(80% 0.16 78)", "oklch(88% 0.11 78)", "oklch(96% 0.04 78)"] },
+      "green": { "role": "tertiary", "displayName": "Verde de Máquina", "canonical": "#0f7a51", "tonalRamp": ["oklch(15% 0.03 160)", "oklch(25% 0.06 160)", "oklch(35% 0.08 160)", "oklch(50% 0.11 160)", "oklch(60% 0.11 160)", "oklch(70% 0.10 160)", "oklch(82% 0.07 160)", "oklch(95% 0.02 160)"] },
+      "paper": { "role": "neutral", "displayName": "Papel Frio", "canonical": "#f4f5f7", "tonalRamp": ["oklch(15% 0.004 260)", "oklch(25% 0.004 260)", "oklch(35% 0.005 260)", "oklch(45% 0.005 260)", "oklch(55% 0.005 260)", "oklch(70% 0.005 260)", "oklch(85% 0.005 260)", "oklch(97% 0.003 260)"] },
+      "white": { "role": "neutral", "displayName": "Branco", "canonical": "#ffffff", "tonalRamp": ["oklch(15% 0 0)", "oklch(25% 0 0)", "oklch(35% 0 0)", "oklch(45% 0 0)", "oklch(55% 0 0)", "oklch(70% 0 0)", "oklch(85% 0 0)", "oklch(100% 0 0)"] },
+      "ink": { "role": "neutral", "displayName": "Tinta", "canonical": "#151515", "tonalRamp": ["oklch(19% 0 0)", "oklch(25% 0 0)", "oklch(35% 0 0)", "oklch(45% 0 0)", "oklch(55% 0 0)", "oklch(70% 0 0)", "oklch(85% 0 0)", "oklch(95% 0 0)"] },
+      "graphite": { "role": "neutral", "displayName": "Grafite", "canonical": "#4f535a", "tonalRamp": ["oklch(15% 0.01 260)", "oklch(25% 0.01 260)", "oklch(35% 0.012 260)", "oklch(44% 0.013 260)", "oklch(55% 0.012 260)", "oklch(70% 0.01 260)", "oklch(85% 0.008 260)", "oklch(95% 0.004 260)"] },
+      "rule": { "role": "neutral", "displayName": "Fio", "canonical": "#d6d9de", "tonalRamp": ["oklch(15% 0.008 260)", "oklch(25% 0.008 260)", "oklch(35% 0.009 260)", "oklch(45% 0.009 260)", "oklch(55% 0.009 260)", "oklch(70% 0.009 260)", "oklch(88% 0.008 260)", "oklch(95% 0.004 260)"] },
+      "danger": { "role": "neutral", "displayName": "Erro", "canonical": "#b42318", "tonalRamp": ["oklch(15% 0.05 28)", "oklch(25% 0.09 28)", "oklch(35% 0.13 28)", "oklch(50% 0.18 28)", "oklch(60% 0.17 28)", "oklch(70% 0.13 28)", "oklch(82% 0.07 28)", "oklch(95% 0.02 28)"] },
+      "success": { "role": "neutral", "displayName": "Sucesso (mesmo valor do verde)", "canonical": "#0f7a51", "tonalRamp": ["oklch(15% 0.03 160)", "oklch(25% 0.06 160)", "oklch(35% 0.08 160)", "oklch(50% 0.11 160)", "oklch(60% 0.11 160)", "oklch(70% 0.10 160)", "oklch(82% 0.07 160)", "oklch(95% 0.02 160)"] },
+      "warning": { "role": "neutral", "displayName": "Aviso", "canonical": "#8a5a00", "tonalRamp": ["oklch(15% 0.03 75)", "oklch(25% 0.06 75)", "oklch(35% 0.08 75)", "oklch(48% 0.10 75)", "oklch(60% 0.12 75)", "oklch(72% 0.12 75)", "oklch(85% 0.08 75)", "oklch(96% 0.03 75)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display de Cartaz", "purpose": "Nome na abertura, títulos de página e 404. Eixo opsz 96, largura 85% (utilitário type-display)." },
+      "headline": { "displayName": "Título de Seção", "purpose": "Títulos de seção da página inicial e do rodapé." },
+      "title": { "displayName": "Título de Cartaz", "purpose": "Nome do projeto na ficha do cartaz. Eixo opsz 48, largura 88% (utilitário type-tight)." },
+      "body": { "displayName": "Texto", "purpose": "Texto corrido em linhas de 46 a 62ch." },
+      "label": { "displayName": "Ficha Técnica", "purpose": "Courier Prime só para datas, períodos e contagens." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Entradas de texto (rise), revelação ao rolar e View Transitions." },
+      { "name": "ease-spring", "value": "cubic-bezier(0.34, 1.4, 0.64, 1)", "purpose": "Giro e entrada das formas, ponto do botão, marca e pontos da navegação." },
+      { "name": "rise", "value": "0.9s ease-out-expo; from opacity 0, translateY(0.6em)", "purpose": "Entrada escalonada de títulos e textos." },
+      { "name": "pop", "value": "0.7s ease-spring; from opacity 0, scale(0.4) rotate(-90deg)", "purpose": "Entrada dos módulos de forma." },
+      { "name": "assemble", "value": "transform 0.8s ease-spring + opacity 0.5s, delay 70ms por peça", "purpose": "Cartazes e lista de tecnologias montando peça a peça ao entrar na tela." },
+      { "name": "reveal", "value": "0.8s ease-out-expo; from opacity 0, translateY(2rem)", "purpose": "Blocos que entram ao rolar." },
+      { "name": "page-transition", "value": "saída 0.25s (translateY -12px), entrada 0.5s (translateY 16px)", "purpose": "Troca de rota via View Transitions API." },
+      { "name": "reduced-motion", "value": "animation/transition none; estados iniciais forçados a visíveis", "purpose": "Obrigatório para todo movimento." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ],
+    "focus": { "value": "outline: 3px solid var(--color-blue); outline-offset: 3px", "purpose": "Foco visível global." },
+    "selection": { "value": "background: var(--color-sun); color: var(--color-ink)" }
+  },
+  "components": [
+    {
+      "name": "Botão Principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal: bloco vermelhão de canto vivo com ponto amarelo que corre no hover.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Ver projetos<span class=\"ds-btn-dot\" aria-hidden=\"true\"></span></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 12px; background: var(--color-red, #d23a16); color: #fff; padding: 14px 24px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; text-decoration: none; border-radius: 0; transition: background-color 300ms, transform 300ms; } .ds-btn-primary:hover { background: var(--color-ink, #151515); } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 3px solid var(--color-blue, #2337c6); outline-offset: 3px; } .ds-btn-dot { width: 10px; height: 10px; border-radius: 9999px; background: var(--color-sun, #f5b31a); transition: transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1); } .ds-btn-primary:hover .ds-btn-dot { transform: translateX(4px) scale(1.5); }"
+    },
+    {
+      "name": "Botão sobre Ultramar",
+      "kind": "button",
+      "refersTo": "button-on-blue",
+      "description": "CTA do rodapé: amarelo-sol com texto tinta e ponto vermelhão.",
+      "html": "<div class=\"ds-blue-field\"><a class=\"ds-btn-sun\" href=\"#\">Vamos conversar<span class=\"ds-btn-sun-dot\" aria-hidden=\"true\"></span></a></div>",
+      "css": ".ds-blue-field { background: var(--color-blue, #2337c6); padding: 32px; } .ds-btn-sun { display: inline-flex; align-items: center; gap: 12px; background: var(--color-sun, #f5b31a); color: var(--color-ink, #151515); padding: 14px 24px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; text-decoration: none; transition: background-color 300ms, transform 300ms; } .ds-btn-sun:hover { background: #fff; } .ds-btn-sun:active { transform: scale(0.97); } .ds-btn-sun:focus-visible { outline: 3px solid #fff; outline-offset: 3px; } .ds-btn-sun-dot { width: 10px; height: 10px; border-radius: 9999px; background: var(--color-red, #d23a16); transition: transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1); } .ds-btn-sun:hover .ds-btn-sun-dot { transform: translateX(4px) scale(1.5); }"
+    },
+    {
+      "name": "Link Secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ação secundária: texto negrito com sublinhado ultramar grosso.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">Entrar em contato</a>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 12px; padding: 14px 4px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; color: var(--color-ink, #151515); text-decoration: underline; text-decoration-color: var(--color-blue, #2337c6); text-decoration-thickness: 3px; text-underline-offset: 6px; transition: color 150ms; } .ds-btn-secondary:hover { color: var(--color-blue, #2337c6); } .ds-btn-secondary:focus-visible { outline: 3px solid var(--color-blue, #2337c6); outline-offset: 3px; }"
+    },
+    {
+      "name": "Chip de Filtro",
+      "kind": "chip",
+      "refersTo": "chip-filter",
+      "description": "Filtro de tecnologia em Projetos, com contagem em datilografada.",
+      "html": "<div class=\"ds-chip-row\"><button class=\"ds-chip\" aria-pressed=\"true\">Todos <span class=\"ds-chip-count\">4</span></button><button class=\"ds-chip\" aria-pressed=\"false\">React <span class=\"ds-chip-count\">2</span></button></div>",
+      "css": ".ds-chip-row { display: flex; gap: 8px; background: var(--color-paper, #f4f5f7); padding: 12px; } .ds-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 0; border-radius: 0; background: #fff; color: var(--color-ink, #151515); font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background-color 300ms, color 300ms, transform 300ms; } .ds-chip:hover { background: var(--color-sky, #c9d3ff); } .ds-chip:active { transform: scale(0.95); } .ds-chip:focus-visible { outline: 3px solid var(--color-blue, #2337c6); outline-offset: 3px; } .ds-chip[aria-pressed=\"true\"] { background: var(--color-blue, #2337c6); color: #fff; } .ds-chip-count { font-family: 'Courier Prime', ui-monospace, monospace; font-size: 0.75rem; color: var(--color-graphite, #4f535a); } .ds-chip[aria-pressed=\"true\"] .ds-chip-count { color: var(--color-sky, #c9d3ff); }"
+    },
+    {
+      "name": "Campo de Formulário",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo de canto vivo com traço inferior de 3px; foco em ultramar e céu.",
+      "html": "<label class=\"ds-label\" for=\"ds-name\">Nome</label><input id=\"ds-name\" class=\"ds-input\" placeholder=\"Seu nome\" />",
+      "css": ".ds-label { display: block; margin-bottom: 8px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; color: var(--color-ink, #151515); } .ds-input { width: 100%; border: 0; border-bottom: 3px solid var(--color-ink, #151515); border-radius: 0; background: var(--color-paper, #f4f5f7); padding: 12px 16px; font: inherit; color: var(--color-ink, #151515); transition: border-color 150ms, background-color 150ms; } .ds-input::placeholder { color: var(--color-graphite, #4f535a); } .ds-input:focus { outline: none; border-bottom-color: var(--color-blue, #2337c6); background: rgb(201 211 255 / 0.4); } .ds-input[aria-invalid=\"true\"] { border-bottom-color: var(--color-danger, #b42318); }"
+    },
+    {
+      "name": "Navegação",
+      "kind": "nav",
+      "refersTo": "nav-bar",
+      "description": "Barra fixa em papel com marca geométrica e ponto na cor da seção ativa.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-brand\" href=\"#\"><span class=\"ds-mark\" aria-hidden=\"true\"><span class=\"ds-m1\"></span><span class=\"ds-m2\"></span><span class=\"ds-m3\"></span><span class=\"ds-m4\"></span></span>Lucas Dias Melo</a><nav class=\"ds-nav-links\"><a class=\"ds-nav-link is-active\" href=\"#\"><span class=\"ds-nav-dot\" style=\"background:#d23a16\"></span>Sobre</a><a class=\"ds-nav-link\" href=\"#\"><span class=\"ds-nav-dot\" style=\"background:#2337c6\"></span>Projetos</a><a class=\"ds-nav-link\" href=\"#\"><span class=\"ds-nav-dot\" style=\"background:#0f7a51\"></span>Contato</a></nav></header>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 32px; background: rgb(244 245 247 / 0.95); border-bottom: 1px solid var(--color-rule, #d6d9de); font-family: 'Bricolage Grotesque', system-ui, sans-serif; } .ds-nav-brand { display: flex; align-items: center; gap: 12px; font-size: 1.125rem; font-weight: 700; letter-spacing: -0.025em; color: var(--color-ink, #151515); text-decoration: none; } .ds-mark { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; width: 32px; height: 32px; transition: transform 500ms cubic-bezier(0.34, 1.4, 0.64, 1); } .ds-nav-brand:hover .ds-mark { transform: rotate(90deg); } .ds-m1 { background: #d23a16; border-top-left-radius: 9999px; } .ds-m2 { background: #f5b31a; border-radius: 9999px; } .ds-m3 { background: #2337c6; } .ds-m4 { background: #151515; border-bottom-right-radius: 9999px; } .ds-nav-links { display: flex; gap: 28px; } .ds-nav-link { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 0.95rem; font-weight: 600; color: var(--color-graphite, #4f535a); text-decoration: none; transition: color 150ms; } .ds-nav-link:hover, .ds-nav-link.is-active { color: var(--color-ink, #151515); } .ds-nav-dot { width: 10px; height: 10px; border-radius: 9999px; transform: scale(0); transition: transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1); } .ds-nav-link:hover .ds-nav-dot { transform: scale(0.75); } .ds-nav-link.is-active .ds-nav-dot { transform: scale(1); } .ds-nav-link:focus-visible { outline: 3px solid var(--color-blue, #2337c6); outline-offset: 3px; }"
+    },
+    {
+      "name": "Selo Em Andamento",
+      "kind": "chip",
+      "refersTo": "chip-status-progress",
+      "description": "Único marcador de estado em andamento: campo amarelo-sol com ponto tinta pulsando.",
+      "html": "<span class=\"ds-status\"><span class=\"ds-status-dot\" aria-hidden=\"true\"></span>Em andamento</span>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 8px; background: var(--color-sun, #f5b31a); color: var(--color-ink, #151515); padding: 2px 8px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; } .ds-status-dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--color-ink, #151515); animation: ds-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; } @keyframes ds-pulse { 50% { opacity: 0.5; } } @media (prefers-reduced-motion: reduce) { .ds-status-dot { animation: none; } }"
+    },
+    {
+      "name": "Módulo de Forma",
+      "kind": "custom",
+      "refersTo": "shape",
+      "description": "Assinatura: módulo quadrado chapado com forma geométrica girada em quartos de volta.",
+      "html": "<div class=\"ds-shapes\"><div class=\"ds-shape\" style=\"background:#2337c6\"><svg viewBox=\"0 0 100 100\" style=\"fill:#f5b31a;transform:rotate(90deg)\"><path d=\"M0 0h100A100 100 0 0 1 0 100Z\"/></svg></div><div class=\"ds-shape\" style=\"background:#151515\"><svg viewBox=\"0 0 100 100\" style=\"fill:#f5b31a\"><path d=\"M50 0A50 50 0 0 0 50 100Z\"/></svg></div><div class=\"ds-shape\" style=\"background:#d23a16\"><svg viewBox=\"0 0 100 100\" style=\"fill:#f4f5f7\"><path d=\"M0 100V50a50 50 0 0 1 100 0v50Z\"/></svg></div><div class=\"ds-shape\" style=\"background:#f4f5f7\"><svg viewBox=\"0 0 100 100\" style=\"fill:#2337c6\"><circle cx=\"50\" cy=\"50\" r=\"50\"/></svg></div></div>",
+      "css": ".ds-shapes { display: grid; grid-template-columns: repeat(4, 96px); } .ds-shape { position: relative; aspect-ratio: 1; overflow: hidden; } .ds-shape svg { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform 700ms cubic-bezier(0.34, 1.4, 0.64, 1); } .ds-shape:hover svg { transform: rotate(90deg) !important; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Cartaz de Máquina",
+    "overview": "O site funciona como o programa de identidade de uma fábrica italiana dos anos 50-60 (Olivetti, Pintori): fundo branco frio, tinta preta e quatro cores chapadas que nunca se misturam em gradiente. Toda a imagem do site é construída com um único módulo quadrado 100x100 em que cabe uma forma geométrica (círculo, ponto, anel, meia-lua, arco, quarto de círculo, folha, quadrado, barras) girada em passos de 90°. Esse módulo compõe o mosaico 4x4 da abertura, o cartaz de cada projeto, a faixa de formas dos cabeçalhos internos e o canto do rodapé.\n\nA tipografia fala em escala de cartaz: uma grotesca larga e pesada, comprimida pelo eixo de largura, para títulos; a mesma família em peso normal para leitura; e uma datilografada reservada para metadados (datas, períodos, contagens, legenda de composição). A densidade é baixa e o ritmo é vertical, com seções de 96px e cartazes alternando de lado.\n\nO movimento é mecânico e com mola: formas entram girando e crescendo, peça a peça; o mosaico gira módulos perto do ponteiro; páginas trocam com View Transitions. Tudo isso desliga com prefers-reduced-motion. Rejeições confirmadas: visual escuro com neon e qualquer cara de template genérico (hero com foto + grade de cards iguais).",
+    "keyCharacteristics": [
+      "Cores chapadas com papéis fixos; nenhuma sombra, nenhum gradiente.",
+      "Um módulo geométrico único, girado em quartos de volta.",
+      "Retângulos sempre em canto vivo; curvas só como formas inteiras.",
+      "Grotesca extra-negrito comprimida em escala de cartaz; datilografada só em metadados.",
+      "Movimento com mola, montado peça a peça, sempre opcional."
+    ],
+    "rules": [
+      { "name": "A Regra do Papel Fixo", "body": "Cada cor tem um trabalho e não o troca: vermelhão age, ultramar conduz, sol sinaliza estado, verde confirma. Uma cor nova de destaque não entra; um papel novo reutiliza a cor do papel mais próximo.", "section": "colors" },
+      { "name": "A Regra da Seção com Cor", "body": "Cada rota tem uma cor: Sobre = vermelhão, Projetos = ultramar, Currículo = sol, Contato = verde. Ela aparece no ponto da navegação e na faixa de formas do cabeçalho da página.", "section": "colors" },
+      { "name": "A Regra da Tinta Chapada", "body": "Cores são aplicadas em campos sólidos. Não há gradiente, transparência decorativa nem brilho; a única mistura é a foto em tons de cinza multiplicada sobre o amarelo-sol.", "section": "colors" },
+      { "name": "A Regra da Ficha Técnica", "body": "A datilografada só carrega fatos medidos: datas, períodos, números. Se o texto não é uma medida, ele é grotesca.", "section": "typography" },
+      { "name": "A Regra do Peso Único de Cartaz", "body": "Todo título é 800 com tracking negativo (-0.015em a -0.02em) e entrelinha abaixo de 1. Não há títulos em peso médio.", "section": "typography" },
+      { "name": "A Regra do Módulo Único", "body": "Toda composição de formas é uma grade de quadrados iguais (mosaico 4x4, cartaz 3x3 com um módulo 2x2, faixa de 3 módulos). Formas não flutuam soltas nem mudam de proporção.", "section": "layout" },
+      { "name": "A Regra Sem Sombra", "body": "Nada se levanta com sombra. Para destacar uma superfície, troque o tom do campo (branco sobre papel, ultramar sob conteúdo).", "section": "elevation" },
+      { "name": "A Regra do Canto Vivo", "body": "Nenhum retângulo recebe raio parcial (4px, 8px, 12px). Ou é canto vivo, ou é forma geométrica completa: círculo, meio círculo ou quarto de círculo.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do construir qualquer ilustração nova com o módulo de formas, em grade de quadrados iguais e giros de 90°.",
+      "Do manter cada cor no seu papel: vermelhão para a ação principal, ultramar para links e foco, sol para estado, verde para sucesso.",
+      "Do usar canto vivo em todo retângulo e curvas apenas como círculo, meio círculo ou quarto de círculo completos.",
+      "Do escrever títulos em Bricolage 800 com tracking negativo e entrelinha abaixo de 1, usando o eixo de largura de cartaz.",
+      "Do reservar Courier Prime para datas, períodos e contagens.",
+      "Do dar a toda animação nova uma versão parada em prefers-reduced-motion."
+    ],
+    "donts": [
+      "Don't usar box-shadow, gradientes ou brilhos; profundidade é troca de tom.",
+      "Don't aplicar raio parcial (4px, 8px, 12px) em botões, campos ou superfícies.",
+      "Don't usar fundo escuro com neon.",
+      "Don't montar listas como grade de cards iguais; projetos são cartazes alternados.",
+      "Don't usar a datilografada em títulos, botões ou texto corrido."
+    ]
+  }
+}

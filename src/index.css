@@ -1,71 +1,105 @@
 @import "tailwindcss";
 
 /*
-  Identidade visual: "folha de desenho técnico".
-  Papel frio de prancheta, tinta azul-marinho, cobalto para cotas e links
-  e um marca-texto amarelo usado só em destaques pontuais.
-  Uma única família (Archivo) com eixo de largura: condensada nos títulos,
-  normal no texto e um pouco expandida nos rótulos.
+  Identidade visual: modernismo industrial italiano (cartazes de máquina dos anos 50-60).
+  Fundo branco frio, tinta preta e quatro cores chapadas com papéis fixos:
+  vermelhão = ação, ultramar = navegação e campos grandes, sol = em andamento, verde = sucesso.
+  Formas geométricas (círculo, meia-lua, quarto de círculo, quadrado) num módulo único.
 */
 @theme {
-  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-type: "Courier Prime", ui-monospace, monospace;
 
-  --color-paper: #edf1f5;
-  --color-sheet: #f8fafc;
-  --color-ink: #13203a;
-  --color-graphite: #4e5a70;
-  --color-rule: #c3ccd9;
-  --color-cobalt: #1f45c4;
-  --color-marker: #ffd84d;
+  --color-paper: #f4f5f7;
+  --color-white: #ffffff;
+  --color-ink: #151515;
+  --color-graphite: #4f535a;
+  --color-rule: #d6d9de;
+  --color-red: #d23a16;
+  --color-blue: #2337c6;
+  --color-sun: #f5b31a;
+  --color-green: #0f7a51;
+  --color-sky: #c9d3ff;
 
   --color-danger: #b42318;
-  --color-success: #146c43;
+  --color-success: #0f7a51;
   --color-warning: #8a5a00;
 
-  /* Linhas de cota que "se desenham" ao abrir a página inicial */
-  --animate-draw: draw 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  --animate-appear: appear 0.5s ease-out both;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 
-  @keyframes draw {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
-  }
+  --animate-rise: rise 0.9s var(--ease-out-expo) both;
+  --animate-pop: pop 0.7s var(--ease-spring) both;
 
-  @keyframes appear {
+  @keyframes rise {
     from {
       opacity: 0;
+      transform: translateY(0.6em);
     }
-    to {
-      opacity: 1;
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.4) rotate(-90deg);
     }
   }
 }
 
-/* Larguras do Archivo (eixo wdth da fonte variável) */
-@utility type-condensed {
-  font-stretch: 62%;
+/* Eixo de largura/óptico da Bricolage */
+@utility type-display {
+  font-variation-settings: "opsz" 96;
+  font-stretch: 85%;
 }
-@utility type-semicondensed {
-  font-stretch: 82%;
-}
-@utility type-wide {
-  font-stretch: 112%;
+@utility type-tight {
+  font-variation-settings: "opsz" 48;
+  font-stretch: 88%;
 }
 
-/* Quadriculado leve de prancheta, usado só dentro das "folhas" */
-@utility drafting-grid {
-  background-image:
-    linear-gradient(to right, rgb(195 204 217 / 0.35) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(195 204 217 / 0.35) 1px, transparent 1px);
-  background-size: 24px 24px;
+/* Formas que se montam ao entrar na tela: só animam quando o JS marca o pai com .is-in */
+.assemble > * {
+  transition:
+    transform 0.8s var(--ease-spring),
+    opacity 0.5s var(--ease-out-expo);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.js .assemble:not(.is-in) > * {
+  opacity: 0;
+  transform: scale(0.3) rotate(-90deg);
+}
+
+.js .reveal {
+  transition:
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+}
+.js .reveal:not(.is-in) {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+/* Transição entre páginas (View Transitions API) */
+::view-transition-old(root) {
+  animation: 0.25s var(--ease-out-expo) both vt-out;
+}
+::view-transition-new(root) {
+  animation: 0.5s var(--ease-out-expo) both vt-in;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: var(--color-ink) var(--color-paper);
 }
 
 body {
@@ -76,15 +110,22 @@ body {
   font-size: 1.0625rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  caret-color: var(--color-red);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 ::selection {
-  background: var(--color-marker);
+  background: var(--color-sun);
   color: var(--color-ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-cobalt);
+  outline: 3px solid var(--color-blue);
   outline-offset: 3px;
 }
 
@@ -92,8 +133,15 @@ body {
   html {
     scroll-behavior: auto;
   }
-  * {
+  *,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation: none !important;
     transition: none !important;
+  }
+  .js .assemble:not(.is-in) > *,
+  .js .reveal:not(.is-in) {
+    opacity: 1;
+    transform: none;
   }
 }

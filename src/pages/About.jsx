@@ -1,167 +1,150 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { profile } from '../data/profile.js'
+import { profile, projects } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
-import Sheet from '../components/Sheet.jsx'
-import { formatYearMonth } from '../utils/date.js'
+import Mosaic from '../components/Mosaic.jsx'
+import ProjectCard from '../components/ProjectCard.jsx'
+import Shape from '../components/Shape.jsx'
+import { parseYearMonth } from '../utils/date.js'
+import { useReveal } from '../utils/useReveal.js'
+import { buttonDot, primaryButton, secondaryButton, wrap } from '../utils/ui.js'
 
-function Photo() {
-  // Se a foto não existir (ainda não foi adicionada em public/), mostra a inicial do nome
-  const [failed, setFailed] = useState(false)
+// Separadores da lista de tecnologias: alternam as cores do sistema
+const dots = ['bg-red', 'bg-blue', 'bg-sun', 'bg-green']
 
-  if (profile.photo && !failed) {
-    return (
-      <img
-        src={profile.photo}
-        alt={profile.name}
-        onError={() => setFailed(true)}
-        className="aspect-[4/5] w-full border border-ink object-cover"
-      />
-    )
-  }
-  return (
-    <div
-      aria-hidden="true"
-      className="type-condensed grid aspect-[4/5] w-full place-items-center border border-ink bg-paper text-8xl font-extrabold"
-    >
-      {profile.shortName.charAt(0)}
-    </div>
-  )
-}
-
-// Foto com anotações ligadas por linhas de chamada, como numa peça cotada
-function AnnotatedPhoto() {
-  const { pick } = useLanguage()
-
-  return (
-    <figure className="grid grid-cols-[minmax(0,8.5rem)_1fr] items-stretch sm:grid-cols-[minmax(0,13rem)_1fr]">
-      <Photo />
-      <ul className="flex flex-col justify-around py-4">
-        {profile.callouts.map((text, i) => (
-          <li key={i} className="flex items-center">
-            <span aria-hidden="true" className="-ml-1 size-2 shrink-0 rounded-full bg-cobalt" />
-            <span
-              aria-hidden="true"
-              className="h-px w-6 shrink-0 origin-left animate-draw bg-cobalt sm:w-10"
-              style={{ animationDelay: `${300 + i * 180}ms` }}
-            />
-            <span
-              className="animate-appear pl-3 text-sm font-medium leading-snug sm:text-[0.95rem]"
-              style={{ animationDelay: `${700 + i * 180}ms` }}
-            >
-              {pick(text)}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </figure>
-  )
-}
-
-// Quadro de identificação, no canto da folha (como o carimbo de um desenho técnico)
-function TitleBlock() {
-  const { lang, t, pick } = useLanguage()
-  const { sheet } = profile
-  const rows = [
-    [t.about.course, pick(sheet.course)],
-    [t.about.institution, sheet.institution],
-    [t.about.term, pick(sheet.term)],
-    [t.about.languages, pick(sheet.languages)],
-    [t.about.revision, formatYearMonth(sheet.revision, lang)],
-  ]
-
-  return (
-    <dl aria-label={t.about.sheetTitle} className="grid grid-cols-2 border-l border-t border-ink bg-sheet">
-      {rows.map(([label, value], i) => (
-        <div
-          key={label}
-          className={['border-b border-r border-ink px-3 py-2', i === 0 ? 'col-span-2' : ''].join(' ')}
-        >
-          <dt className="type-wide text-xs text-graphite">{label}</dt>
-          <dd className="font-semibold leading-snug">{value}</dd>
-        </div>
-      ))}
-    </dl>
-  )
-}
-
-export default function About() {
+function Hero() {
   const { t, pick } = useLanguage()
-  const { about } = profile
   const [firstName, ...rest] = profile.name.split(' ')
 
   return (
-    <>
-      <Sheet as="section" grid aria-labelledby="nome" className="px-5 pb-5 pt-8 sm:px-10 sm:pt-12">
-        <div className="grid gap-12 lg:grid-cols-[1.25fr_1fr] lg:gap-10">
-          <div>
-            <h1
-              id="nome"
-              className="type-condensed text-[clamp(4.5rem,15vw,9.5rem)] font-black uppercase leading-[0.82] tracking-tight"
-            >
-              {firstName}
-              <span className="block">{rest.join(' ')}</span>
-            </h1>
-            <p className="type-wide mt-8 text-xl font-semibold text-cobalt">{pick(profile.role)}</p>
-            <p className="mt-3 max-w-[46ch] text-lg text-graphite">{pick(profile.tagline)}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                to="/projetos"
-                className="bg-ink px-5 py-3 font-semibold text-paper transition-colors hover:bg-cobalt"
-              >
-                {t.about.ctaProjects}
-              </Link>
-              <Link
-                to="/contato"
-                className="border border-ink px-5 py-3 font-semibold transition-colors hover:bg-ink hover:text-paper"
-              >
-                {t.about.ctaContact}
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between gap-10">
-            <AnnotatedPhoto />
-            <TitleBlock />
-          </div>
+    <section aria-labelledby="nome" className={`${wrap} grid items-center gap-12 pb-16 pt-10 sm:pt-14 lg:grid-cols-2 lg:gap-16`}>
+      <div>
+        <h1
+          id="nome"
+          className="type-display text-[clamp(4rem,12vw,6rem)] font-extrabold leading-[0.85] tracking-[-0.015em] lg:text-[clamp(5rem,8.5vw,6rem)]"
+        >
+          <span className="block animate-rise [animation-delay:80ms]">{firstName}</span>
+          <span className="block animate-rise [animation-delay:160ms]">
+            {rest.slice(0, -1).join(' ')} <span className="text-red">{rest.at(-1)}</span>
+          </span>
+        </h1>
+        <p className="mt-8 animate-rise text-2xl font-semibold leading-snug [animation-delay:260ms]">
+          {pick(profile.role)}
+          <span className="block text-lg font-medium text-graphite">
+            {profile.sheet.institution} · {pick(profile.sheet.term)}
+          </span>
+        </p>
+        <p className="mt-3 max-w-[46ch] animate-rise text-lg text-graphite [animation-delay:320ms]">{pick(profile.tagline)}</p>
+        <div className="mt-10 flex animate-rise flex-wrap items-center gap-x-8 gap-y-4 [animation-delay:400ms]">
+          <Link to="/projetos" viewTransition className={primaryButton}>
+            {t.about.ctaProjects}
+            <span aria-hidden="true" className={buttonDot} />
+          </Link>
+          <Link to="/contato" viewTransition className={secondaryButton}>
+            {t.about.ctaContact}
+          </Link>
         </div>
-      </Sheet>
+      </div>
 
-      <section aria-labelledby="sobre" className="mt-20 grid gap-x-16 gap-y-10 lg:grid-cols-[1fr_2fr]">
-        <h2 id="sobre" className="type-condensed text-5xl font-extrabold leading-none tracking-tight">
+      <div>
+        <Mosaic />
+      </div>
+    </section>
+  )
+}
+
+function Summary() {
+  const { t, pick } = useLanguage()
+  const { about } = profile
+  const ref = useReveal()
+  const facts = [
+    [t.about.education, about.education, 'red'],
+    [t.about.focus, about.focus, 'blue'],
+    [t.about.interests, about.interests, 'sun'],
+    [t.about.goals, about.goals, 'green'],
+  ]
+
+  return (
+    <section aria-labelledby="sobre" className="bg-white py-24">
+      <div ref={ref} className={`${wrap} reveal grid gap-x-16 gap-y-10 lg:grid-cols-12`}>
+        <h2 id="sobre" className="type-display text-[clamp(3rem,6vw,4.5rem)] font-extrabold leading-[0.9] tracking-[-0.015em] lg:col-span-4">
           {t.about.title}
         </h2>
-        <div>
-          <p className="max-w-[60ch] text-[1.3rem] leading-relaxed">{pick(about.summary)}</p>
+        <div className="lg:col-span-8">
+          <p className="max-w-[58ch] text-[1.35rem] leading-relaxed">{pick(about.summary)}</p>
 
-          <dl className="mt-12 grid gap-x-12 gap-y-8 sm:grid-cols-2">
-            {[
-              [t.about.education, about.education],
-              [t.about.focus, about.focus],
-              [t.about.interests, about.interests],
-              [t.about.goals, about.goals],
-            ].map(([label, text]) => (
-              <div key={label} className="border-t border-ink pt-4">
-                <dt className="type-wide font-semibold">{label}</dt>
+          <dl className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2">
+            {facts.map(([label, text, color]) => (
+              <div key={label}>
+                <dt className="flex items-center gap-3 text-lg font-bold">
+                  <Shape kind="quarter" bg="white" fg={color} className="size-6" />
+                  {label}
+                </dt>
                 <dd className="mt-2 text-graphite">{pick(text)}</dd>
               </div>
             ))}
           </dl>
         </div>
-      </section>
+      </div>
+    </section>
+  )
+}
 
-      <section aria-labelledby="tecnologias" className="mt-20 grid gap-x-16 gap-y-6 lg:grid-cols-[1fr_2fr]">
-        <h2 id="tecnologias" className="type-condensed text-[2rem] font-bold leading-tight">
-          {t.about.skills}
+function Skills() {
+  const { t } = useLanguage()
+  const ref = useReveal()
+
+  return (
+    <section aria-labelledby="tecnologias" className={`${wrap} py-24`}>
+      <h2 id="tecnologias" className="type-tight max-w-[20ch] text-[clamp(2rem,4vw,2.75rem)] font-extrabold leading-tight tracking-[-0.02em]">
+        {t.about.skills}
+      </h2>
+      <ul ref={ref} className="assemble mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
+        {profile.about.skills.map((skill, i) => (
+          <li
+            key={skill}
+            style={{ '--i': i }}
+            className="type-tight flex items-center gap-6 text-[clamp(2rem,5vw,3.75rem)] font-extrabold leading-tight tracking-[-0.015em]"
+          >
+            {/* O ponto vem antes do item: a quebra de linha nunca deixa um ponto sobrando no fim */}
+            {i > 0 && <span aria-hidden="true" className={`size-3 rounded-full sm:size-4 ${dots[(i - 1) % dots.length]}`} />}
+            {skill}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function Featured() {
+  const { t } = useLanguage()
+  const latest = [...projects].sort((a, b) => parseYearMonth(b.date) - parseYearMonth(a.date)).slice(0, 2)
+
+  return (
+    <section aria-labelledby="recentes" className={`${wrap} pb-24`}>
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+        <h2 id="recentes" className="type-display text-[clamp(3rem,6vw,4.5rem)] font-extrabold leading-[0.9] tracking-[-0.015em]">
+          {t.about.featured}
         </h2>
-        <ul className="flex flex-wrap content-start gap-2">
-          {about.skills.map((skill) => (
-            <li key={skill} className="type-wide border border-ink bg-sheet px-3.5 py-1.5 font-medium">
-              {skill}
-            </li>
-          ))}
-        </ul>
-      </section>
+        <Link to="/projetos" viewTransition className={secondaryButton}>
+          {t.about.allProjects} ({projects.length})
+        </Link>
+      </div>
+      <div className="grid gap-24">
+        {latest.map((project, i) => (
+          <ProjectCard key={project.id} project={project} flip={i % 2 === 1} headingLevel="h3" />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export default function About() {
+  return (
+    <>
+      <Hero />
+      <Featured />
+      <Summary />
+      <Skills />
     </>
   )
 }

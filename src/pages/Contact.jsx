@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import PageHeader from '../components/PageHeader.jsx'
 import ContactIcon from '../components/ContactIcon.jsx'
-import Sheet from '../components/Sheet.jsx'
+import Shape from '../components/Shape.jsx'
 import { contacts } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { buttonDot, primaryButton, wrap } from '../utils/ui.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
@@ -40,7 +41,7 @@ const fields = ['name', 'email', 'message']
 function Field({ id, label, error, children }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block font-semibold">
+      <label htmlFor={id} className="mb-2 block font-bold">
         {label}
       </label>
       {children}
@@ -55,9 +56,9 @@ function Field({ id, label, error, children }) {
 
 const inputClass = (hasError) =>
   [
-    'w-full border bg-white px-3.5 py-2.5 text-ink placeholder:text-graphite/60',
-    'focus:border-cobalt focus:outline-none focus:ring-1 focus:ring-cobalt',
-    hasError ? 'border-danger' : 'border-ink/40',
+    'w-full border-0 border-b-[3px] bg-paper px-4 py-3 text-ink placeholder:text-graphite transition-colors',
+    'focus:border-blue focus:bg-sky/40 focus:outline-none',
+    hasError ? 'border-danger' : 'border-ink',
   ].join(' ')
 
 export default function Contact() {
@@ -133,15 +134,15 @@ export default function Contact() {
 
   return (
     <>
-      <PageHeader title={t.contact.title} subtitle={t.contact.subtitle} />
+      <PageHeader title={t.contact.title} subtitle={t.contact.subtitle} color="green" shapes={['half', 'circle', 'arch']} />
 
-      <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
+      <div className={`${wrap} grid gap-12 lg:grid-cols-5 lg:gap-16`}>
         <section className="lg:col-span-2" aria-labelledby="canais">
-          <h2 id="canais" className="type-condensed mb-4 text-[2rem] font-bold leading-tight">
+          <h2 id="canais" className="type-tight mb-6 text-[2rem] font-extrabold leading-tight tracking-[-0.02em]">
             {t.contact.channels}
           </h2>
-          <ul className="border-t border-ink">
-            {contacts.map((c) => (
+          <ul className="border-t border-rule">
+            {contacts.map((c, i) => (
               <li key={c.type} className="border-b border-rule">
                 <a
                   href={c.href}
@@ -149,7 +150,13 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="group flex items-center gap-4 py-4"
                 >
-                  <span className="text-xl text-cobalt">
+                  <span
+                    className={[
+                      'grid size-12 shrink-0 place-items-center text-xl text-white transition-transform duration-500 ease-spring group-hover:-rotate-12 group-hover:scale-110',
+                      ['bg-red', 'bg-green', 'bg-blue', 'bg-ink'][i % 4],
+                      i % 2 ? 'rounded-full' : 'rounded-tl-full',
+                    ].join(' ')}
+                  >
                     <ContactIcon type={c.type} />
                   </span>
                   <span className="min-w-0">
@@ -165,8 +172,9 @@ export default function Contact() {
         </section>
 
         <section className="lg:col-span-3" aria-labelledby="formulario">
-          <Sheet as="form" onSubmit={handleSubmit} noValidate className="p-5 sm:p-8">
-            <h2 id="formulario" className="type-condensed mb-6 text-[2rem] font-bold leading-tight">
+          <form onSubmit={handleSubmit} noValidate className="relative bg-white p-6 sm:p-10">
+            <Shape kind="quarter" bg="green" fg="sun" turn={1} className="absolute right-0 top-0 size-14 sm:size-20" />
+            <h2 id="formulario" className="type-tight mb-8 pr-16 text-[2rem] font-extrabold leading-tight tracking-[-0.02em]">
               {t.contact.formTitle}
             </h2>
 
@@ -236,17 +244,23 @@ export default function Contact() {
             <button
               type="submit"
               disabled={sending}
-              className="mt-7 w-full bg-ink px-6 py-3 font-semibold text-paper transition-colors hover:bg-cobalt disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+              className={`${primaryButton} mt-8 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto`}
             >
               {sending ? t.contact.sending : t.contact.send}
+              <span aria-hidden="true" className={`${buttonDot} ${sending ? 'animate-ping' : ''}`} />
             </button>
 
             <div aria-live="polite" className="mt-4 min-h-6 font-medium">
-              {status === 'success' && <p className="text-success">{t.contact.success}</p>}
+              {status === 'success' && (
+                <p className="flex animate-rise items-center gap-3 text-success">
+                  <Shape kind="circle" fg="green" className="size-5 animate-pop" />
+                  {t.contact.success}
+                </p>
+              )}
               {status === 'error' && <p className="text-danger">{t.contact.error}</p>}
               {status === 'notConfigured' && <p className="text-warning">{t.contact.notConfigured}</p>}
             </div>
-          </Sheet>
+          </form>
         </section>
       </div>
     </>
