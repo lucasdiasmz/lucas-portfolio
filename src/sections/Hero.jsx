@@ -101,7 +101,7 @@ export default function Hero() {
                 src={profile.photo}
                 alt={pick({ pt: `Foto de ${profile.name}`, en: `Photo of ${profile.name}` })}
                 onError={() => setPhotoOk(false)}
-                className="size-full object-cover grayscale-[15%] transition-transform duration-700 hover:scale-105"
+                className="size-full object-cover object-bottom transition-transform duration-700 hover:scale-105"
               />
             ) : (
               <span className="grid size-full place-items-center text-8xl text-orange-500">{profile.name[0]}</span>
