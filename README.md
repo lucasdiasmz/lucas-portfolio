@@ -58,16 +58,16 @@ Este projeto é o meu **portfólio profissional**, desenvolvido como trabalho do
 
 - **Por que existe:** apresentar minha trajetória e meus projetos de forma organizada e acessível, e servir de vitrine para oportunidades de estágio e trabalho (inclusive no exterior, por isso o site é bilíngue).
 - **Contexto:** acadêmico (PUC Minas, Engenharia de Software) e profissional.
-- **Decisão de design:** o site imita uma folha de desenho técnico, ligada à engenharia. Usa fundo claro de prancheta com quadriculado leve, tinta azul-marinho, cobalto nos links e destaques e amarelo de marca-texto só em detalhes pontuais. A tipografia é uma única família, a Archivo, condensada nos títulos e normal no texto. O topo da página inicial traz a foto com anotações ligadas por linhas e um quadro de identificação, como o carimbo de uma folha técnica. O objetivo é ser marcante sem deixar de ser profissional para recrutadores.
+- **Decisão de design:** página única em modo escuro, inspirada em portfólios de estúdio: fundo quase preto com grade fina e brilho laranja, uma única cor de destaque (laranja, com gradiente para vermelho nos botões), tipografia larga e técnica (Michroma) e cartões de vidro fosco que brilham no hover. As seções seguem a ordem topo, sobre, processo, habilidades, foco, projetos e contato, com animações de entrada letra a letra e cursor personalizado. O objetivo é ser marcante sem deixar de ser profissional para recrutadores.
 
 ---
 
 ## ✨ Funcionalidades Principais
 
-- 🧭 **Navegação por menu** entre quatro páginas (Sobre mim, Projetos, Currículo e Contato), com menu responsivo no celular.
+- 🧭 **Página única com navegação por âncoras** (Sobre, Habilidades, Foco, Projetos e Contato) em uma barra de vidro flutuante que some ao rolar para baixo, com menu responsivo no celular e página separada para o Currículo.
 - 🌐 **Internacionalização (i18n) PT/EN:** a troca de idioma vale para o site inteiro e é lembrada no navegador. O idioma inicial segue o do navegador.
-- 🕒 **Linha do tempo dinâmica de projetos**, ordenada do mais antigo ao mais recente, gerada a partir de um único arquivo de dados.
-- 🔎 **Filtro por tecnologia** na página de projetos.
+- 🗂️ **Cards de projetos** do mais recente ao mais antigo, com período, tecnologias, links para o repositório e o site, e botão "Ler mais".
+- ✨ **Animações:** abertura com a marca, títulos que surgem letra a letra, texto digitado no topo, cursor laranja, barra de progresso de leitura e brilho nos cartões (tudo desligado com `prefers-reduced-motion`).
 - 📄 **Currículo** em PDF, com botão para baixar, opção de abrir em nova aba e visualização na própria página.
 - 📨 **Formulário de contato funcional** com envio por e-mail (EmailJS), validação de campos, mensagens de erro acessíveis e proteção simples contra robôs (honeypot).
 - 🔗 **Ícones clicáveis** para e-mail, WhatsApp, LinkedIn e GitHub.
@@ -116,8 +116,8 @@ Aplicação **SPA (Single Page Application)** somente de front-end, sem back-end
 
 - **Camada de dados (`src/data`):** `profile.js` guarda perfil, projetos, currículo e contatos. Textos em `{ pt, en }`.
 - **Camada de i18n (`src/i18n`):** `LanguageContext` expõe `t` (textos fixos da interface), `pick()` (escolhe `pt` ou `en` em objetos de conteúdo) e `setLang()`.
-- **Camada de apresentação:** `pages/` (uma por rota) compostas por `components/` reutilizáveis (`Timeline`, `ProjectCard`, `Navbar`...).
-- **Roteamento:** `BrowserRouter` com um `Layout` comum (navbar, rodapé, `<Outlet />`). O `vercel.json` redireciona qualquer rota para `index.html`, para que o acesso direto a `/projetos` funcione.
+- **Camada de apresentação:** `pages/Home.jsx` monta as `sections/` da página única; `components/` guarda as peças reutilizáveis (`Navbar`, `SplitTitle`, `Reveal`, `Cursor`...).
+- **Roteamento:** roteador de dados do React Router com um `Layout` comum (navbar, rodapé, `<Outlet />`). Os endereços antigos `/projetos` e `/contato` levam à seção correspondente da página única. O `vercel.json` redireciona qualquer rota para `index.html`.
 
 **Decisões e trade-offs**
 
@@ -220,27 +220,38 @@ O arquivo `vercel.json` já configura o redirecionamento das rotas para o `index
     ├── App.jsx               # 🧭 Definição das rotas
     ├── index.css             # 🎨 Tailwind e tokens de tema (cores, fontes, animação)
     ├── components/           # 🧱 Componentes reutilizáveis
-    │   ├── Layout.jsx        #    Estrutura comum às páginas
-    │   ├── Navbar.jsx        #    Menu de navegação e troca de idioma
-    │   ├── Footer.jsx        #    Rodapé com ícones de contato
-    │   ├── Sheet.jsx         #    Moldura de "folha técnica" com marcas de canto
-    │   ├── Timeline.jsx      #    Linha do tempo em linhas (data à esquerda)
-    │   ├── ProjectCard.jsx   #    Conteúdo de um projeto na linha do tempo
-    │   ├── ContactIcon.jsx   #    Mapa tipo de contato → ícone
-    │   └── PageHeader.jsx    #    Título e subtítulo das páginas
+    │   ├── Layout.jsx        #    Estrutura comum (fundo, abertura, cursor, navbar, rodapé)
+    │   ├── Navbar.jsx        #    Barra de vidro, troca de idioma e progresso de leitura
+    │   ├── Footer.jsx        #    Rodapé com navegação e redes
+    │   ├── SplitTitle.jsx    #    Título laranja que surge letra a letra
+    │   ├── Reveal.jsx        #    Entrada com subida e desfoque ao rolar
+    │   ├── RollText.jsx      #    Letras que rolam no hover dos links
+    │   ├── SectionLink.jsx   #    Link para uma seção da página única
+    │   ├── Cursor.jsx        #    Cursor laranja personalizado
+    │   ├── Intro.jsx         #    Abertura com a marca (uma vez por sessão)
+    │   ├── Logo.jsx          #    Marca "L" em gradiente
+    │   └── ContactIcon.jsx   #    Mapa tipo de contato → ícone
+    ├── sections/             # 🧩 Seções da página única
+    │   ├── Hero.jsx          #    #inicio       Nome, texto digitado, foto e botões
+    │   ├── About.jsx         #    #sobre        Sobre mim e destaques
+    │   ├── Process.jsx       #                  Ideias → Código
+    │   ├── Skills.jsx        #    #habilidades  Tecnologias com ícones
+    │   ├── Focus.jsx         #    #foco         Áreas que estudo
+    │   ├── Projects.jsx      #    #projetos     Cards de projetos
+    │   └── Contact.jsx       #    #contato      Canais e formulário
     ├── pages/                # 📄 Uma página por rota
-    │   ├── About.jsx         #    /              Sobre mim
-    │   ├── Projects.jsx      #    /projetos      Timeline de projetos
+    │   ├── Home.jsx          #    /              Página única
     │   ├── Resume.jsx        #    /curriculo     Currículo (PDF)
-    │   ├── Contact.jsx       #    /contato       Canais e formulário
     │   └── NotFound.jsx      #    *              Página 404
     ├── data/
-    │   └── profile.js        # ✏️ Todo o conteúdo editável do portfólio
+    │   ├── profile.js        # ✏️ Todo o conteúdo editável do portfólio
+    │   └── sections.js       # 🧭 Ordem e âncoras das seções
     ├── i18n/
     │   ├── LanguageContext.jsx  # 🌐 Provider e hook useLanguage()
     │   └── translations.js      # 🌐 Textos da interface em PT e EN
     └── utils/
-        └── date.js           # 🛠️ Formatação de datas por idioma
+        ├── date.js           # 🛠️ Formatação de datas por idioma
+        └── useReveal.js      # 🛠️ Marca elementos que entraram na tela
 ```
 
 ---

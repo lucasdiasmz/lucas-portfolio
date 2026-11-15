@@ -1,135 +1,123 @@
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { FaBars, FaXmark } from 'react-icons/fa6'
+import Logo from './Logo.jsx'
+import RollText from './RollText.jsx'
+import SectionLink from './SectionLink.jsx'
+import { sections } from '../data/sections.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
-import { profile } from '../data/profile.js'
-import { wrap } from '../utils/ui.js'
 
-// Cada seção tem a sua cor; o ponto colorido marca a página atual
-const links = [
-  { to: '/', key: 'about', end: true, color: 'bg-red' },
-  { to: '/projetos', key: 'projects', color: 'bg-blue' },
-  { to: '/curriculo', key: 'resume', color: 'bg-sun' },
-  { to: '/contato', key: 'contact', color: 'bg-green' },
-]
-
-// Marca: três formas do sistema visual
-function Mark() {
-  return (
-    <span aria-hidden="true" className="grid size-8 grid-cols-2 grid-rows-2 transition-transform duration-500 ease-spring group-hover:rotate-90">
-      <span className="rounded-tl-full bg-red" />
-      <span className="rounded-full bg-sun" />
-      <span className="bg-blue" />
-      <span className="rounded-br-full bg-ink" />
-    </span>
-  )
-}
-
-function LanguageSwitch() {
-  const { lang, setLang, t } = useLanguage()
-  return (
-    <div role="group" aria-label={t.nav.language} className="inline-flex text-sm font-semibold">
-      {['pt', 'en'].map((code) => (
-        <button
-          key={code}
-          type="button"
-          onClick={() => setLang(code)}
-          aria-pressed={lang === code}
-          className={[
-            'px-2.5 py-1 uppercase transition-colors',
-            lang === code ? 'bg-ink text-white' : 'text-graphite hover:text-ink',
-          ].join(' ')}
-        >
-          {code}
-        </button>
-      ))}
-    </div>
-  )
-}
-
-function NavItem({ link, onClick, large = false }) {
-  const { t } = useLanguage()
-  return (
-    <NavLink
-      to={link.to}
-      end={link.end}
-      viewTransition
-      onClick={onClick}
-      className={({ isActive }) =>
-        [
-          'group/link flex items-center gap-2.5 font-semibold transition-colors',
-          large ? 'py-3 text-3xl' : 'py-1 text-[0.95rem]',
-          isActive ? 'text-ink' : 'text-graphite hover:text-ink',
-        ].join(' ')
-      }
-    >
-      {({ isActive }) => (
-        <>
-          <span
-            aria-hidden="true"
-            className={[
-              'size-2.5 rounded-full transition-transform duration-300 ease-spring',
-              link.color,
-              isActive ? 'scale-100' : 'scale-0 group-hover/link:scale-75',
-            ].join(' ')}
-          />
-          {t.nav[link.key]}
-        </>
-      )}
-    </NavLink>
-  )
-}
-
+// Pílula de vidro flutuante com brilho que atravessa, links com letras que rolam
+// e botão de idioma em gradiente. Some ao rolar para baixo e volta ao subir.
 export default function Navbar() {
+  const { lang, setLang, t } = useLanguage()
   const [open, setOpen] = useState(false)
-  const { t } = useLanguage()
+  const [hidden, setHidden] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    let last = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      setHidden(y > 160 && y > last)
+      last = y
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? y / max : 0)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  const links = sections.filter((s) => s.id !== 'inicio')
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur-sm">
-      <div className={`${wrap} flex h-16 items-center justify-between`}>
-        <Link
-          to="/"
-          viewTransition
-          className="group flex items-center gap-3 text-lg font-bold tracking-tight"
-          onClick={() => setOpen(false)}
-        >
-          <Mark />
-          {profile.name}
-        </Link>
+    <>
+      {/* Barra de progresso de leitura na lateral direita */}
+      <div aria-hidden="true" className="fixed right-1 top-0 z-50 hidden h-screen w-[3px] sm:block">
+        <div
+          className="h-full w-full origin-top rounded-full bg-gradient-to-b from-orange-400 to-red-600 shadow-[0_0_10px_#fa6e00]"
+          style={{ transform: `scaleY(${progress})` }}
+        />
+      </div>
 
-        <div className="flex items-center gap-8">
-          <nav className="hidden items-center gap-7 md:flex" aria-label="Principal">
-            {links.map((l) => (
-              <NavItem key={l.to} link={l} />
+      <header
+        className={[
+          'fixed inset-x-0 top-0 z-40 px-4 pt-4 transition-transform duration-500 ease-[var(--ease-out-expo)] sm:pt-5',
+          hidden && !open ? '-translate-y-[130%]' : 'translate-y-0',
+        ].join(' ')}
+      >
+        <nav
+          aria-label={t.nav.home}
+          className="navbar relative mx-auto flex max-w-6xl items-center justify-between rounded-full py-2.5 pl-3 pr-3 text-white sm:pl-4"
+        >
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-full">
+            <div className="navbar-shine" />
+          </div>
+
+          <SectionLink id="inicio" className="relative flex items-center gap-2.5" onClick={() => setOpen(false)}>
+            <Logo className="size-9 drop-shadow-[0_0_10px_rgb(250_110_0/0.6)]" />
+            <span className="hidden text-xs tracking-[0.3em] text-neutral-200 sm:inline">LUCAS</span>
+          </SectionLink>
+
+          <ul className="relative hidden items-center gap-6 text-[0.74rem] md:flex lg:gap-9">
+            {links.map((s) => (
+              <li key={s.id}>
+                <SectionLink id={s.id} className="roll-host">
+                  <RollText>{t.nav[s.key]}</RollText>
+                </SectionLink>
+              </li>
             ))}
-          </nav>
-          <div className="flex items-center gap-2">
-            <LanguageSwitch />
+          </ul>
+
+          <div className="relative flex items-center gap-2">
             <button
               type="button"
-              className="grid size-10 place-items-center text-xl text-ink md:hidden"
-              aria-label={t.nav.menu}
+              onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}
+              aria-label={t.nav.language}
+              className="rounded-full bg-gradient-to-r from-ember to-flame px-4 py-1.5 text-xs transition-transform hover:scale-105"
+            >
+              {lang === 'pt' ? 'PT' : 'EN'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="menu-mobile"
-              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? t.nav.close : t.nav.menu}
+              className="grid size-9 place-items-center rounded-full border border-white/20 md:hidden"
             >
               {open ? <FaXmark /> : <FaBars />}
             </button>
           </div>
-        </div>
-      </div>
+        </nav>
 
-      {open && (
-        <nav id="menu-mobile" className="border-t border-rule px-4 pb-6 pt-2 md:hidden" aria-label="Principal">
-          <ul className="flex flex-col">
-            {links.map((l, i) => (
-              <li key={l.to} className="animate-rise" style={{ animationDelay: `${i * 50}ms` }}>
-                <NavItem link={l} large onClick={() => setOpen(false)} />
+        {/* Menu do celular */}
+        <div id="menu-mobile" hidden={!open} className="glass mx-auto mt-3 max-w-6xl p-3 md:hidden">
+          <ul className="grid gap-1">
+            {sections.map((s) => (
+              <li key={s.id}>
+                <SectionLink
+                  id={s.id}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm hover:bg-white/5 hover:text-orange-400"
+                >
+                  {t.nav[s.key]}
+                  <span aria-hidden="true" className="text-orange-500">
+                    →
+                  </span>
+                </SectionLink>
               </li>
             ))}
           </ul>
-        </nav>
-      )}
-    </header>
+        </div>
+      </header>
+    </>
   )
 }

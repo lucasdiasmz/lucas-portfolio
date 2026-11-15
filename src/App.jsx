@@ -1,21 +1,18 @@
 import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
-import About from './pages/About.jsx'
-import Projects from './pages/Projects.jsx'
+import Home from './pages/Home.jsx'
 import Resume from './pages/Resume.jsx'
-import Contact from './pages/Contact.jsx'
 import NotFound from './pages/NotFound.jsx'
 
-// Roteador de dados: necessário para as transições de página (prop viewTransition nos links)
+// O portfólio virou uma página única; os endereços antigos levam à seção correspondente
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout />}>
-      <Route index element={<About />} />
-      <Route path="projetos" element={<Projects />} />
+      <Route index element={<Home />} />
       <Route path="curriculo" element={<Resume />} />
-      {/* Endereço antigo da página de Experiências: leva para o Currículo */}
+      <Route path="projetos" element={<Navigate to={{ pathname: '/', hash: '#projetos' }} replace />} />
+      <Route path="contato" element={<Navigate to={{ pathname: '/', hash: '#contato' }} replace />} />
       <Route path="experiencias" element={<Navigate to="/curriculo" replace />} />
-      <Route path="contato" element={<Contact />} />
       <Route path="*" element={<NotFound />} />
     </Route>,
   ),

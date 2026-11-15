@@ -21,20 +21,55 @@ export const profile = {
   // o site mostra a inicial do nome no lugar da foto.
   photo: '/foto.jpg',
 
-  // Quadro de identificação no topo da página inicial (como o carimbo de uma
-  // folha de desenho técnico). `revision` ('AAAA-MM') é a data da última atualização.
-  sheet: {
-    course: { pt: 'Engenharia de Software', en: 'Software Engineering' },
-    institution: 'PUC Minas',
-    term: { pt: '2º período', en: '2nd semester' },
-    languages: { pt: 'Português e inglês', en: 'Portuguese and English' },
-    revision: '2026-10',
-  },
-  // Anotações que apontam para a foto na página inicial. Use frases curtas (até 3).
-  callouts: [
-    { pt: 'Back-end com Java e Spring Boot', en: 'Back-end with Java and Spring Boot' },
+  // Frases que se alternam no topo da página, como se fossem digitadas.
+  typing: [
+    { pt: 'Engenharia de Software', en: 'Software Engineering' },
+    { pt: 'Back-end com Java', en: 'Back-end with Java' },
     { pt: 'Front-end com React', en: 'Front-end with React' },
-    { pt: 'Orientação a objetos e código limpo', en: 'Object-oriented design and clean code' },
+  ],
+  // Selo que aparece sobre a foto no topo da página
+  badge: { pt: 'Estudante de Software', en: 'Software Student' },
+
+  // Quatro cartões curtos ao lado do texto "Sobre mim": título + linha de apoio
+  highlights: [
+    { title: 'PUC Minas', text: { pt: 'Engenharia de Software', en: 'Software Engineering' } },
+    { title: { pt: '2º período', en: '2nd semester' }, text: { pt: 'Graduação em andamento', en: 'Degree in progress' } },
+    { title: { pt: '2 idiomas', en: '2 languages' }, text: { pt: 'Português • Inglês', en: 'Portuguese • English' } },
+    { title: { pt: 'Disponível', en: 'Available' }, text: { pt: 'Para estágio', en: 'For internships' } },
+  ],
+
+  // Áreas que estudo e pratico. `icon`: backend | frontend | oop | games | api | web
+  focusAreas: [
+    {
+      icon: 'backend',
+      title: { pt: 'Back-end com Java', en: 'Back-end with Java' },
+      text: { pt: 'APIs REST com Java e Spring Boot, do controlador à persistência.', en: 'REST APIs with Java and Spring Boot, from controller to persistence.' },
+    },
+    {
+      icon: 'frontend',
+      title: { pt: 'Front-end com React', en: 'Front-end with React' },
+      text: { pt: 'Interfaces responsivas com HTML, CSS, JavaScript e React.', en: 'Responsive interfaces with HTML, CSS, JavaScript and React.' },
+    },
+    {
+      icon: 'oop',
+      title: { pt: 'Orientação a objetos', en: 'Object-oriented design' },
+      text: { pt: 'Classes, herança e responsabilidades bem divididas, com código limpo.', en: 'Classes, inheritance and well-split responsibilities, with clean code.' },
+    },
+    {
+      icon: 'web',
+      title: { pt: 'Landing pages', en: 'Landing pages' },
+      text: { pt: 'Páginas únicas publicadas, com foco em conversão e contato rápido.', en: 'Published single pages focused on conversion and quick contact.' },
+    },
+    {
+      icon: 'games',
+      title: { pt: 'Desenvolvimento de jogos', en: 'Game development' },
+      text: { pt: 'Jogos em Python com Pygame, trabalhando em grupo.', en: 'Python games with Pygame, built as a team.' },
+    },
+    {
+      icon: 'api',
+      title: { pt: 'Projetos acadêmicos', en: 'Academic projects' },
+      text: { pt: 'Sistemas em equipe nas disciplinas de TI da PUC Minas.', en: 'Team systems for the IT courses at PUC Minas.' },
+    },
   ],
 
   about: {
@@ -64,7 +99,7 @@ export const profile = {
 }
 
 // -----------------------------------------------------------------------------
-//  PROJETOS — a linha do tempo ordena por `date` (do mais antigo ao mais recente).
+//  PROJETOS — os cards aparecem do mais recente ao mais antigo (pelo campo `date`).
 //  `date` ('AAAA-MM') só serve para ordenar. O que aparece no card é `period`
 //  (ex.: '2026/1' = 1º semestre de 2026); sem `period`, aparece mês e ano de `date`.
 // -----------------------------------------------------------------------------
