@@ -48,8 +48,9 @@ export const translations = {
       inProgress: 'Em desenvolvimento',
       repo: 'Repositório no GitHub',
       site: 'Ver site no ar',
-      more: 'Ler mais',
-      less: 'Mostrar menos',
+      stack: 'Tecnologias',
+      filter: 'Filtrar projetos por área',
+      groups: { all: 'Todos', web: 'Web', backend: 'Back-end', python: 'Python' },
     },
     resume: {
       title: 'Currículo',
@@ -158,8 +159,9 @@ export const translations = {
       inProgress: 'In progress',
       repo: 'GitHub repository',
       site: 'Live site',
-      more: 'Read more',
-      less: 'Show less',
+      stack: 'Stack',
+      filter: 'Filter projects by area',
+      groups: { all: 'All', web: 'Web', backend: 'Back-end', python: 'Python' },
     },
     resume: {
       title: 'Résumé',
