@@ -38,6 +38,8 @@ export const translations = {
     skills: {
       title: 'Habilidades',
       subtitle: 'Linguagens e ferramentas que estudo e uso nos projetos.',
+      open: 'Abrir a pasta de habilidades',
+      replay: 'Explodir a pasta de novo',
     },
     focus: {
       title: 'O que estudo',
@@ -154,6 +156,8 @@ export const translations = {
     skills: {
       title: 'Skills',
       subtitle: 'Languages and tools I study and use in my projects.',
+      open: 'Open the skills folder',
+      replay: 'Burst the folder again',
     },
     focus: {
       title: 'What I work on',

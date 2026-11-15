@@ -1,0 +1,456 @@
+/* Pasta "HABILIDADES" que explode em habilidades (ver SkillBurst.jsx).
+   Fases em data-phase: idle → crack → charge → burst → done. */
+
+.sb {
+  --sb-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --sb-fw: clamp(210px, 36cqw, 340px);
+  position: relative;
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
+  aspect-ratio: 16 / 9;
+  container-type: size;
+}
+@media (max-width: 639px) {
+  .sb {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* ---------- Pasta ---------- */
+.sb__folder {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  width: clamp(210px, 36cqw, 340px);
+  aspect-ratio: 32 / 20;
+  translate: -50% -50%;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.sb__body {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform-origin: 50% 50%;
+  transition:
+    scale 0.55s var(--sb-ease),
+    opacity 0.4s;
+}
+.sb__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgb(250 110 0 / 0.55));
+}
+.sb__panel {
+  fill: rgb(18 12 8 / 0.82);
+  transition: fill 0.5s;
+}
+.sb__edge {
+  fill: none;
+  stroke: rgb(255 154 60 / 0.55);
+  stroke-width: 1.5;
+}
+.sb__bar {
+  fill: none;
+  stroke: #ff9a3c;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+.sb__cracks path {
+  fill: none;
+  stroke: #ffb066;
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition:
+    stroke-dashoffset 0.7s cubic-bezier(0.5, 0, 0.2, 1),
+    stroke-width 0.5s,
+    opacity 0.3s;
+}
+.sb__label {
+  position: relative;
+  padding-top: 6%;
+  font-size: calc(var(--sb-fw) * 0.062);
+  letter-spacing: 0.06em;
+  color: rgb(255 154 60 / 0.14);
+  -webkit-text-stroke: 1px #ff9a3c;
+  text-shadow: 0 0 14px rgb(250 110 0 / 0.55);
+  transition: opacity 0.3s;
+}
+
+/* Parado: respira e balança de leve, convidando o clique */
+.sb[data-phase='idle'] .sb__body {
+  animation: sb-nudge 2.4s ease-in-out 1s infinite;
+}
+.sb[data-phase='idle'] .sb__folder:hover .sb__body,
+.sb[data-phase='idle'] .sb__folder:focus-visible .sb__body {
+  animation: none;
+  scale: 1.04;
+}
+@keyframes sb-nudge {
+  0%,
+  60%,
+  100% {
+    rotate: 0deg;
+  }
+  68% {
+    rotate: -1.5deg;
+  }
+  76% {
+    rotate: 1.3deg;
+  }
+  84% {
+    rotate: -0.8deg;
+  }
+  92% {
+    rotate: 0.3deg;
+  }
+}
+
+/* Racha */
+.sb[data-phase='crack'] .sb__cracks path,
+.sb[data-phase='charge'] .sb__cracks path {
+  stroke-dashoffset: 0;
+}
+.sb[data-phase='crack'] .sb__body {
+  animation: sb-shake 0.12s linear infinite;
+}
+
+/* Carrega: brilha por dentro e treme forte */
+.sb[data-phase='charge'] .sb__cracks path {
+  stroke-width: 4;
+  stroke: #fff1dc;
+}
+.sb[data-phase='charge'] .sb__panel {
+  fill: rgb(120 48 4 / 0.85);
+}
+.sb[data-phase='charge'] .sb__body {
+  animation: sb-shake 0.07s linear infinite;
+  scale: 1.06;
+}
+@keyframes sb-shake {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25% {
+    translate: 1.5px -1px;
+  }
+  50% {
+    translate: -1.5px 1px;
+  }
+  75% {
+    translate: 1px 1.5px;
+  }
+}
+
+/* Explodiu: a pasta encolhe e vira o núcleo da rede */
+.sb[data-open] .sb__body {
+  scale: 0.3;
+}
+.sb[data-open] .sb__label,
+.sb[data-open] .sb__cracks path {
+  opacity: 0;
+}
+.sb[data-open] .sb__panel {
+  fill: rgb(14 9 6 / 0.97);
+}
+.sb[data-open] .sb__edge {
+  stroke: #ff9a3c;
+  stroke-width: 4;
+}
+.sb[data-phase='done'] .sb__svg {
+  animation: sb-core 2.6s ease-in-out infinite;
+}
+.sb[data-phase='done'] .sb__folder:hover .sb__body,
+.sb[data-phase='done'] .sb__folder:focus-visible .sb__body {
+  scale: 0.36;
+}
+@keyframes sb-core {
+  50% {
+    opacity: 0.65;
+  }
+}
+/* No núcleo pequeno, só ele recebe o clique (o resto deixa passar para as habilidades) */
+.sb[data-open] .sb__folder {
+  pointer-events: none;
+}
+.sb[data-open] .sb__body {
+  pointer-events: auto;
+}
+
+/* ---------- Efeitos ---------- */
+.sb__fx {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.sb__fx > * {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+.sb__rays {
+  width: 110cqmin;
+  aspect-ratio: 1;
+  margin: -55cqmin 0 0 -55cqmin;
+  border-radius: 50%;
+  background: repeating-conic-gradient(rgb(255 170 90 / 0.55) 0 1.5deg, transparent 1.5deg 14deg);
+  -webkit-mask: radial-gradient(closest-side, #000 8%, transparent 70%);
+  mask: radial-gradient(closest-side, #000 8%, transparent 70%);
+  opacity: 0;
+  scale: 0.3;
+  transition:
+    opacity 0.5s,
+    scale 0.7s var(--sb-ease);
+}
+.sb[data-phase='charge'] .sb__rays {
+  opacity: 1;
+  scale: 1;
+  animation: sb-spin 6s linear infinite;
+}
+.sb[data-phase='burst'] .sb__rays {
+  opacity: 0;
+  scale: 1.8;
+}
+@keyframes sb-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* Anéis em órbita, inclinados em perspectiva */
+.sb__orbit {
+  width: calc(var(--sb-fw) * 1.5);
+  aspect-ratio: 1;
+  margin: calc(var(--sb-fw) * -0.75) 0 0 calc(var(--sb-fw) * -0.75);
+  transform: perspective(700px) rotateX(74deg) rotateY(-14deg);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.sb__orbit--b {
+  transform: perspective(700px) rotateX(70deg) rotateY(22deg);
+  scale: 1.15;
+}
+.sb__orbit > span {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #ffb066;
+  border-right-color: rgb(255 154 60 / 0.4);
+  filter: drop-shadow(0 0 6px #fa6e00);
+  animation: sb-spin 0.9s linear infinite;
+}
+.sb__orbit--b > span {
+  animation-duration: 1.3s;
+  animation-direction: reverse;
+}
+.sb[data-phase='charge'] .sb__orbit {
+  opacity: 1;
+}
+
+.sb__flash {
+  width: 40cqmin;
+  aspect-ratio: 1;
+  margin: -20cqmin 0 0 -20cqmin;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff 0 12%, rgb(255 190 120 / 0.9) 28%, rgb(250 110 0 / 0.35) 55%, transparent);
+  opacity: 0;
+}
+.sb[data-phase='burst'] .sb__flash {
+  animation: sb-flash 0.9s ease-out forwards;
+}
+@keyframes sb-flash {
+  0% {
+    opacity: 1;
+    scale: 0.2;
+  }
+  25% {
+    opacity: 1;
+    scale: 1.6;
+  }
+  100% {
+    opacity: 0;
+    scale: 3.2;
+  }
+}
+
+.sb__spark {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: #ffc58a;
+  box-shadow: 0 0 6px 1px #fa6e00;
+  opacity: 0;
+}
+.sb[data-phase='burst'] .sb__spark {
+  animation: sb-spark 1s cubic-bezier(0.1, 0.7, 0.3, 1) var(--sd) forwards;
+}
+@keyframes sb-spark {
+  0% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    translate: var(--sx) var(--sy);
+  }
+}
+
+/* ---------- Rede ---------- */
+.sb__links {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.sb__links--t {
+  display: none;
+}
+@media (max-width: 639px) {
+  .sb__links--w {
+    display: none;
+  }
+  .sb__links--t {
+    display: block;
+  }
+}
+.sb__line,
+.sb__pulse {
+  fill: none;
+}
+.sb__line {
+  stroke: rgb(250 110 0 / 0.4);
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.25s;
+}
+.sb[data-open] .sb__line {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.8s var(--sb-ease) calc(var(--d) + 120ms);
+}
+.sb__pulse {
+  stroke: #ffb066;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0.06 0.94;
+  stroke-dashoffset: 0.06;
+  opacity: 0;
+}
+.sb[data-phase='done'] .sb__pulse {
+  opacity: 1;
+  animation: sb-pulse 2.4s linear var(--pd) infinite backwards;
+}
+@keyframes sb-pulse {
+  from {
+    stroke-dashoffset: 0.06;
+  }
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+/* Símbolos soltos de código, como no fundo do vídeo */
+.sb__glyph {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  z-index: 1;
+  translate: -50% -50%;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.7rem;
+  color: #ff9a3c;
+  opacity: 0;
+  scale: 0.4;
+  pointer-events: none;
+  transition:
+    opacity 0.25s,
+    scale 0.25s;
+}
+.sb[data-open] .sb__glyph {
+  opacity: 0.4;
+  scale: 1;
+  transition:
+    opacity 0.6s var(--d),
+    scale 0.8s var(--sb-ease) var(--d);
+}
+
+/* ---------- Habilidades ---------- */
+.sb__skills {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.sb__skill {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(5.75rem, 13cqw, 8.5rem);
+  aspect-ratio: 5 / 4;
+  translate: -50% -50%;
+  scale: 0.15;
+  opacity: 0;
+  transition:
+    translate 0.45s cubic-bezier(0.6, 0, 0.8, 0.4),
+    scale 0.45s,
+    opacity 0.3s 0.15s;
+}
+.sb[data-open] .sb__skill {
+  translate: calc(-50% + (var(--x) - 50) * 1cqw) calc(-50% + (var(--y) - 50) * 1cqh);
+  scale: 1;
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    translate 1s var(--sb-ease) var(--d),
+    scale 1s var(--sb-ease) var(--d),
+    opacity 0.2s var(--d);
+}
+@media (max-width: 639px) {
+  .sb__glyph {
+    left: calc(var(--mx) * 1%);
+    top: calc(var(--my) * 1%);
+  }
+  .sb[data-open] .sb__skill {
+    translate: calc(-50% + (var(--mx) - 50) * 1cqw) calc(-50% + (var(--my) - 50) * 1cqh);
+  }
+}
+.sb__float {
+  width: 100%;
+  height: 100%;
+}
+.sb[data-phase='done'] .sb__float {
+  animation: sb-float 4.8s ease-in-out var(--fd) infinite;
+}
+@keyframes sb-float {
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb *,
+  .sb *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
