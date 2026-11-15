@@ -360,6 +360,7 @@ export default function GlassFolder({
   onOpenChange,
   maxWidth = 340,
   appearDelay = 0,
+  nudgeDelay = 0,
   openLabel = 'Abrir',
   closeLabel = 'Fechar',
   contentsLabel = 'Conteúdo',
@@ -468,7 +469,7 @@ export default function GlassFolder({
         className="gf-root"
         data-open={open || undefined}
         data-entered={entered || undefined}
-        style={{ width, height: (H + HEADROOM) * k }}
+        style={{ width, height: (H + HEADROOM) * k, '--gf-nudge-delay': `${nudgeDelay}ms` }}
       >
         <div className="gf-stage" style={{ transform: `translateY(${HEADROOM * k}px) scale(${k})` }}>
           <div className="gf-tilt">

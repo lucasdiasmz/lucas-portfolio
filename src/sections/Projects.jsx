@@ -149,6 +149,7 @@ export default function Projects() {
                 open={p.id === openId}
                 onOpenChange={(o) => setOpenId(o ? p.id : null)}
                 appearDelay={i * 120}
+                nudgeDelay={1500 + i * 700}
                 openLabel={t.projects.open}
                 closeLabel={t.projects.close}
                 contentsLabel={t.projects.contents}

@@ -401,3 +401,39 @@ canvas.gf-sheet-art[data-ready] {
     opacity: 0;
   }
 }
+
+/* ---- convite: tremida curta de tempos em tempos, só na pasta fechada ---- */
+.gf-tilt {
+  transform-origin: 50% 100%;
+  animation: gf-nudge 4.5s var(--gf-ease) var(--gf-nudge-delay, 0s) infinite;
+}
+.gf-root:not([data-entered]) .gf-tilt,
+.gf-root:hover .gf-tilt,
+.gf-root:focus-within .gf-tilt,
+.gf-root[data-open] .gf-tilt {
+  animation: none;
+}
+@keyframes gf-nudge {
+  0%,
+  78%,
+  100% {
+    rotate: 0deg;
+    translate: 0 0;
+  }
+  82% {
+    rotate: -1.6deg;
+    translate: 0 -3px;
+  }
+  86% {
+    rotate: 1.4deg;
+    translate: 0 -2px;
+  }
+  90% {
+    rotate: -0.9deg;
+    translate: 0 -1px;
+  }
+  94% {
+    rotate: 0.4deg;
+    translate: 0 0;
+  }
+}
