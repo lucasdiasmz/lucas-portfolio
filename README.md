@@ -211,7 +211,7 @@ O arquivo `vercel.json` já configura o redirecionamento das rotas para o `index
 ├── vite.config.js            # ⚙️ Configuração do Vite (React + Tailwind)
 ├── public/
 │   ├── favicon.svg           # 🖼️ Ícone do site
-│   ├── foto.jpg              # 🖼️ Foto da página inicial
+│   ├── foto.png              # 🖼️ Foto da página inicial
 │   └── projetos/             # 🖼️ Imagens/GIFs dos projetos (adicione aqui)
 ├── docs/
 │   └── wireframes/           # 🎨 Exportações do Figma usadas neste README

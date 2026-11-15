@@ -68,11 +68,11 @@ export default function XRayPhoto({ src, alt, onError, className = '' }) {
       }}
       className={`xray group ${className}`}
     >
-      <img src={src} alt={alt} onError={onError} className="xray__photo size-full object-cover grayscale-[15%]" />
+      <img src={src} alt={alt} onError={onError} className="xray__photo size-full object-cover object-bottom" />
 
       {/* camada oculta: aparece só dentro do círculo */}
       <div aria-hidden="true" className="xray__layer">
-        <img src={src} alt="" className="xray__photo xray__photo--scan size-full object-cover" />
+        <img src={src} alt="" className="xray__photo xray__photo--scan size-full object-cover object-bottom" />
         <div className="xray__scan" />
         <pre className="xray__code">
           {code.map(([k, v]) => (
