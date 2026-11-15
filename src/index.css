@@ -392,3 +392,106 @@
     display: none;
   }
 }
+
+/* ---- Raio-X de código na foto do hero (XRayPhoto.jsx) ---- */
+@property --r {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+.xray {
+  --x: 50%;
+  --y: 50%;
+  --r: 0px;
+  position: absolute;
+  inset: 0;
+  cursor: crosshair;
+  transition: --r 0.5s var(--ease-out-expo);
+  -webkit-tap-highlight-color: transparent;
+}
+.xray[data-hover] {
+  --r: 110px;
+}
+.xray[data-full] {
+  --r: 700px;
+}
+.xray:focus-visible {
+  outline: 2px solid #ff7b00;
+  outline-offset: -4px;
+  border-radius: inherit;
+}
+.xray__layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: rgb(10 10 10 / 0.88);
+  clip-path: circle(var(--r) at var(--x) var(--y));
+  will-change: clip-path;
+  pointer-events: none;
+}
+.xray__photo--scan {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  filter: grayscale(100%) contrast(150%) sepia(100%) hue-rotate(-15deg) saturate(400%);
+}
+.xray__scan {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgb(255 94 0 / 0.16) 0 1px, transparent 1px 3px),
+    linear-gradient(rgb(255 123 0 / 0.12) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgb(255 123 0 / 0.12) 1px, transparent 1px) 0 0 / 24px 24px;
+}
+.xray__code {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 50%;
+  translate: 0 -50%;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgb(255 123 0 / 0.45);
+  border-radius: 12px;
+  background: rgb(0 0 0 / 0.7);
+  box-shadow: 0 0 24px rgb(255 94 0 / 0.25);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.62rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+@media (min-width: 640px) {
+  .xray__code {
+    font-size: 0.7rem;
+  }
+}
+.xray__ring {
+  position: absolute;
+  left: -110px;
+  top: -110px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px solid #ff7b00;
+  box-shadow:
+    0 0 16px rgb(255 94 0 / 0.7),
+    inset 0 0 16px rgb(255 94 0 / 0.45);
+  translate: var(--x) var(--y);
+  scale: 0.2;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    scale 0.5s var(--ease-out-expo),
+    opacity 0.3s;
+}
+.xray[data-hover]:not([data-full]) .xray__ring {
+  scale: 1;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .xray,
+  .xray__ring {
+    transition: none;
+  }
+}

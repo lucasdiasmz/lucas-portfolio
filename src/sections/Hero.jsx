@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaCode, FaComputerMouse, FaDownload } from 'react-icons/fa6'
 import ContactIcon from '../components/ContactIcon.jsx'
+import XRayPhoto from '../components/XRayPhoto.jsx'
 import { contacts, profile, resume } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
@@ -97,11 +98,10 @@ export default function Hero() {
         <div className="frame-glow">
           <div className="relative h-[340px] w-[260px] overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-red-900 via-neutral-900 to-black sm:h-[420px] sm:w-[320px]">
             {photoOk ? (
-              <img
+              <XRayPhoto
                 src={profile.photo}
                 alt={pick({ pt: `Foto de ${profile.name}`, en: `Photo of ${profile.name}` })}
                 onError={() => setPhotoOk(false)}
-                className="size-full object-cover grayscale-[15%] transition-transform duration-700 hover:scale-105"
               />
             ) : (
               <span className="grid size-full place-items-center text-8xl text-orange-500">{profile.name[0]}</span>
