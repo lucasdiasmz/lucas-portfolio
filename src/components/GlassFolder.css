@@ -405,7 +405,7 @@ canvas.gf-sheet-art[data-ready] {
 /* ---- convite: tremida curta de tempos em tempos, só na pasta fechada ---- */
 .gf-tilt {
   transform-origin: 50% 100%;
-  animation: gf-nudge 4.5s var(--gf-ease) var(--gf-nudge-delay, 0s) infinite;
+  animation: gf-nudge 2.2s var(--gf-ease) var(--gf-nudge-delay, 0s) infinite;
 }
 .gf-root:not([data-entered]) .gf-tilt,
 .gf-root:hover .gf-tilt,
@@ -415,25 +415,28 @@ canvas.gf-sheet-art[data-ready] {
 }
 @keyframes gf-nudge {
   0%,
-  78%,
+  64%,
   100% {
     rotate: 0deg;
     translate: 0 0;
   }
-  82% {
+  70% {
     rotate: -1.6deg;
     translate: 0 -3px;
   }
-  86% {
+  76% {
     rotate: 1.4deg;
     translate: 0 -2px;
   }
-  90% {
-    rotate: -0.9deg;
+  82% {
+    rotate: -1deg;
     translate: 0 -1px;
   }
-  94% {
-    rotate: 0.4deg;
+  88% {
+    rotate: 0.6deg;
     translate: 0 0;
+  }
+  94% {
+    rotate: -0.2deg;
   }
 }
