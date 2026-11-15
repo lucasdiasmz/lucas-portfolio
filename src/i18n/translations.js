@@ -51,6 +51,11 @@ export const translations = {
       stack: 'Tecnologias',
       filter: 'Filtrar projetos por área',
       groups: { all: 'Todos', web: 'Web', backend: 'Back-end', python: 'Python' },
+      details: 'Detalhes',
+      open: 'Abrir projeto',
+      close: 'Fechar projeto',
+      contents: 'Arquivos do projeto',
+      hint: 'Abra uma pasta para ver o projeto',
     },
     resume: {
       title: 'Currículo',
@@ -162,6 +167,11 @@ export const translations = {
       stack: 'Stack',
       filter: 'Filter projects by area',
       groups: { all: 'All', web: 'Web', backend: 'Back-end', python: 'Python' },
+      details: 'Details',
+      open: 'Open project',
+      close: 'Close project',
+      contents: 'Project files',
+      hint: 'Open a folder to see the project',
     },
     resume: {
       title: 'Résumé',
