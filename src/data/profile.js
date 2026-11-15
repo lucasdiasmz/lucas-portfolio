@@ -38,7 +38,7 @@ export const profile = {
     { title: { pt: 'Disponível', en: 'Available' }, text: { pt: 'Para estágio', en: 'For internships' } },
   ],
 
-  // Áreas que estudo e pratico. `icon`: backend | frontend | oop | games | api | web
+  // Áreas que estudo e pratico. `icon`: backend | frontend | oop | ai | games | api | web
   focusAreas: [
     {
       icon: 'backend',
@@ -61,9 +61,12 @@ export const profile = {
       text: { pt: 'Páginas únicas publicadas, com foco em conversão e contato rápido.', en: 'Published single pages focused on conversion and quick contact.' },
     },
     {
-      icon: 'games',
-      title: { pt: 'Desenvolvimento de jogos', en: 'Game development' },
-      text: { pt: 'Jogos em Python com Pygame, trabalhando em grupo.', en: 'Python games with Pygame, built as a team.' },
+      icon: 'ai',
+      title: { pt: 'Desenvolvimento avançado com IA', en: 'AI-assisted development' },
+      text: {
+        pt: 'Agentes de IA no fluxo de trabalho: planejamento, geração e revisão de código, testes e automação, sempre com validação humana.',
+        en: 'AI agents across the workflow: planning, code generation and review, testing and automation, always with human validation.',
+      },
     },
     {
       icon: 'api',

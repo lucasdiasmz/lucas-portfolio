@@ -1,4 +1,4 @@
-import { FaCubes, FaGamepad, FaGraduationCap, FaLaptopCode, FaRocket, FaServer } from 'react-icons/fa6'
+import { FaBrain, FaCubes, FaGamepad, FaGraduationCap, FaLaptopCode, FaRocket, FaServer } from 'react-icons/fa6'
 import Reveal from '../components/Reveal.jsx'
 import SplitTitle from '../components/SplitTitle.jsx'
 import { profile } from '../data/profile.js'
@@ -9,6 +9,7 @@ const icons = {
   frontend: { Icon: FaLaptopCode, color: 'text-orange-400' },
   oop: { Icon: FaCubes, color: 'text-violet-400' },
   web: { Icon: FaRocket, color: 'text-amber-300' },
+  ai: { Icon: FaBrain, color: 'text-emerald-400' },
   games: { Icon: FaGamepad, color: 'text-emerald-400' },
   api: { Icon: FaGraduationCap, color: 'text-rose-400' },
 }
