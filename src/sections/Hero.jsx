@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaCode, FaComputerMouse, FaDownload } from 'react-icons/fa6'
+import { FaComputerMouse, FaDownload } from 'react-icons/fa6'
 import ContactIcon from '../components/ContactIcon.jsx'
-import XRayPhoto from '../components/XRayPhoto.jsx'
+import HeroPortrait from '../components/HeroPortrait.jsx'
 import { contacts, profile, resume } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
@@ -42,7 +42,6 @@ export default function Hero() {
   const { lang, pick, t } = useLanguage()
   const phrases = useMemo(() => profile.typing.map((p) => p[lang] ?? p.pt), [lang])
   const typed = useTyping(phrases)
-  const [photoOk, setPhotoOk] = useState(true)
   const [first, ...rest] = profile.name.split(' ')
 
   return (
@@ -93,27 +92,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Foto na moldura com brilho laranja */}
-      <div className="relative animate-rise [animation-delay:150ms]">
-        <div className="frame-glow">
-          <div className="relative h-[340px] w-[260px] overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-red-900 via-neutral-900 to-black sm:h-[420px] sm:w-[320px]">
-            {photoOk ? (
-              <XRayPhoto
-                src={profile.photo}
-                alt={pick({ pt: `Foto de ${profile.name}`, en: `Photo of ${profile.name}` })}
-                onError={() => setPhotoOk(false)}
-              />
-            ) : (
-              <span className="grid size-full place-items-center text-8xl text-orange-500">{profile.name[0]}</span>
-            )}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-red-600/10" />
-          </div>
-        </div>
-        <p className="absolute -bottom-4 right-4 flex items-center gap-2 rounded-full border border-white/10 bg-black/70 px-4 py-2 text-[0.7rem] text-neutral-100 backdrop-blur-md sm:right-6">
-          <FaCode aria-hidden="true" className="text-orange-500" />
-          {pick(profile.badge)}
-        </p>
-      </div>
+      {/* Retrato que sai da moldura, com órbita, tecnologias e raio-x */}
+      <HeroPortrait />
 
       <a
         href="#sobre"

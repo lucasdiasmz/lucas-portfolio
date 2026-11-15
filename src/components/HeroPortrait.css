@@ -1,0 +1,365 @@
+/* ---- Retrato do hero (HeroPortrait.jsx) ----
+ * --fw/--fh: moldura | --ci: largura interna | --pw/--ph: recorte da foto.
+ * O recorte é 20% mais largo que a moldura e mais alto que ela, então a
+ * cabeça passa da borda de cima. 0.542 = centro da cabeça na largura da foto,
+ * 1.1226 = altura/largura do PNG.
+ */
+@property --r {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+.hp {
+  --fw: 270px;
+  --fh: 280px;
+  --pad: 10px;
+  --radius: 1.25rem;
+  --ci: calc(var(--fw) - 2 * var(--pad));
+  --pw: calc(var(--ci) * 1.2);
+  --ph: calc(var(--pw) * 1.1226);
+  --tx: 0;
+  --ty: 0;
+  position: relative;
+  flex-shrink: 0;
+  width: var(--fw);
+  height: calc(var(--ph) + var(--pad));
+  margin-bottom: 1rem;
+}
+@media (min-width: 640px) {
+  .hp {
+    --fw: 330px;
+    --fh: 350px;
+  }
+}
+@media (min-width: 1024px) {
+  .hp {
+    --fw: 390px;
+    --fh: 420px;
+    margin-right: 2.5rem;
+  }
+}
+
+.hp__tilt {
+  position: absolute;
+  inset: 0;
+  transform: perspective(1100px) rotateY(calc(var(--tx) * 7deg)) rotateX(calc(var(--ty) * -6deg));
+  transition: transform 0.7s var(--ease-out-expo);
+}
+
+/* anel de órbita atrás da cabeça, com um ponto que gira */
+.hp__orbit {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--ph) * 0.36);
+  width: calc(var(--fw) * 1.32);
+  aspect-ratio: 1;
+  translate: calc(-50% + var(--tx) * -10px) calc(-50% + var(--ty) * -10px);
+  border: 1px dashed rgb(255 123 0 / 0.32);
+  border-radius: 50%;
+  animation: hp-spin 40s linear infinite;
+}
+.hp__orbit::before {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border: 1px solid rgb(255 94 0 / 0.12);
+  border-radius: 50%;
+}
+.hp__orbit::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: #ff7b00;
+  box-shadow: 0 0 12px 2px rgb(255 94 0 / 0.8);
+}
+
+.hp .hp__frame {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--fw);
+  height: var(--fh);
+}
+.hp__card {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid rgb(255 255 255 / 0.06);
+  background:
+    linear-gradient(rgb(255 123 0 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgb(255 123 0 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(135deg, #7f1d1d, #171717 55%, #000);
+}
+.hp:has(.xray:focus-visible) .hp__card {
+  outline: 2px solid #ff7b00;
+  outline-offset: 3px;
+}
+.hp__halo {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: 95%;
+  aspect-ratio: 1;
+  translate: calc(-50% + var(--tx) * -14px) calc(-50% + var(--ty) * -14px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 94 0 / 0.55), rgb(255 0 0 / 0.16) 45%, transparent 70%);
+  animation: hp-breathe 7s ease-in-out infinite;
+}
+
+/* recorte da pessoa: preso às laterais e à base da moldura, livre em cima */
+.hp__person {
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: var(--pad);
+  height: var(--ph);
+  clip-path: inset(0 round 0 0 var(--radius) var(--radius));
+}
+.hp__person::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 30%;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.55), transparent);
+  pointer-events: none;
+}
+.hp__img {
+  position: absolute;
+  bottom: 0;
+  left: calc(var(--ci) / 2 - var(--pw) * 0.542);
+  width: var(--pw);
+  max-width: none;
+  height: auto;
+  animation: hp-emerge 1s var(--ease-out-expo) 0.35s both;
+}
+
+/* tecnologias flutuando em volta */
+.hp__chips {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.hp__chip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem;
+  border: 1px solid rgb(255 123 0 / 0.3);
+  border-radius: 999px;
+  background: rgb(10 10 10 / 0.72);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45), 0 0 18px rgb(255 94 0 / 0.15);
+  backdrop-filter: blur(8px);
+  color: #f5f5f5;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  translate: calc(var(--tx) * (12px + var(--i) * 5px)) calc(var(--ty) * (12px + var(--i) * 5px));
+  animation:
+    hp-pop 0.6s var(--ease-out-expo) calc(0.8s + var(--i) * 0.12s) both,
+    hp-float 6s ease-in-out calc(var(--i) * -1.5s) infinite;
+}
+.hp__chip svg {
+  font-size: 1rem;
+}
+.hp__chip-label {
+  display: none;
+}
+.hp__chip:nth-child(1) {
+  left: -8%;
+  top: 28%;
+}
+.hp__chip:nth-child(2) {
+  right: -8%;
+  top: 44%;
+}
+.hp__chip:nth-child(3) {
+  left: -6%;
+  top: 70%;
+}
+.hp__chip:nth-child(4) {
+  right: -7%;
+  top: 22%;
+}
+@media (min-width: 640px) {
+  .hp__chip {
+    padding: 0.45rem 0.85rem 0.45rem 0.6rem;
+  }
+  .hp__chip-label {
+    display: inline;
+  }
+  .hp__chip:nth-child(1) {
+    left: -24%;
+  }
+  .hp__chip:nth-child(2) {
+    right: -26%;
+  }
+  .hp__chip:nth-child(3) {
+    left: -20%;
+  }
+  .hp__chip:nth-child(4) {
+    right: -22%;
+  }
+}
+/* lado a lado com o texto: pouco espaço à direita, então os chips da
+   direita descem para os ombros e entram um pouco na moldura */
+@media (min-width: 1024px) {
+  .hp__chip:nth-child(2) {
+    right: -10%;
+    top: 60%;
+  }
+  .hp__chip:nth-child(4) {
+    right: -8%;
+    top: 80%;
+  }
+}
+
+.hp__badge {
+  position: absolute;
+  right: 1rem;
+  bottom: -1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.7);
+  backdrop-filter: blur(12px);
+  color: #f5f5f5;
+  font-size: 0.7rem;
+}
+
+/* ---- raio-x de código ---- */
+.xray {
+  --x: 50%;
+  --y: 50%;
+  --r: 0px;
+  cursor: crosshair;
+  transition: --r 0.5s var(--ease-out-expo);
+  -webkit-tap-highlight-color: transparent;
+}
+.xray:focus-visible {
+  outline: none;
+}
+.xray[data-hover] {
+  --r: 110px;
+}
+.xray[data-full] {
+  --r: 900px;
+}
+.xray__layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: circle(var(--r) at var(--x) var(--y));
+  will-change: clip-path;
+  pointer-events: none;
+}
+.xray__silhouette {
+  background:
+    repeating-linear-gradient(0deg, rgb(255 94 0 / 0.18) 0 1px, transparent 1px 3px),
+    linear-gradient(rgb(255 123 0 / 0.14) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgb(255 123 0 / 0.14) 1px, transparent 1px) 0 0 / 24px 24px,
+    rgb(10 10 10 / 0.9);
+  -webkit-mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.542) bottom 0 / var(--pw) auto;
+  mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.542) bottom 0 / var(--pw) auto;
+}
+.xray__photo--scan {
+  opacity: 0.6;
+  filter: grayscale(100%) contrast(150%) sepia(100%) hue-rotate(-15deg) saturate(400%);
+  animation: none;
+}
+.xray__code {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 18%;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgb(255 123 0 / 0.45);
+  border-radius: 12px;
+  background: rgb(0 0 0 / 0.75);
+  box-shadow: 0 0 24px rgb(255 94 0 / 0.25);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.62rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+@media (min-width: 640px) {
+  .xray__code {
+    font-size: 0.72rem;
+  }
+}
+.xray__ring {
+  position: absolute;
+  left: -110px;
+  top: -110px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px solid #ff7b00;
+  box-shadow:
+    0 0 16px rgb(255 94 0 / 0.7),
+    inset 0 0 16px rgb(255 94 0 / 0.45);
+  translate: var(--x) var(--y);
+  scale: 0.2;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    scale 0.5s var(--ease-out-expo),
+    opacity 0.3s;
+}
+.xray[data-hover]:not([data-full]) .xray__ring {
+  scale: 1;
+  opacity: 1;
+}
+
+@keyframes hp-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes hp-breathe {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.75;
+  }
+}
+@keyframes hp-emerge {
+  from {
+    opacity: 0;
+    transform: translateY(14%);
+  }
+}
+@keyframes hp-pop {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+@keyframes hp-float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hp__tilt {
+    transform: none;
+  }
+  .xray,
+  .xray__ring {
+    transition: none;
+  }
+}
