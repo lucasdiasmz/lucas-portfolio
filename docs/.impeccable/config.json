@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/sobre-propostas.html"
+        ],
+        "createdAt": "2026-11-16T21:26:41.929Z",
+        "reason": "Claude: neon glow is the site's documented design system (DESIGN-SYSTEM-NEON.md rule 3)"
+      }
+    ]
+  }
+}

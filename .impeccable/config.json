@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "docs/sobre-propostas.html"
+        ],
+        "createdAt": "2026-11-16T21:28:09.813Z",
+        "reason": "Claude: line-height 1 only on single-line display titles and the big stat in proposal C"
+      }
+    ]
+  }
+}

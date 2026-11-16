@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Propostas Sobre mim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --night: #000;
+    --paper: #fff;
+    --mist: #a3a3a3;
+    --dim: #8a8a8a;
+    --line: rgb(255 255 255 / 0.1);
+    --cyan: #00f0ff;
+    --cyan-300: #7df9ff;
+    --magenta: #ff2bd6;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --title-glow: 0 0 22px rgb(0 240 255 / 0.45), 0 0 60px rgb(255 43 214 / 0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--night);
+    color: var(--paper);
+    font-family: "Michroma", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-attachment: fixed;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; border-radius: 4px; }
+
+  /* moldura de cada proposta (só para comparar, não vai para o site) */
+  .proposal { border-top: 1px solid var(--line); padding: 28px 16px 96px; }
+  .proposal__tag {
+    max-width: 72rem; margin: 0 auto 56px; display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap;
+    font-size: 0.8rem; color: var(--mist);
+  }
+  .proposal__tag b { color: var(--magenta); font-weight: 400; }
+  .section { max-width: 72rem; margin: 0 auto; padding: 0 8px; }
+  .title {
+    font-size: clamp(2.2rem, 6vw, 4.2rem); font-weight: 400; line-height: 1;
+    text-align: center; text-shadow: var(--title-glow); margin-bottom: 56px;
+  }
+  @media (min-width: 640px) { .proposal { padding: 32px 40px 120px; } }
+
+  /* ============ A: Manchete viva ============ */
+  .a-lead {
+    font-size: clamp(1.25rem, 3.1vw, 2.35rem); line-height: 1.55; max-width: 26ch;
+    letter-spacing: -0.01em;
+  }
+  .a-term {
+    position: relative; display: inline; color: var(--cyan);
+    background-image: linear-gradient(90deg, var(--cyan), var(--magenta));
+    background-size: 100% 2px; background-position: 0 92%; background-repeat: no-repeat;
+    transition: color 0.25s, background-size 0.35s var(--ease);
+  }
+  .a-term:hover, .a-term[aria-expanded="true"] { color: var(--paper); background-size: 100% 100%; background-position: 0 0; color: #000; }
+  .a-term { padding: 0 0.12em; border-radius: 3px; }
+  .a-detail {
+    margin-top: 28px; min-height: 3.4em; max-width: 46ch; font-size: 0.85rem; line-height: 1.9; color: var(--mist);
+    border-left: 2px solid var(--cyan); padding-left: 18px;
+  }
+  .a-detail strong { color: var(--paper); font-weight: 400; }
+  .a-detail.is-swap { animation: a-in 0.45s var(--ease); }
+  @keyframes a-in { from { opacity: 0; transform: translateY(6px); } }
+  .a-facts {
+    margin-top: 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    border-top: 1px solid var(--line);
+  }
+  .a-facts li { list-style: none; padding: 22px 24px 0 0; font-size: 0.8rem; color: var(--mist); line-height: 1.8; }
+  .a-facts strong { display: block; color: var(--paper); font-size: 1rem; font-weight: 400; margin-bottom: 4px; }
+  .a-facts .live { display: flex; align-items: center; gap: 10px; }
+  .live::before {
+    content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan);
+    box-shadow: 0 0 0 3px rgb(0 240 255 / 0.2);
+  }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgb(0 240 255 / 0); } 100% { box-shadow: 0 0 0 0 rgb(0 240 255 / 0); } }
+
+  /* ============ B: Trajetória ============ */
+  .b-lead { font-size: clamp(1rem, 2vw, 1.3rem); line-height: 1.8; max-width: 40ch; margin: 0 auto; text-align: center; }
+  .b-lead span { color: var(--cyan); }
+  .b-track { position: relative; margin: 72px auto 0; max-width: 64rem; }
+  .b-rail { position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: var(--line); }
+  .b-rail i {
+    position: absolute; inset: 0 auto 0 0; width: var(--progress, 0%);
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    box-shadow: 0 0 14px rgb(0 240 255 / 0.6);
+    transition: width 1.6s var(--ease);
+  }
+  .b-steps { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); list-style: none; }
+  .b-step { text-align: center; }
+  .b-step button { display: grid; justify-items: center; gap: 18px; width: 100%; padding: 0 4px; }
+  .b-dot {
+    width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--dim); background: var(--night);
+    transition: border-color 0.3s, background 0.3s, transform 0.3s var(--ease);
+  }
+  .b-step.is-done .b-dot { border-color: var(--cyan); background: var(--cyan); }
+  .b-step.is-now .b-dot { border-color: var(--magenta); background: var(--night); box-shadow: 0 0 0 6px rgb(255 43 214 / 0.18), 0 0 22px rgb(255 43 214 / 0.7); }
+  .b-step.is-next .b-dot { border-style: dashed; }
+  .b-step button:hover .b-dot, .b-step button[aria-pressed="true"] .b-dot { transform: scale(1.25); }
+  .b-name { font-size: 0.78rem; line-height: 1.5; color: var(--mist); transition: color 0.25s; }
+  .b-step button[aria-pressed="true"] .b-name, .b-step button:hover .b-name { color: var(--paper); }
+  .b-note {
+    margin: 48px auto 0; max-width: 40rem; text-align: center; font-size: 0.85rem; line-height: 1.9; color: var(--mist);
+    min-height: 3.8em;
+  }
+  .b-note strong { color: var(--paper); font-weight: 400; }
+  .b-note.is-swap { animation: a-in 0.45s var(--ease); }
+  @media (max-width: 720px) {
+    .b-rail { left: 11px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
+    .b-rail i { inset: 0 0 auto 0; width: 100%; height: var(--progress, 0%); transition: height 1.6s var(--ease); }
+    .b-steps { grid-template-columns: 1fr; gap: 26px; }
+    .b-step { text-align: left; }
+    .b-step button { grid-template-columns: 24px 1fr; justify-items: start; align-items: center; gap: 18px; padding: 0; }
+    .b-note { text-align: left; }
+  }
+
+  /* ============ C: Três perguntas ============ */
+  .c-grid { display: grid; gap: 40px; }
+  @media (min-width: 900px) { .c-grid { grid-template-columns: 1fr 1.15fr; gap: 72px; align-items: start; } }
+  .c-tabs { display: grid; gap: 4px; }
+  .c-tab {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px; text-align: left;
+    padding: 18px 0; border-bottom: 1px solid var(--line);
+    font-size: clamp(1.05rem, 2.4vw, 1.6rem); color: var(--dim); transition: color 0.3s;
+  }
+  .c-tab::after {
+    content: ""; flex: none; width: 34px; height: 2px; background: var(--line);
+    transition: width 0.4s var(--ease), background 0.3s;
+  }
+  .c-tab:hover { color: var(--mist); }
+  .c-tab[aria-selected="true"] { color: var(--paper); text-shadow: var(--title-glow); }
+  .c-tab[aria-selected="true"]::after { width: 64px; background: linear-gradient(90deg, var(--cyan), var(--magenta)); }
+  .c-panel {
+    position: relative; padding: 36px; border-radius: 22px;
+    background: rgb(255 255 255 / 0.035); border: 1px solid rgb(255 255 255 / 0.09);
+    backdrop-filter: blur(14px); overflow: hidden; min-height: 21rem;
+  }
+  .c-panel::before {
+    content: ""; position: absolute; width: 260px; height: 260px; right: -90px; top: -110px; border-radius: 50%;
+    background: var(--glow, rgb(0 240 255 / 0.22)); filter: blur(80px); transition: background 0.6s;
+  }
+  .c-panel[hidden] { display: none; }
+  .c-panel.is-swap > * { animation: c-in 0.5s var(--ease) both; }
+  .c-panel.is-swap > *:nth-child(2) { animation-delay: 60ms; }
+  .c-panel.is-swap > *:nth-child(3) { animation-delay: 120ms; }
+  @keyframes c-in { from { opacity: 0; transform: translateX(14px); } }
+  .c-big { position: relative; font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1; color: var(--cyan); }
+  .c-big small { display: block; font-size: 0.8rem; color: var(--mist); margin-top: 12px; line-height: 1.6; }
+  .c-text { position: relative; margin-top: 32px; font-size: 0.9rem; line-height: 1.95; max-width: 38ch; }
+  .c-pill {
+    position: relative; margin-top: 28px; display: inline-flex; gap: 10px; align-items: center;
+    padding: 8px 16px; border-radius: 999px; font-size: 0.78rem;
+    border: 1px solid rgb(0 240 255 / 0.35); background: rgb(0 240 255 / 0.08); color: var(--cyan-300);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PROPOSTA A ================= -->
+<section class="proposal" aria-labelledby="a-title">
+  <p class="proposal__tag"><b>Proposta A</b> Manchete viva: uma frase grande, os termos-chave abrem o detalhe</p>
+  <div class="section">
+    <h2 class="title" id="a-title">Sobre mim</h2>
+    <p class="a-lead">
+      Estudo
+      <button class="a-term" data-k="puc" aria-expanded="true" aria-controls="a-detail">Engenharia de Software</button>
+      na PUC Minas, construo com
+      <button class="a-term" data-k="stack" aria-expanded="false" aria-controls="a-detail">Java e React</button>
+      e procuro meu
+      <button class="a-term" data-k="estagio" aria-expanded="false" aria-controls="a-detail">primeiro estágio</button>.
+    </p>
+    <p class="a-detail" id="a-detail" aria-live="polite"></p>
+
+    <ul class="a-facts">
+      <li><strong>2º período</strong>Graduação em andamento</li>
+      <li><strong>Português e inglês</strong>Inglês entre intermediário e avançado</li>
+      <li><strong class="live">Disponível</strong>Para estágio</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= PROPOSTA B ================= -->
+<section class="proposal" aria-labelledby="b-title">
+  <p class="proposal__tag"><b>Proposta B</b> Trajetória: o caminho de estudo vira uma linha que se desenha</p>
+  <div class="section">
+    <h2 class="title" id="b-title">Sobre mim</h2>
+    <p class="b-lead">Estudante de Engenharia de Software na <span>PUC Minas</span>. Este é o caminho até aqui.</p>
+
+    <div class="b-track" id="b-track">
+      <div class="b-rail"><i></i></div>
+      <ol class="b-steps">
+        <li class="b-step is-done"><button aria-pressed="false" data-note="<strong>Python.</strong> Primeira linguagem: lógica, algoritmos e os primeiros scripts."><span class="b-dot"></span><span class="b-name">Python</span></button></li>
+        <li class="b-step is-done"><button aria-pressed="false" data-note="<strong>Orientação a objetos.</strong> Classes, herança e responsabilidades bem divididas."><span class="b-dot"></span><span class="b-name">Orientação a objetos</span></button></li>
+        <li class="b-step is-done"><button aria-pressed="false" data-note="<strong>Web.</strong> HTML, CSS e JavaScript, com landing pages publicadas."><span class="b-dot"></span><span class="b-name">Web</span></button></li>
+        <li class="b-step is-now"><button aria-pressed="true" data-note="<strong>Agora: Java e Spring Boot.</strong> APIs REST, do controlador à persistência."><span class="b-dot"></span><span class="b-name">Java + Spring</span></button></li>
+        <li class="b-step is-now"><button aria-pressed="false" data-note="<strong>Agora: React.</strong> Interfaces responsivas, como este portfólio."><span class="b-dot"></span><span class="b-name">React</span></button></li>
+        <li class="b-step is-next"><button aria-pressed="false" data-note="<strong>Próximo passo: estágio.</strong> Disponível agora, de preferência em equipe multinacional. Uso inglês no dia a dia."><span class="b-dot"></span><span class="b-name">Estágio</span></button></li>
+      </ol>
+    </div>
+    <p class="b-note" id="b-note" aria-live="polite"></p>
+  </div>
+</section>
+
+<!-- ================= PROPOSTA C ================= -->
+<section class="proposal" aria-labelledby="c-title">
+  <p class="proposal__tag"><b>Proposta C</b> Três perguntas: um assunto por vez, com um dado em destaque</p>
+  <div class="section">
+    <h2 class="title" id="c-title">Sobre mim</h2>
+    <div class="c-grid">
+      <div class="c-tabs" role="tablist" aria-label="Sobre mim">
+        <button class="c-tab" role="tab" id="c-t1" aria-controls="c-p1" aria-selected="true">Quem sou</button>
+        <button class="c-tab" role="tab" id="c-t2" aria-controls="c-p2" aria-selected="false" tabindex="-1">O que estudo agora</button>
+        <button class="c-tab" role="tab" id="c-t3" aria-controls="c-p3" aria-selected="false" tabindex="-1">O que procuro</button>
+      </div>
+      <div>
+        <div class="c-panel" role="tabpanel" id="c-p1" aria-labelledby="c-t1">
+          <p class="c-big">2º período<small>Engenharia de Software, PUC Minas</small></p>
+          <p class="c-text">Gosto de entender por que o código é escrito de um jeito, não só de fazer funcionar.</p>
+        </div>
+        <div class="c-panel" role="tabpanel" id="c-p2" aria-labelledby="c-t2" hidden style="--glow: rgb(255 43 214 / 0.2)">
+          <p class="c-big">Java + React<small>Back-end com Spring Boot, front-end com React</small></p>
+          <p class="c-text">Antes passei por Python, orientação a objetos e web. Fora das aulas, gosto de desenvolvimento de jogos.</p>
+        </div>
+        <div class="c-panel" role="tabpanel" id="c-p3" aria-labelledby="c-t3" hidden>
+          <p class="c-big">Estágio<small>Disponível agora</small></p>
+          <p class="c-text">Quero crescer em equipes grandes, de preferência multinacionais. Já uso inglês no dia a dia de estudo.</p>
+          <p class="c-pill">Português e inglês</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // A: termos-chave trocam o detalhe
+  const aDetails = {
+    puc: '<strong>PUC Minas, 2º período.</strong> Gosto de entender por que o código é escrito de um jeito, não só de fazer funcionar.',
+    stack: '<strong>Java + Spring Boot no back-end, React no front-end.</strong> Antes disso passei por Python, orientação a objetos e web.',
+    estagio: '<strong>Disponível para estágio.</strong> De preferência em equipe multinacional; já uso inglês no dia a dia de estudo.',
+  }
+  const aBox = document.getElementById('a-detail')
+  const aTerms = document.querySelectorAll('.a-term')
+  function showA(btn) {
+    aTerms.forEach((t) => t.setAttribute('aria-expanded', String(t === btn)))
+    aBox.innerHTML = aDetails[btn.dataset.k]
+    aBox.classList.remove('is-swap'); void aBox.offsetWidth; aBox.classList.add('is-swap')
+  }
+  aTerms.forEach((t) => {
+    t.addEventListener('click', () => showA(t))
+    t.addEventListener('mouseenter', () => showA(t))
+  })
+  aBox.innerHTML = aDetails.puc
+
+  // B: a linha se desenha uma vez ao aparecer; cada etapa troca a nota
+  const track = document.getElementById('b-track')
+  const bNote = document.getElementById('b-note')
+  const bBtns = track.querySelectorAll('button')
+  function showB(btn) {
+    bBtns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)))
+    bNote.innerHTML = btn.dataset.note
+    bNote.classList.remove('is-swap'); void bNote.offsetWidth; bNote.classList.add('is-swap')
+  }
+  bBtns.forEach((b) => b.addEventListener('click', () => showB(b)))
+  bNote.innerHTML = track.querySelector('[aria-pressed="true"]').dataset.note
+  new IntersectionObserver(([e], obs) => {
+    if (e.isIntersecting) { track.style.setProperty('--progress', '78%'); obs.disconnect() }
+  }, { threshold: 0.5 }).observe(track)
+
+  // C: abas acessíveis (setas trocam de aba)
+  const tabs = [...document.querySelectorAll('.c-tab')]
+  function selectC(tab) {
+    tabs.forEach((t) => {
+      const on = t === tab
+      t.setAttribute('aria-selected', String(on))
+      t.tabIndex = on ? 0 : -1
+      const p = document.getElementById(t.getAttribute('aria-controls'))
+      p.hidden = !on
+      if (on) { p.classList.remove('is-swap'); void p.offsetWidth; p.classList.add('is-swap') }
+    })
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => selectC(t))
+    t.addEventListener('keydown', (e) => {
+      const d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0
+      if (!d) return
+      e.preventDefault()
+      const n = tabs[(i + d + tabs.length) % tabs.length]
+      selectC(n); n.focus()
+    })
+  })
+</script>
+</body>
+</html>
