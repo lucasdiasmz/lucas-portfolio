@@ -1,38 +1,73 @@
 @import "tailwindcss";
 
 /*
-  Identidade visual: estúdio noturno.
-  Três cores: Ink Black (#050505) no fundo, Paper White (#FFFFFF) no texto e
-  Cornflower Blue (#548cff) como único destaque. Os outros tons são só variações
-  dessas três (azul mais claro ou mais escuro, branco com transparência).
-  Tipografia larga e técnica (Michroma), vidro fosco nos cartões.
+  Identidade visual: estúdio noturno em neon.
+  Preto (#000) no fundo, branco no texto e dois acentos neon: ciano (#00f0ff)
+  como destaque principal e magenta (#ff2bd6) como contraponto. Tipografia
+  larga e técnica (Michroma), vidro fosco nos cartões.
+
+  Fonte única de cor do site: CSS customizado lê estes tokens com var() e
+  color-mix(); o JS (canvas, SVG) lê pelo src/theme.js. Trocar a paleta é
+  mexer só aqui. "static" garante que todos virem variáveis CSS, mesmo os
+  que nenhuma classe usa, porque o JS depende deles.
 */
-@theme {
+@theme static {
   --font-sans: "Michroma", ui-sans-serif, system-ui, sans-serif;
 
-  --color-night: #050505;
+  /* Neutros */
+  --color-night: #000000;
+  --color-paper: #ffffff;
   --color-coal: #0a0a0a;
-  --color-ember: #548cff;
-  --color-flame: #3d73e6;
-  --color-glow: #93b3ff;
   --color-mist: #a3a3a3;
+  /* superfícies escuras, do mais fundo ao mais claro */
+  --color-surface-1: #080808;
+  --color-surface-2: #0a0a0a;
+  --color-surface-3: #0d0d0d;
+  --color-surface-4: #111111;
+  --color-surface-5: #141414;
+  --color-surface-6: #1a1a1a;
+  --color-surface-7: #262626;
 
-  /* A escala brand do Tailwind passa a derivar do Cornflower Blue (500) */
-  --color-brand-50: #eef4ff;
-  --color-brand-100: #dbe7ff;
-  --color-brand-200: #bad0ff;
-  --color-brand-300: #93b3ff;
-  --color-brand-400: #7199ff;
-  --color-brand-500: #548cff;
-  --color-brand-600: #3d73e6;
-  --color-brand-700: #2f5bbf;
-  --color-brand-800: #274a99;
-  --color-brand-900: #1d3670;
-  --color-brand-950: #0f1d3d;
+  /* Neon */
+  --color-neon-cyan: #00f0ff;
+  --color-neon-magenta: #ff2bd6;
+  --color-on-neon: #000000; /* texto sobre fundo neon sólido ou em gradiente */
+
+  /* Nomes históricos do destaque, agora em ciano */
+  --color-ember: var(--color-brand-500);
+  --color-flame: var(--color-brand-600);
+  --color-glow: var(--color-brand-300);
+
+  /* Escala brand derivada do ciano (500) */
+  --color-brand-50: #f0feff;
+  --color-brand-100: #e6fdff;
+  --color-brand-200: #befbff;
+  --color-brand-300: #7df9ff;
+  --color-brand-400: #33f5ff;
+  --color-brand-500: var(--color-neon-cyan);
+  --color-brand-600: #00b8d9;
+  --color-brand-700: #0094b0;
+  --color-brand-800: #006b80;
+  --color-brand-900: #004a59;
+  --color-brand-950: #002830;
 
   --color-danger: #ff6b6b;
   --color-success: #4ade80;
   --color-warning: #fbbf24;
+
+  /* Gradientes e brilhos neon */
+  --gradient-neon: linear-gradient(90deg, var(--color-neon-cyan), var(--color-neon-magenta));
+  --gradient-neon-frame: linear-gradient(
+    45deg,
+    var(--color-flame),
+    var(--color-neon-cyan),
+    var(--color-neon-magenta),
+    var(--color-neon-cyan),
+    var(--color-flame)
+  );
+  --text-shadow-title:
+    0 0 22px color-mix(in srgb, var(--color-neon-cyan) 45%, transparent),
+    0 0 60px color-mix(in srgb, var(--color-neon-magenta) 18%, transparent);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -64,7 +99,7 @@
   }
   body {
     background: var(--color-night);
-    color: #fff;
+    color: var(--color-paper);
     font-family: var(--font-sans);
     font-size: 0.9375rem;
     line-height: 1.8;
@@ -72,15 +107,21 @@
     -webkit-font-smoothing: antialiased;
   }
   ::selection {
-    background: var(--color-ember);
-    color: #fff;
+    background: var(--color-neon-magenta);
+    color: var(--color-on-neon);
+  }
+  /* Títulos em branco com brilho neon; spans de destaque dentro deles mantêm a cor própria */
+  h1,
+  h2 {
+    color: var(--color-paper);
+    text-shadow: var(--text-shadow-title);
   }
   :focus-visible {
     outline: 2px solid var(--color-glow);
     outline-offset: 3px;
     border-radius: 6px;
   }
-  /* Cursor personalizado: o nativo some só quando o cursor laranja está ativo */
+  /* Cursor personalizado: o nativo some só quando o cursor neon está ativo */
   html.has-cursor,
   html.has-cursor * {
     cursor: none !important;
@@ -92,7 +133,7 @@
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: var(--color-night);
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(var(--color-ember), var(--color-flame));
@@ -115,7 +156,8 @@
   height: 100%;
   object-fit: cover;
   /* Desfoque leve: o código vira textura, sem disputar atenção com o conteúdo */
-  filter: blur(6px) saturate(0.9) hue-rotate(195deg); /* o vídeo é laranja: gira o matiz para o azul da marca */
+  opacity: 0.22;
+  filter: blur(6px) grayscale(1) contrast(1.15); /* textura em preto e branco: a cor fica só com o neon */
   transform: scale(1.08); /* esconde a borda clara que o blur cria */
 }
 .site-bg::before {
@@ -124,10 +166,10 @@
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(60rem 40rem at 50% -10%, rgb(84 140 255 / 0.14), transparent 70%),
-    linear-gradient(rgb(255 255 255 / 0.03) 1px, transparent 1px) 0 0 / 56px 56px,
-    linear-gradient(90deg, rgb(255 255 255 / 0.03) 1px, transparent 1px) 0 0 / 56px 56px,
-    radial-gradient(ellipse at center, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0.9));
+    radial-gradient(60rem 40rem at 50% -10%, color-mix(in srgb, var(--color-neon-cyan) 10%, transparent), transparent 70%),
+    linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px) 0 0 / 56px 56px,
+    radial-gradient(ellipse at center, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.88));
 }
 .site-bg::after {
   content: "";
@@ -138,7 +180,7 @@
   width: 34rem;
   height: 34rem;
   border-radius: 9999px;
-  background: rgb(84 140 255 / 0.1);
+  background: color-mix(in srgb, var(--color-neon-magenta) 7%, transparent);
   filter: blur(140px);
   animation: orb 22s ease-in-out infinite;
 }
@@ -158,10 +200,10 @@
   transition: border-color 0.4s, box-shadow 0.4s;
 }
 .navbar:hover {
-  border-color: rgb(147 179 255 / 0.5);
+  border-color: color-mix(in srgb, var(--color-glow) 50%, transparent);
   box-shadow:
-    0 0 25px rgb(84 140 255 / 0.45),
-    0 0 45px rgb(84 140 255 / 0.25);
+    0 0 25px color-mix(in srgb, var(--color-ember) 45%, transparent),
+    0 0 45px color-mix(in srgb, var(--color-ember) 25%, transparent);
 }
 .navbar-shine {
   position: absolute;
@@ -220,16 +262,16 @@
   border-radius: 9999px;
   padding: 0.75rem 1.5rem;
   font-size: 0.8rem;
-  color: #fff;
-  background: linear-gradient(90deg, var(--color-ember), var(--color-flame));
-  box-shadow: 0 6px 24px rgb(84 140 255 / 0.3);
+  color: var(--color-on-neon);
+  background: var(--gradient-neon);
+  box-shadow: 0 6px 28px color-mix(in srgb, var(--color-neon-cyan) 35%, transparent);
   transition:
     transform 0.3s var(--ease-out-expo),
     box-shadow 0.3s;
 }
 .btn-fire:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 34px rgb(84 140 255 / 0.55);
+  box-shadow: 0 10px 38px color-mix(in srgb, var(--color-neon-magenta) 50%, transparent);
 }
 .btn-ghost {
   display: inline-flex;
@@ -238,7 +280,7 @@
   border-radius: 9999px;
   padding: 0.75rem 1.5rem;
   font-size: 0.8rem;
-  color: #fff;
+  color: var(--color-paper);
   border: 1px solid rgb(255 255 255 / 0.25);
   background: rgb(255 255 255 / 0.04);
   transition:
@@ -265,9 +307,9 @@
     box-shadow 0.4s;
 }
 .glass-hover:hover {
-  border-color: rgb(84 140 255 / 0.45);
+  border-color: color-mix(in srgb, var(--color-ember) 45%, transparent);
   transform: translateY(-6px);
-  box-shadow: 0 18px 50px -12px rgb(84 140 255 / 0.35);
+  box-shadow: 0 18px 50px -12px color-mix(in srgb, var(--color-ember) 35%, transparent);
 }
 
 /* Moldura com brilho em movimento (foto do topo) */
@@ -282,7 +324,7 @@
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(45deg, #3d73e6, #548cff, #93b3ff, #3d73e6) 0 0 / 300% auto;
+  background: var(--gradient-neon-frame) 0 0 / 300% auto;
   filter: blur(8px);
   opacity: 0.5;
   animation: glow-move 5s linear infinite;
@@ -302,8 +344,8 @@
 
 .glow-text {
   text-shadow:
-    0 0 10px rgb(84 140 255 / 0.55),
-    0 0 26px rgb(84 140 255 / 0.35);
+    0 0 10px color-mix(in srgb, var(--color-ember) 55%, transparent),
+    0 0 26px color-mix(in srgb, var(--color-ember) 35%, transparent);
 }
 
 /* ---------- Animações de entrada ---------- */

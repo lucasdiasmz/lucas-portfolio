@@ -15,8 +15,8 @@
   aspect-ratio: 2.15 / 1;
   overflow: hidden;
   /* some suave nas bordas, sem corte seco do canvas */
-  -webkit-mask: linear-gradient(to bottom, transparent, #050505 8%, #050505 94%, transparent);
-  mask: linear-gradient(to bottom, transparent, #050505 8%, #050505 94%, transparent);
+  -webkit-mask: linear-gradient(to bottom, transparent, var(--color-night) 8%, var(--color-night) 94%, transparent);
+  mask: linear-gradient(to bottom, transparent, var(--color-night) 8%, var(--color-night) 94%, transparent);
 }
 @media (max-width: 639px) {
   .so {
@@ -55,7 +55,7 @@
   border-radius: 50%;
 }
 .so__core:focus-visible {
-  outline: 2px solid #93b3ff;
+  outline: 2px solid var(--color-glow);
   outline-offset: 6px;
 }
 
@@ -120,15 +120,15 @@
 }
 .so__disc:focus-visible {
   outline: none;
-  border-color: #93b3ff;
+  border-color: var(--color-glow);
 }
 
 /* Ícone branco; a cor da marca aparece no destaque */
 .so__icon {
   width: 44%;
   height: 44%;
-  color: #ffffff;
-  filter: drop-shadow(0 0 6px rgb(84 140 255 / 0.45));
+  color: var(--color-paper);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-ember) 45%, transparent));
   transition:
     color 0.35s,
     filter 0.35s;
@@ -138,21 +138,21 @@
   filter: drop-shadow(0 0 8px color-mix(in srgb, var(--brand) 55%, transparent));
 }
 
-/* Destaque: borda e sombra laranja do glass-hover do projeto */
+/* Destaque: borda e sombra neon do glass-hover do projeto */
 .so__badge:is(.is-hot, .is-sel) .so__disc {
   scale: 1.14;
-  border-color: rgb(84 140 255 / 0.6);
+  border-color: color-mix(in srgb, var(--color-ember) 60%, transparent);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.15),
-    0 0 0 4px rgb(84 140 255 / 0.12),
-    0 18px 50px -12px rgb(84 140 255 / 0.55);
+    0 0 0 4px color-mix(in srgb, var(--color-ember) 12%, transparent),
+    0 18px 50px -12px color-mix(in srgb, var(--color-ember) 55%, transparent);
 }
 .so__badge.is-sel .so__disc {
-  border-color: #548cff;
+  border-color: var(--color-ember);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.2),
-    0 0 0 5px rgb(84 140 255 / 0.2),
-    0 0 40px rgb(84 140 255 / 0.5);
+    0 0 0 5px color-mix(in srgb, var(--color-ember) 20%, transparent),
+    0 0 40px color-mix(in srgb, var(--color-ember) 50%, transparent);
 }
 
 /* Tooltip (só na cúpula): pílula de vidro com o nome */
@@ -162,7 +162,7 @@
   bottom: calc(100% + 0.7rem);
   translate: -50% 4px;
   padding: 0.4rem 0.75rem;
-  border: 1px solid rgb(84 140 255 / 0.35);
+  border: 1px solid color-mix(in srgb, var(--color-ember) 35%, transparent);
   border-radius: 999px;
   background: rgb(0 0 0 / 0.85);
   backdrop-filter: blur(6px);
@@ -204,7 +204,7 @@
   transition-delay: 0.7s;
 }
 .so[data-mode='globe'] .so__badge:is(.is-hot, .is-sel) .so__label {
-  color: #93b3ff;
+  color: var(--color-glow);
 }
 
 /* Cartão da tecnologia: abre ao lado do badge escolhido */
@@ -215,14 +215,14 @@
   top: var(--y);
   width: min(17rem, calc(100vw - 2rem));
   padding: 1.1rem 1.2rem 1.2rem;
-  border: 1px solid rgb(84 140 255 / 0.45);
+  border: 1px solid color-mix(in srgb, var(--color-ember) 45%, transparent);
   border-radius: 1.25rem;
   background: linear-gradient(160deg, rgb(255 255 255 / 0.08), rgb(0 0 0 / 0.82));
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.12),
-    0 24px 60px -18px rgb(84 140 255 / 0.45);
+    0 24px 60px -18px color-mix(in srgb, var(--color-ember) 45%, transparent);
   translate: 2.6rem -50%;
   transform-origin: 0 50%;
   animation: so-card-in 0.5s var(--ease-out-expo) both;
@@ -290,13 +290,13 @@
 }
 .so__card-close:hover {
   color: #fff;
-  border-color: #548cff;
+  border-color: var(--color-ember);
 }
 .so__card-meta {
   margin: 0.9rem 0 0;
   font-size: 0.62rem;
   line-height: 1.6;
-  color: #93b3ff;
+  color: var(--color-glow);
 }
 .so__card-list {
   display: grid;
@@ -320,8 +320,8 @@
   width: 0.38rem;
   height: 0.38rem;
   border-radius: 50%;
-  background: #548cff;
-  box-shadow: 0 0 8px rgb(84 140 255 / 0.8);
+  background: var(--color-ember);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-ember) 80%, transparent);
 }
 
 .so__hint {

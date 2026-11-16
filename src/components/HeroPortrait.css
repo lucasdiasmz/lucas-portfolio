@@ -49,7 +49,7 @@
   width: calc(var(--fw) * 1.32);
   aspect-ratio: 1;
   translate: calc(-50% + var(--tx) * -10px) calc(-50% + var(--ty) * -10px);
-  border: 1px dashed rgb(84 140 255 / 0.32);
+  border: 1px dashed color-mix(in srgb, var(--color-ember) 32%, transparent);
   border-radius: 50%;
   animation: hp-spin 40s linear infinite;
 }
@@ -57,7 +57,7 @@
   content: "";
   position: absolute;
   inset: 14%;
-  border: 1px solid rgb(84 140 255 / 0.12);
+  border: 1px solid color-mix(in srgb, var(--color-ember) 12%, transparent);
   border-radius: 50%;
 }
 .hp__orbit::after {
@@ -69,8 +69,8 @@
   height: 8px;
   margin-left: -4px;
   border-radius: 50%;
-  background: #548cff;
-  box-shadow: 0 0 12px 2px rgb(84 140 255 / 0.8);
+  background: var(--color-neon-magenta);
+  box-shadow: 0 0 14px 3px color-mix(in srgb, var(--color-neon-magenta) 85%, transparent);
 }
 
 .hp .hp__frame {
@@ -87,9 +87,9 @@
   border-radius: var(--radius);
   border: 1px solid rgb(255 255 255 / 0.06);
   background:
-    linear-gradient(rgb(84 140 255 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(90deg, rgb(84 140 255 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(135deg, #1d3670, #0d1119 55%, #050505);
+    linear-gradient(color-mix(in srgb, var(--color-ember) 7%, transparent) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, color-mix(in srgb, var(--color-ember) 7%, transparent) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(135deg, var(--color-surface-7), var(--color-surface-3) 55%, var(--color-night));
 }
 .hp__halo {
   position: absolute;
@@ -99,7 +99,7 @@
   aspect-ratio: 1;
   translate: calc(-50% + var(--tx) * -14px) calc(-50% + var(--ty) * -14px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(84 140 255 / 0.55), rgb(84 140 255 / 0.16) 45%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-ember) 55%, transparent), color-mix(in srgb, var(--color-ember) 16%, transparent) 45%, transparent 70%);
   animation: hp-breathe 7s ease-in-out infinite;
 }
 
@@ -127,6 +127,8 @@
   width: var(--pw);
   max-width: none;
   height: auto;
+  /* foto em preto e branco; a cor neon só aparece na máscara (foto-cyber) */
+  filter: grayscale(1) contrast(1.08);
   animation: hp-emerge 1s var(--ease-out-expo) 0.35s both;
 }
 
@@ -145,12 +147,12 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.5rem;
-  border: 1px solid rgb(84 140 255 / 0.3);
+  border: 1px solid color-mix(in srgb, var(--color-ember) 30%, transparent);
   border-radius: 999px;
   background: rgb(0 0 0 / 0.72);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45), 0 0 18px rgb(84 140 255 / 0.15);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45), 0 0 18px color-mix(in srgb, var(--color-ember) 15%, transparent);
   backdrop-filter: blur(8px);
-  color: #ffffff;
+  color: var(--color-paper);
   font-size: 0.72rem;
   white-space: nowrap;
   translate: calc(var(--tx) * (12px + var(--i) * 5px)) calc(var(--ty) * (12px + var(--i) * 5px));
@@ -226,7 +228,7 @@
   border-radius: 999px;
   background: rgb(0 0 0 / 0.7);
   backdrop-filter: blur(12px);
-  color: #ffffff;
+  color: var(--color-paper);
   font-size: 0.7rem;
 }
 
