@@ -434,6 +434,58 @@
   }
 }
 
+/* ---------- Abas da seção "Sobre mim" ---------- */
+.about-tab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+  text-align: left;
+  font-size: clamp(1.05rem, 2.4vw, 1.6rem);
+  line-height: 1.4;
+  color: #8a8a8a;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.about-tab::after {
+  content: "";
+  flex: none;
+  width: 34px;
+  height: 2px;
+  background: rgb(255 255 255 / 0.1);
+  transition:
+    width 0.4s var(--ease-out-expo),
+    background 0.3s;
+}
+.about-tab:hover {
+  color: var(--color-mist);
+}
+.about-tab[aria-selected="true"] {
+  color: var(--color-paper);
+  text-shadow: var(--text-shadow-title);
+}
+.about-tab[aria-selected="true"]::after {
+  width: 64px;
+  background: var(--gradient-neon);
+}
+.about-swap > * {
+  animation: about-in 0.5s var(--ease-out-expo) both;
+}
+.about-swap > :nth-child(2) {
+  animation-delay: 60ms;
+}
+.about-swap > :nth-child(n + 3) {
+  animation-delay: 120ms;
+}
+@keyframes about-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

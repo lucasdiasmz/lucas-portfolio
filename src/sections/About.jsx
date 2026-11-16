@@ -1,59 +1,76 @@
-import { FaGraduationCap } from 'react-icons/fa6'
+import { useRef, useState } from 'react'
 import Reveal from '../components/Reveal.jsx'
 import SplitTitle from '../components/SplitTitle.jsx'
 import { profile } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
+// Brilho do cartão alterna entre ciano e magenta a cada aba
+const glows = ['bg-brand-500/20', 'bg-neon-magenta/20', 'bg-brand-500/20']
+
 export default function About() {
   const { pick, t } = useLanguage()
-  const { about } = profile
+  const { tabs } = profile.about
+  const [active, setActive] = useState(0)
+  const tabRefs = useRef([])
+  const tab = tabs[active]
+
+  // Setas trocam de aba, como pede o padrão de abas acessíveis
+  function onKeyDown(e, i) {
+    const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key]
+    if (!step) return
+    e.preventDefault()
+    const next = (i + step + tabs.length) % tabs.length
+    setActive(next)
+    tabRefs.current[next]?.focus()
+  }
 
   return (
     <section id="sobre" aria-labelledby="sobre-titulo" className="px-6 py-14 sm:px-10 md:py-16">
       <SplitTitle id="sobre-titulo" text={t.about.title} />
 
-      <div className="mx-auto mt-10 grid max-w-6xl items-start gap-10 sm:mt-12 lg:grid-cols-[1.25fr_1fr]">
-        <div className="space-y-6 text-[0.95rem] leading-[1.9] text-neutral-200">
-          <Reveal as="p">{pick(about.summary)}</Reveal>
-          <Reveal as="p" delay={100}>
-            {pick(about.focus)}
-          </Reveal>
-          <Reveal as="p" delay={200}>
-            {pick(about.goals)}
-          </Reveal>
+      <div className="mx-auto mt-10 grid max-w-6xl items-start gap-10 sm:mt-12 lg:grid-cols-[1fr_1.15fr] lg:gap-18">
+        <Reveal role="tablist" aria-label={t.about.title} aria-orientation="vertical" className="grid gap-1">
+          {tabs.map((item, i) => (
+            <button
+              key={i}
+              ref={(el) => (tabRefs.current[i] = el)}
+              role="tab"
+              id={`sobre-aba-${i}`}
+              aria-controls="sobre-painel"
+              aria-selected={i === active}
+              tabIndex={i === active ? 0 : -1}
+              onClick={() => setActive(i)}
+              onKeyDown={(e) => onKeyDown(e, i)}
+              className="about-tab"
+            >
+              {pick(item.label)}
+            </button>
+          ))}
+        </Reveal>
 
-          <ul className="grid gap-4 pt-4 sm:grid-cols-2">
-            {profile.highlights.map((h, i) => (
-              <Reveal as="li" key={i} delay={i * 90} className="glass glass-hover p-6">
-                <p className="text-lg leading-snug text-brand-500">{pick(h.title)}</p>
-                <p className="mt-2 text-xs text-neutral-400">{pick(h.text)}</p>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-
-        {/* Cartão com formação e interesses, no lugar da segunda foto do modelo */}
-        <Reveal delay={150} className="glass relative overflow-hidden p-8 lg:sticky lg:top-28">
+        <Reveal delay={150}>
           <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-brand-500/20 blur-[90px]"
-          />
-          <FaGraduationCap aria-hidden="true" className="relative text-4xl text-brand-500" />
-          <p className="relative mt-6 text-[0.65rem] tracking-[0.3em] text-neutral-500 uppercase">
-            {pick({ pt: 'Formação', en: 'Education' })}
-          </p>
-          <p className="relative mt-2 text-sm leading-relaxed text-white">{pick(about.education)}</p>
-          <p className="relative mt-8 text-[0.65rem] tracking-[0.3em] text-neutral-500 uppercase">
-            {pick({ pt: 'Interesses', en: 'Interests' })}
-          </p>
-          <p className="relative mt-2 text-sm leading-relaxed text-white">{pick(about.interests)}</p>
-          <ul className="relative mt-8 flex flex-wrap gap-2">
-            {about.skills.map((s) => (
-              <li key={s} className="rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-[0.65rem] text-brand-300">
-                {s}
-              </li>
-            ))}
-          </ul>
+            role="tabpanel"
+            id="sobre-painel"
+            aria-labelledby={`sobre-aba-${active}`}
+            className="glass relative min-h-[21rem] overflow-hidden p-8 sm:p-9"
+          >
+            <div
+              aria-hidden="true"
+              className={`pointer-events-none absolute -right-24 -top-28 size-64 rounded-full blur-[80px] transition-colors duration-700 ${glows[active % glows.length]}`}
+            />
+            {/* key remonta o conteúdo para a troca de aba animar */}
+            <div key={active} className="about-swap relative">
+              <p className="text-[clamp(2.2rem,5.5vw,3.5rem)] leading-[1.05] text-brand-500">{pick(tab.big)}</p>
+              <p className="mt-3 text-xs leading-relaxed text-neutral-400">{pick(tab.sub)}</p>
+              <p className="mt-8 max-w-[38ch] text-[0.95rem] leading-[1.9] text-neutral-100">{pick(tab.text)}</p>
+              {tab.pill && (
+                <p className="mt-7 inline-flex rounded-full border border-brand-500/35 bg-brand-500/10 px-4 py-2 text-xs text-brand-300">
+                  {pick(tab.pill)}
+                </p>
+              )}
+            </div>
+          </div>
         </Reveal>
       </div>
     </section>

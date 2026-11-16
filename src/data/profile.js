@@ -30,14 +30,6 @@ export const profile = {
   // Selo que aparece sobre a foto no topo da página
   badge: { pt: 'Estudante de Software', en: 'Software Student' },
 
-  // Quatro cartões curtos ao lado do texto "Sobre mim": título + linha de apoio
-  highlights: [
-    { title: 'PUC Minas', text: { pt: 'Engenharia de Software', en: 'Software Engineering' } },
-    { title: { pt: '2º período', en: '2nd semester' }, text: { pt: 'Graduação em andamento', en: 'Degree in progress' } },
-    { title: { pt: '2 idiomas', en: '2 languages' }, text: { pt: 'Português • Inglês', en: 'Portuguese • English' } },
-    { title: { pt: 'Disponível', en: 'Available' }, text: { pt: 'Para estágio', en: 'For internships' } },
-  ],
-
   // Áreas que estudo e pratico. `icon`: backend | frontend | oop | ai | games | api | web
   focusAreas: [
     {
@@ -76,27 +68,38 @@ export const profile = {
   ],
 
   about: {
-    summary: {
-      pt: 'Sou estudante de Engenharia de Software na PUC Minas, no 2º período. Gosto de entender o porquê das decisões de design por trás do código, não só de fazer funcionar. Já passei por Python, orientação a objetos e desenvolvimento web, e hoje aprofundo meus estudos em Java, Spring Boot e React.',
-      en: "I'm a Software Engineering student at PUC Minas, currently in my 2nd semester. I like understanding the reasoning behind design decisions in code, not just making it work. I've worked with Python, object-oriented design and web development, and I'm now going deeper into Java, Spring Boot and React.",
-    },
-    education: {
-      pt: 'Bacharelado em Engenharia de Software — PUC Minas (2º período, em andamento).',
-      en: "Bachelor's degree in Software Engineering — PUC Minas (2nd semester, in progress).",
-    },
-    focus: {
-      pt: 'Ainda explorando as áreas da engenharia de software. Hoje estudo back-end com Java e Spring Boot e front-end com HTML, CSS, JavaScript e React.',
-      en: "Still exploring the areas of software engineering. Right now I study back-end with Java and Spring Boot and front-end with HTML, CSS, JavaScript and React.",
-    },
-    // TODO: você deixou "Interesses" em branco. Este texto é um rascunho — troque pelo seu.
-    interests: {
-      pt: 'Projetos que unem criatividade e técnica, como desenvolvimento de jogos, além de boas práticas de engenharia de software.',
-      en: 'Projects that blend creativity and technique, such as game development, plus software engineering best practices.',
-    },
-    goals: {
-      pt: 'Crescer na área e financeiramente, trabalhar em empresas multinacionais e, no futuro, também em empresas do exterior. Também considero o serviço público, por meio de concursos. Já uso o inglês no dia a dia de estudo, em um nível entre intermediário e avançado.',
-      en: 'Grow in the field and financially, work for multinational companies and, in the future, for companies abroad. I also consider a public service career through civil service exams. I already use English in my daily studies, at an upper-intermediate to advanced level.',
-    },
+    // Abas da seção "Sobre mim": uma pergunta, um dado em destaque e uma frase curta.
+    // `pill` é opcional.
+    tabs: [
+      {
+        label: { pt: 'Quem sou', en: 'Who I am' },
+        big: { pt: '2º período', en: '2nd semester' },
+        sub: { pt: 'Engenharia de Software, PUC Minas', en: 'Software Engineering, PUC Minas' },
+        text: {
+          pt: 'Gosto de entender por que o código é escrito de um jeito, não só de fazer funcionar.',
+          en: 'I like to understand why code is written a certain way, not just to make it work.',
+        },
+      },
+      {
+        label: { pt: 'O que estudo agora', en: 'What I study now' },
+        big: 'Java + React',
+        sub: { pt: 'Back-end com Spring Boot, front-end com React', en: 'Back-end with Spring Boot, front-end with React' },
+        text: {
+          pt: 'Antes passei por Python, orientação a objetos e web. Fora das aulas, gosto de desenvolvimento de jogos.',
+          en: 'Before that I went through Python, object-oriented design and web. Outside class, I enjoy game development.',
+        },
+      },
+      {
+        label: { pt: 'O que procuro', en: "What I'm looking for" },
+        big: { pt: 'Estágio', en: 'Internship' },
+        sub: { pt: 'Disponível agora', en: 'Available now' },
+        text: {
+          pt: 'Quero crescer em equipes grandes, de preferência multinacionais. Já uso inglês no dia a dia de estudo.',
+          en: 'I want to grow in large teams, ideally at multinational companies. I already use English in my daily studies.',
+        },
+        pill: { pt: 'Português e inglês', en: 'Portuguese and English' },
+      },
+    ],
     skills: ['Python', 'Java', 'HTML', 'CSS', 'JavaScript', 'Spring Boot', 'React'],
   },
 }
