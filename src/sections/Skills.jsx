@@ -1,5 +1,5 @@
 import Reveal from '../components/Reveal.jsx'
-import SkillBurst from '../components/SkillBurst.jsx'
+import SkillOrbit from '../components/SkillOrbit.jsx'
 import SplitTitle from '../components/SplitTitle.jsx'
 import { profile } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -14,17 +14,9 @@ export default function Skills() {
         {t.skills.subtitle}
       </Reveal>
 
-      <div className="mt-10">
-        <SkillBurst
-          skills={profile.about.skills}
-          label={t.skills.title}
-          countLabel={t.skills.files.replace('{n}', profile.about.skills.length)}
-          openLabel={t.skills.open}
-          replayLabel={t.skills.replay}
-          holdHint={t.skills.hold}
-          closeHint={t.skills.close}
-        />
-      </div>
+      <Reveal delay={150} className="mt-4">
+        <SkillOrbit skills={profile.about.skills} />
+      </Reveal>
     </section>
   )
 }

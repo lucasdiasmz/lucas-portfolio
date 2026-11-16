@@ -406,7 +406,7 @@
       transform-origin: 50% 0%;
       animation: section-exit linear both;
       animation-timeline: view();
-      animation-range: exit 0% exit 90%;
+      animation-range: exit 35% exit 100%;
     }
   }
 }
