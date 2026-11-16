@@ -392,3 +392,35 @@
     display: none;
   }
 }
+
+/*
+ * Saída das seções: enquanto uma seção deixa a tela pelo topo, ela recua,
+ * desfoca e some. A animação é ligada ao scroll (não ao tempo), então ao
+ * rolar de volta ela reaparece no mesmo ritmo. A última seção (contato)
+ * fica de fora: não há próxima para tomar o lugar dela.
+ * Navegadores sem scroll-driven animations só mostram a página normal.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    #conteudo > section:not(:last-child) {
+      transform-origin: 50% 0%;
+      animation: section-exit linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 90%;
+    }
+  }
+}
+@keyframes section-exit {
+  0% {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    scale: 0.9;
+    translate: 0 6vh;
+    filter: blur(10px);
+  }
+}
