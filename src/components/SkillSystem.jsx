@@ -30,6 +30,17 @@ function ringsFrom(first, step, count) {
 // O SVG dos anéis é maior que o palco: EXT_X de cada lado e EXT_TOP em cima
 const EXT_X = 1
 const EXT_TOP = 0.12
+const skyW = 1 + 2 * EXT_X
+const skyH = 1 + EXT_TOP
+
+// Camadas de arcos giratórios: cada uma leva um terço dos anéis internos
+const skyBox = { left: `${-EXT_X * 100}%`, top: `${-EXT_TOP * 100}%`, width: `${skyW * 100}%`, height: `${skyH * 100}%` }
+
+const SPIN_LAYERS = [
+  { dur: '140s', dir: 'normal', start: '0deg' },
+  { dur: '190s', dir: 'reverse', start: '40deg' },
+  { dur: '250s', dir: 'normal', start: '110deg' },
+]
 
 // Traço de cada arco giratório (pathLength = 360, então as medidas são graus)
 const DASHES = ['1.5 10.5', '46 134', '14 40 4 122', '2 22', '80 280', '22 68']
@@ -41,6 +52,7 @@ const LAYOUTS = {
     c: [110, 820],
     r: 230,
     rings: ringsFrom(300, 75, 30),
+    spin: 14, // quantos anéis (de dentro para fora) têm arcos girando
     angles: [58, 28, 70, 40, 62, 22, 46],
   },
   narrow: {
@@ -49,6 +61,7 @@ const LAYOUTS = {
     c: [20, 640],
     r: 95,
     rings: ringsFrom(135, 42, 22),
+    spin: 12,
     angles: [60, 25, 72, 40, 66, 30, 48],
   },
 }
@@ -90,64 +103,95 @@ export default function SkillSystem({ skills, labels }) {
       style={{ '--ss-ratio': `${L.w} / ${L.h}`, '--tint': current?.color ?? 'var(--color-ember)' }}
       onKeyDown={(ev) => ev.key === 'Escape' && setSel(null)}
     >
-      <svg
-        className="ss__rings"
-        viewBox={`${-L.w * EXT_X} ${-L.h * EXT_TOP} ${L.w * (1 + 2 * EXT_X)} ${L.h * (1 + EXT_TOP)}`}
-        style={{ left: `${-EXT_X * 100}%`, top: `${-EXT_TOP * 100}%`, width: `${(1 + 2 * EXT_X) * 100}%`, height: `${(1 + EXT_TOP) * 100}%` }}
+      {/* Céu: maior que o palco (anéis passam das bordas) e apagado nas pontas.
+          Os anéis ficam num SVG parado; os arcos que giram vão em poucas camadas
+          que giram inteiras, só com transform, sem repintar nada a cada quadro. */}
+      <div
+        className="ss__sky"
+        style={skyBox}
         aria-hidden="true"
       >
-        <defs>
-          <radialGradient id="ss-fade" cx={L.c[0]} cy={L.c[1]} r={L.rings.at(-1)} gradientUnits="userSpaceOnUse">
-            <stop offset="0.1" stopColor="var(--color-paper)" stopOpacity="0.34" />
-            <stop offset="0.45" stopColor="var(--color-paper)" stopOpacity="0.1" />
-            <stop offset="1" stopColor="var(--color-paper)" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="ss-arc" cx={L.c[0]} cy={L.c[1]} r={L.rings.at(-1)} gradientUnits="userSpaceOnUse">
-            <stop offset="0.1" stopColor="var(--color-glow)" stopOpacity="0.6" />
-            <stop offset="0.5" stopColor="var(--color-glow)" stopOpacity="0.18" />
-            <stop offset="1" stopColor="var(--color-glow)" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        {L.rings.map((r, i) => {
-          const on = current && current.ring === i
-          return (
-            <g key={r}>
+        <svg className="ss__rings" viewBox={`${-L.w * EXT_X} ${-L.h * EXT_TOP} ${L.w * skyW} ${L.h * skyH}`}>
+          <defs>
+            <radialGradient id="ss-fade" cx={L.c[0]} cy={L.c[1]} r={L.rings.at(-1)} gradientUnits="userSpaceOnUse">
+              <stop offset="0.1" stopColor="var(--color-paper)" stopOpacity="0.34" />
+              <stop offset="0.45" stopColor="var(--color-paper)" stopOpacity="0.1" />
+              <stop offset="1" stopColor="var(--color-paper)" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          {L.rings.map((r, i) => {
+            const on = current && current.ring === i
+            return (
               <circle
+                key={r}
                 className={`ss__ring${on ? ' is-on' : ''}`}
                 cx={L.c[0]}
                 cy={L.c[1]}
                 r={r}
                 stroke={on ? current.color : 'url(#ss-fade)'}
               />
-              <circle
-                className="ss__spin"
-                cx={L.c[0]}
-                cy={L.c[1]}
-                r={r}
-                pathLength="360"
-                stroke="url(#ss-arc)"
-                strokeDasharray={DASHES[i % DASHES.length]}
-                style={{
-                  '--spin': `${70 + i * 11}s`,
-                  '--dir': i % 2 ? 'reverse' : 'normal',
-                  '--start': `${(i * 137) % 360}deg`,
-                }}
-              />
-            </g>
+            )
+          })}
+        </svg>
+
+        {SPIN_LAYERS.map((layer, g) => {
+          const rings = L.rings.slice(0, L.spin).filter((_, i) => i % SPIN_LAYERS.length === g)
+          const R = L.rings[L.spin - 1] + 10
+          return (
+            <svg
+              key={g}
+              className="ss__spin"
+              viewBox={`${L.c[0] - R} ${L.c[1] - R} ${R * 2} ${R * 2}`}
+              style={{
+                left: pct(L.c[0] - R + L.w * EXT_X, L.w * skyW),
+                top: pct(L.c[1] - R + L.h * EXT_TOP, L.h * skyH),
+                width: pct(R * 2, L.w * skyW),
+                '--spin': layer.dur,
+                '--dir': layer.dir,
+                '--start': layer.start,
+              }}
+            >
+              <defs>
+                <radialGradient id={`ss-arc-${g}`} cx={L.c[0]} cy={L.c[1]} r={R} gradientUnits="userSpaceOnUse">
+                  <stop offset="0.2" stopColor="var(--color-glow)" stopOpacity="0.6" />
+                  <stop offset="0.6" stopColor="var(--color-glow)" stopOpacity="0.25" />
+                  <stop offset="1" stopColor="var(--color-glow)" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              {rings.map((r, k) => (
+                <circle
+                  key={r}
+                  cx={L.c[0]}
+                  cy={L.c[1]}
+                  r={r}
+                  pathLength="360"
+                  stroke={`url(#ss-arc-${g})`}
+                  strokeDasharray={DASHES[(g + k * SPIN_LAYERS.length) % DASHES.length]}
+                  strokeDashoffset={(k * 97) % 360}
+                />
+              ))}
+            </svg>
           )
         })}
-      </svg>
+      </div>
 
-      <div className="ss__stage">
-
+      {/* Planeta numa camada do tamanho do céu, com o mesmo degradê na base */}
+      <div className="ss__ground" style={skyBox}>
         <button
           type="button"
           className="ss__planet"
-          style={{ left: pct(L.c[0], L.w), top: pct(L.c[1], L.h), width: pct(L.r * 2, L.w) }}
+          style={{
+            left: pct(L.c[0] + L.w * EXT_X, L.w * skyW),
+            top: pct(L.c[1] + L.h * EXT_TOP, L.h * skyH),
+            width: pct(L.r * 2, L.w * skyW),
+          }}
           aria-label={labels.back}
           tabIndex={current ? 0 : -1}
           onClick={() => setSel(null)}
         />
+      </div>
+
+      <div className="ss__stage">
 
         <ul className="ss__moons">
           {placed.map(({ name, Icon, color, ring }, i) => (

@@ -452,8 +452,9 @@
 }
 
 /*
- * Saída das seções: enquanto uma seção deixa a tela pelo topo, ela recua,
- * desfoca e some. A animação é ligada ao scroll (não ao tempo), então ao
+ * Saída das seções: enquanto uma seção deixa a tela pelo topo, ela recua
+ * e some (sem blur: desfocar a seção inteira a cada quadro pesa). A animação
+ * é ligada ao scroll (não ao tempo), então ao
  * rolar de volta ela reaparece no mesmo ritmo. A última seção (contato)
  * fica de fora: não há próxima para tomar o lugar dela.
  * Navegadores sem scroll-driven animations só mostram a página normal.
@@ -473,12 +474,10 @@
     opacity: 1;
     scale: 1;
     translate: 0 0;
-    filter: blur(0);
   }
   100% {
     opacity: 0;
     scale: 0.9;
     translate: 0 6vh;
-    filter: blur(10px);
   }
 }
