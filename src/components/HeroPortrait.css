@@ -4,12 +4,6 @@
  * cabeça passa da borda de cima. 0.512 = centro da cabeça na largura da foto,
  * 1.1226 = altura/largura do PNG.
  */
-@property --r {
-  syntax: "<length>";
-  inherits: true;
-  initial-value: 0px;
-}
-
 .hp {
   --fw: 270px;
   --fh: 280px;
@@ -96,10 +90,6 @@
     linear-gradient(rgb(254 81 1 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
     linear-gradient(90deg, rgb(254 81 1 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
     linear-gradient(135deg, #5c1d00, #171717 55%, #000);
-}
-.hp:has(.xray:focus-visible) .hp__card {
-  outline: 2px solid #fe5101;
-  outline-offset: 3px;
 }
 .hp__halo {
   position: absolute;
@@ -240,89 +230,16 @@
   font-size: 0.7rem;
 }
 
-/* ---- raio-x de código ---- */
-.xray {
-  --x: 50%;
-  --y: 50%;
-  --r: 0px;
-  cursor: crosshair;
-  transition: --r 0.5s var(--ease-out-expo);
-  -webkit-tap-highlight-color: transparent;
+/* ---- máscara fluida: foto cyberpunk revelada pelo rastro do mouse ---- */
+.hp__person {
+  touch-action: pan-y;
 }
-.xray:focus-visible {
-  outline: none;
-}
-.xray[data-hover] {
-  --r: 110px;
-}
-.xray[data-full] {
-  --r: 900px;
-}
-.xray__layer {
+.hp__reveal {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  clip-path: circle(var(--r) at var(--x) var(--y));
-  will-change: clip-path;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-}
-.xray__silhouette {
-  background:
-    repeating-linear-gradient(0deg, rgb(254 81 1 / 0.18) 0 1px, transparent 1px 3px),
-    linear-gradient(rgb(254 81 1 / 0.14) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(90deg, rgb(254 81 1 / 0.14) 1px, transparent 1px) 0 0 / 24px 24px,
-    rgb(0 0 0 / 0.9);
-  -webkit-mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.512) bottom 0 / var(--pw) auto;
-  mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.512) bottom 0 / var(--pw) auto;
-}
-.xray__photo--scan {
-  opacity: 0.6;
-  filter: grayscale(100%) contrast(150%) sepia(100%) hue-rotate(-15deg) saturate(400%);
-  animation: none;
-}
-.xray__code {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 18%;
-  margin: 0;
-  padding: 12px 14px;
-  border: 1px solid rgb(254 81 1 / 0.45);
-  border-radius: 12px;
-  background: rgb(0 0 0 / 0.75);
-  box-shadow: 0 0 24px rgb(254 81 1 / 0.25);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 0.62rem;
-  line-height: 1.55;
-  white-space: pre-wrap;
-}
-@media (min-width: 640px) {
-  .xray__code {
-    font-size: 0.72rem;
-  }
-}
-.xray__ring {
-  position: absolute;
-  left: -110px;
-  top: -110px;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  border: 1px solid #fe5101;
-  box-shadow:
-    0 0 16px rgb(254 81 1 / 0.7),
-    inset 0 0 16px rgb(254 81 1 / 0.45);
-  translate: var(--x) var(--y);
-  scale: 0.2;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    scale 0.5s var(--ease-out-expo),
-    opacity 0.3s;
-}
-.xray[data-hover]:not([data-full]) .xray__ring {
-  scale: 1;
-  opacity: 1;
 }
 
 @keyframes hp-spin {
@@ -357,9 +274,5 @@
 @media (prefers-reduced-motion: reduce) {
   .hp__tilt {
     transform: none;
-  }
-  .xray,
-  .xray__ring {
-    transition: none;
   }
 }
