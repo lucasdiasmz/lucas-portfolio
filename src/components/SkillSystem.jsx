@@ -93,6 +93,7 @@ export default function SkillSystem({ skills, labels }) {
 
   const placed = skills.map((s, i) => ({ ...s, ...(brands[s.name] ?? { Icon: FaCode, color: 'var(--color-ember)' }), ring: i + 1 }))
   const current = sel !== null ? placed[sel] : null
+  const hlR = current ? L.rings[current.ring] + 12 : 0
 
   const toggle = (i) => setSel((s) => (s === i ? null : i))
 
@@ -119,19 +120,9 @@ export default function SkillSystem({ skills, labels }) {
               <stop offset="1" stopColor="var(--color-paper)" stopOpacity="0" />
             </radialGradient>
           </defs>
-          {L.rings.map((r, i) => {
-            const on = current && current.ring === i
-            return (
-              <circle
-                key={r}
-                className={`ss__ring${on ? ' is-on' : ''}`}
-                cx={L.c[0]}
-                cy={L.c[1]}
-                r={r}
-                stroke={on ? current.color : 'url(#ss-fade)'}
-              />
-            )
-          })}
+          {L.rings.map((r) => (
+            <circle key={r} className="ss__ring" cx={L.c[0]} cy={L.c[1]} r={r} stroke="url(#ss-fade)" />
+          ))}
         </svg>
 
         {SPIN_LAYERS.map((layer, g) => {
@@ -173,6 +164,21 @@ export default function SkillSystem({ skills, labels }) {
             </svg>
           )
         })}
+        {current && (
+          <svg
+            key={current.ring}
+            className="ss__hl"
+            viewBox={`${L.c[0] - hlR} ${L.c[1] - hlR} ${hlR * 2} ${hlR * 2}`}
+            style={{
+              left: pct(L.c[0] - hlR + L.w * EXT_X, L.w * skyW),
+              top: pct(L.c[1] - hlR + L.h * EXT_TOP, L.h * skyH),
+              width: pct(hlR * 2, L.w * skyW),
+            }}
+          >
+            <circle cx={L.c[0]} cy={L.c[1]} r={L.rings[current.ring]} stroke={current.color} strokeWidth="7" strokeOpacity="0.18" />
+            <circle cx={L.c[0]} cy={L.c[1]} r={L.rings[current.ring]} stroke={current.color} strokeWidth="1.6" />
+          </svg>
+        )}
       </div>
 
       {/* Planeta numa camada do tamanho do céu, com o mesmo degradê na base */}
