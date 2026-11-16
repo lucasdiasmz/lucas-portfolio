@@ -51,7 +51,7 @@ export default function Hero() {
     >
       <div className="w-full max-w-xl animate-rise text-center lg:text-left">
         <p className="text-sm text-neutral-300 sm:text-base">{t.hero.greeting}</p>
-        <h1 className="glow-text mt-2 text-[clamp(2.1rem,6vw,3.9rem)] leading-[1.05] tracking-wide text-brand-500">
+        <h1 className="mt-2 text-[clamp(2.1rem,6vw,3.9rem)] leading-[1.05] tracking-wide">
           {first} <span className="block">{rest.join(' ')}</span>
         </h1>
         <p className="mt-5 min-h-[1.8em] text-base text-white sm:text-xl" aria-label={phrases.join(', ')}>
@@ -68,7 +68,7 @@ export default function Hero() {
                 target={c.type === 'email' ? undefined : '_blank'}
                 rel="noopener noreferrer"
                 aria-label={c.label}
-                className="grid size-10 place-items-center rounded-lg border border-brand-500/30 bg-brand-500/10 text-lg text-brand-500 transition-[transform,background-color,color] duration-300 hover:-translate-y-1 hover:bg-brand-500 hover:text-white"
+                className="grid size-10 place-items-center rounded-lg border border-brand-500/30 bg-brand-500/10 text-lg text-brand-500 transition-[transform,background-color,color] duration-300 hover:-translate-y-1 hover:bg-brand-500 hover:text-on-neon"
               >
                 <ContactIcon type={c.type} />
               </a>

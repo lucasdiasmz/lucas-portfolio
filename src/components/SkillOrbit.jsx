@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { FaCode, FaXmark } from 'react-icons/fa6'
 import { SiCss, SiHtml5, SiJavascript, SiOpenjdk, SiPython, SiReact, SiSpringboot } from 'react-icons/si'
 import './SkillOrbit.css'
+import { cssVar, rgba, token } from '../theme.js'
 
 // Ícone e cor de marca de cada tecnologia. A cor de marca só aparece no
 // destaque (hover, foco ou cartão aberto); no resto do tempo o ícone é branco.
@@ -15,10 +16,10 @@ const brands = {
   React: { Icon: SiReact, color: '#61dafb' },
 }
 
-// Paleta (index.css): Cornflower Blue, dois tons dele e branco
-const DOME_COLORS = ['#548cff', '#93b3ff', '#cfe0ff', '#ffffff']
+// Tokens da paleta (index.css): neon principal, dois tons dele e branco
+const DOME_COLORS = ['ember', 'glow', 'brand-100', 'paper']
 // Globo: oceano (pontos brancos fracos), terra, terra clara e luzes das cidades
-const GLOBE_COLORS = ['#ffffff', '#548cff', '#93b3ff', '#e6efff']
+const GLOBE_COLORS = ['paper', 'ember', 'glow', 'paper']
 const GLOBE_ALPHA = [0.08, 0.95, 1, 1]
 const GLOBE_SIZE = [1.1, 2, 2, 2.6]
 
@@ -159,7 +160,7 @@ function geometry(w, h) {
  *    com as tecnologias orbitando em badges de vidro.
  * 2. Globo: ao clicar na cúpula, ela acende, solta uma onda de choque e raios
  *    de luz pelo plano dos anéis e sobe até o centro como um globo com os
- *    continentes em pontos laranja. Os anéis se abrem e cada badge ganha nome;
+ *    continentes em pontos neon. Os anéis se abrem e cada badge ganha nome;
  *    clicar num badge abre um cartão com os projetos que usam a tecnologia.
  *
  * Camadas (de trás para frente): canvas de trás (poeira, metade de trás dos
@@ -189,7 +190,7 @@ export default function SkillOrbit({ skills, labels }) {
   // Distribui as habilidades pelos anéis: 2, 2 e o resto no de fora
   const placed = skills.map((skill, i) => {
     const ring = i < 6 ? i % 3 : 2
-    return { ...skill, ring, ...(brands[skill.name] ?? { Icon: FaCode, color: '#548cff' }) }
+    return { ...skill, ring, ...(brands[skill.name] ?? { Icon: FaCode, color: cssVar('ember') }) }
   })
   const perRing = [0, 1, 2].map((r) => placed.filter((p) => p.ring === r).length)
   const slot = [0, 0, 0]
@@ -259,11 +260,11 @@ export default function SkillOrbit({ skills, labels }) {
       const top = g.cy - ry
       const bottom = g.cy + ry
       const glow = ctx.createLinearGradient(0, top, 0, bottom)
-      glow.addColorStop(0, `rgb(147 179 255 / ${0.05 * boost})`)
-      glow.addColorStop(1, `rgb(147 179 255 / ${0.15 * boost})`)
+      glow.addColorStop(0, rgba('glow', 0.05 * boost))
+      glow.addColorStop(1, rgba('glow', 0.15 * boost))
       const line = ctx.createLinearGradient(0, top, 0, bottom)
-      line.addColorStop(0, `rgb(186 208 255 / ${Math.min(1, 0.16 * boost)})`)
-      line.addColorStop(1, `rgb(186 208 255 / ${Math.min(1, 0.66 * boost)})`)
+      line.addColorStop(0, rgba('brand-200', Math.min(1, 0.16 * boost)))
+      line.addColorStop(1, rgba('brand-200', Math.min(1, 0.66 * boost)))
       ctx.beginPath()
       ctx.ellipse(g.cx, g.cy, rx, ry, 0, isFront ? 0 : Math.PI, isFront ? Math.PI : Math.PI * 2)
       ctx.strokeStyle = glow
@@ -325,7 +326,7 @@ export default function SkillOrbit({ skills, labels }) {
 
       // --- Fundo: poeira e metade de trás dos anéis ---
       cb.clearRect(0, 0, w, h)
-      cb.fillStyle = '#93b3ff'
+      cb.fillStyle = token('glow')
       for (const d of dust) {
         d.y -= d.v * dt
         if (d.y < -0.02) d.y = 1.02
@@ -343,16 +344,16 @@ export default function SkillOrbit({ skills, labels }) {
       if (e < 1) {
         cf.globalAlpha = 1 - e
         const body = cf.createRadialGradient(X0, Y0 - R * 0.2, R * 0.1, X0, Y0, R * 1.05)
-        body.addColorStop(0, `rgb(84 140 255 / ${0.28 + heat * 0.22})`)
-        body.addColorStop(0.6, 'rgb(5 8 18 / 0.92)')
-        body.addColorStop(1, 'rgb(0 0 0 / 0.96)')
+        body.addColorStop(0, rgba('ember', 0.28 + heat * 0.22))
+        body.addColorStop(0.6, rgba('surface-1', 0.92))
+        body.addColorStop(1, rgba('night', 0.96))
         cf.fillStyle = body
         cf.beginPath()
         cf.arc(X0, Y0, R, 0, Math.PI * 2)
         cf.fill()
         const halo = cf.createRadialGradient(X0, Y0, R * 0.9, X0, Y0, R * 1.6)
-        halo.addColorStop(0, `rgb(84 140 255 / ${0.22 + heat * 0.2})`)
-        halo.addColorStop(1, 'rgb(84 140 255 / 0)')
+        halo.addColorStop(0, rgba('ember', 0.22 + heat * 0.2))
+        halo.addColorStop(1, rgba('ember', 0))
         cf.fillStyle = halo
         cf.beginPath()
         cf.arc(X0, Y0, R * 1.6, 0, Math.PI * 2)
@@ -364,7 +365,7 @@ export default function SkillOrbit({ skills, labels }) {
         const cp = Math.cos(-0.38)
         const sp = Math.sin(-0.38)
         for (let c = 0; c < DOME_COLORS.length; c++) {
-          cf.fillStyle = DOME_COLORS[c]
+          cf.fillStyle = token(DOME_COLORS[c])
           for (let i = 0; i < DOME.n; i++) {
             if (DOME.c[i] !== c) continue
             const x1 = DOME.x[i] * cyw + DOME.z[i] * syw
@@ -396,16 +397,16 @@ export default function SkillOrbit({ skills, labels }) {
       if (e > 0) {
         cf.globalAlpha = e
         const atm = cf.createRadialGradient(X0, Y0, R * 0.95, X0, Y0, R * 1.3)
-        atm.addColorStop(0, 'rgb(84 140 255 / 0.32)')
-        atm.addColorStop(1, 'rgb(84 140 255 / 0)')
+        atm.addColorStop(0, rgba('ember', 0.32))
+        atm.addColorStop(1, rgba('ember', 0))
         cf.fillStyle = atm
         cf.beginPath()
         cf.arc(X0, Y0, R * 1.3, 0, Math.PI * 2)
         cf.fill()
         const body = cf.createRadialGradient(X0 - R * 0.35, Y0 - R * 0.4, R * 0.05, X0, Y0, R)
-        body.addColorStop(0, 'rgb(14 22 44)')
-        body.addColorStop(0.55, 'rgb(6 8 16)')
-        body.addColorStop(1, '#050505')
+        body.addColorStop(0, token('surface-5'))
+        body.addColorStop(0.55, token('surface-1'))
+        body.addColorStop(1, token('night'))
         cf.fillStyle = body
         cf.beginPath()
         cf.arc(X0, Y0, R, 0, Math.PI * 2)
@@ -413,7 +414,7 @@ export default function SkillOrbit({ skills, labels }) {
 
         for (let i = 0; i < GLOBE.n; i++) rot(GLOBE.x[i], GLOBE.y[i], GLOBE.z[i], proj, i)
         for (let c = 0; c < GLOBE_COLORS.length; c++) {
-          cf.fillStyle = GLOBE_COLORS[c]
+          cf.fillStyle = token(GLOBE_COLORS[c])
           const base = GLOBE_SIZE[c] * g.scale
           for (let i = 0; i < GLOBE.n; i++) {
             if (GLOBE.c[i] !== c) continue
@@ -427,7 +428,7 @@ export default function SkillOrbit({ skills, labels }) {
 
         // Arcos de Belo Horizonte para o mundo, com uma luz correndo em cada um
         cf.lineWidth = 1.1
-        cf.strokeStyle = '#93b3ff'
+        cf.strokeStyle = token('glow')
         const tmp = { x: [0], y: [0], z: [0] }
         ARCS.forEach((pts, a) => {
           const count = pts.length / 3
@@ -449,30 +450,30 @@ export default function SkillOrbit({ skills, labels }) {
           const head = sx[Math.floor(((t * 0.32 + a * 0.29) % 1) * (count - 1))]
           if (head) {
             cf.globalAlpha = e
-            cf.fillStyle = '#ffffff'
+            cf.fillStyle = token('paper')
             cf.fillRect(head[0] - 1.6, head[1] - 1.6, 3.2, 3.2)
           }
           const end = sx[count - 1]
           if (end) {
             const pulse = (t * 0.7 + a * 0.25) % 1
             cf.globalAlpha = e * (1 - pulse) * 0.9
-            cf.strokeStyle = '#ffffff'
+            cf.strokeStyle = token('paper')
             cf.beginPath()
             cf.arc(end[0], end[1], 2 + pulse * 7, 0, Math.PI * 2)
             cf.stroke()
-            cf.strokeStyle = '#93b3ff'
+            cf.strokeStyle = token('glow')
           }
         })
 
         // Borda do globo e um brilho branco no canto de cima
         cf.globalAlpha = e
         cf.lineWidth = 1.2
-        cf.strokeStyle = 'rgb(255 255 255 / 0.22)'
+        cf.strokeStyle = rgba('paper', 0.22)
         cf.beginPath()
         cf.arc(X0, Y0, R, 0, Math.PI * 2)
         cf.stroke()
         cf.lineWidth = 2
-        cf.strokeStyle = 'rgb(255 255 255 / 0.5)'
+        cf.strokeStyle = rgba('paper', 0.5)
         cf.beginPath()
         cf.arc(X0, Y0, R - 1, Math.PI * 1.08, Math.PI * 1.42)
         cf.stroke()
@@ -489,7 +490,7 @@ export default function SkillOrbit({ skills, labels }) {
           const z = Math.sin(a)
           const ctx = z >= 0 ? cf : cb
           ctx.globalAlpha = (1 - j / 18) * (0.25 + 0.6 * ((z + 1) / 2))
-          ctx.fillStyle = j === 0 ? '#e6efff' : '#93b3ff'
+          ctx.fillStyle = j === 0 ? token('paper') : token('glow')
           const s = j === 0 ? 3 : 2
           ctx.fillRect(cx + Math.cos(a) * rx - s / 2, cy + Math.sin(a) * ry - s / 2, s, s)
         }
@@ -506,7 +507,7 @@ export default function SkillOrbit({ skills, labels }) {
       cb.globalCompositeOperation = 'lighter'
       cf.globalCompositeOperation = 'lighter'
       cb.lineWidth = cf.lineWidth = 1.2
-      cb.strokeStyle = cf.strokeStyle = '#93b3ff'
+      cb.strokeStyle = cf.strokeStyle = token('glow')
       for (let i = rays.length - 1; i >= 0; i--) {
         const r = rays[i]
         r.life += dt
@@ -526,7 +527,7 @@ export default function SkillOrbit({ skills, labels }) {
         ctx.moveTo(x0, y0)
         ctx.lineTo(cx + ca * (r.r + r.len), cy + sa * (r.r + r.len) * k)
         ctx.stroke()
-        ctx.fillStyle = '#e6efff'
+        ctx.fillStyle = token('paper')
         ctx.fillRect(cx + ca * (r.r + r.len) - 1, cy + sa * (r.r + r.len) * k - 1, 2, 2)
       }
 
@@ -535,9 +536,9 @@ export default function SkillOrbit({ skills, labels }) {
         const q1 = burst / 0.55
         if (q1 < 1) {
           const fl = cf.createRadialGradient(X0, Y0, 0, X0, Y0, R * (0.7 + q1 * 2.2))
-          fl.addColorStop(0, `rgb(255 255 255 / ${0.9 * (1 - q1)})`)
-          fl.addColorStop(0.3, `rgb(147 179 255 / ${0.7 * (1 - q1)})`)
-          fl.addColorStop(1, 'rgb(84 140 255 / 0)')
+          fl.addColorStop(0, rgba('paper', 0.9 * (1 - q1)))
+          fl.addColorStop(0.3, rgba('glow', 0.7 * (1 - q1)))
+          fl.addColorStop(1, rgba('ember', 0))
           cf.globalAlpha = 1
           cf.fillStyle = fl
           cf.beginPath()
@@ -548,15 +549,15 @@ export default function SkillOrbit({ skills, labels }) {
         if (q2 > 0 && q2 < 1) {
           const rb = R * (1 + 0.9 * easeOut(q2))
           const fill = cf.createRadialGradient(X0, Y0, rb * 0.5, X0, Y0, rb)
-          fill.addColorStop(0, 'rgb(84 140 255 / 0)')
-          fill.addColorStop(1, `rgb(84 140 255 / ${0.18 * (1 - q2)})`)
+          fill.addColorStop(0, rgba('ember', 0))
+          fill.addColorStop(1, rgba('ember', 0.18 * (1 - q2)))
           cf.globalAlpha = 1
           cf.fillStyle = fill
           cf.beginPath()
           cf.arc(X0, Y0, rb, 0, Math.PI * 2)
           cf.fill()
           cf.globalAlpha = 0.55 * (1 - q2)
-          cf.strokeStyle = '#ffffff'
+          cf.strokeStyle = token('paper')
           cf.lineWidth = 1.4
           cf.stroke()
         }
@@ -567,10 +568,10 @@ export default function SkillOrbit({ skills, labels }) {
           cf.translate(cx, cy)
           cf.scale(1, k)
           const sh = cf.createRadialGradient(0, 0, rs * 0.3, 0, 0, rs)
-          sh.addColorStop(0, 'rgb(84 140 255 / 0)')
-          sh.addColorStop(0.72, `rgb(84 140 255 / ${0.4 * (1 - q3)})`)
-          sh.addColorStop(0.94, `rgb(207 224 255 / ${0.85 * (1 - q3)})`)
-          sh.addColorStop(1, 'rgb(84 140 255 / 0)')
+          sh.addColorStop(0, rgba('ember', 0))
+          sh.addColorStop(0.72, rgba('ember', 0.4 * (1 - q3)))
+          sh.addColorStop(0.94, rgba('brand-100', 0.85 * (1 - q3)))
+          sh.addColorStop(1, rgba('ember', 0))
           cf.globalAlpha = 1
           cf.fillStyle = sh
           cf.beginPath()

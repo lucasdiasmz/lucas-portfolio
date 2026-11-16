@@ -42,7 +42,7 @@ export default function Navbar() {
       {/* Barra de progresso de leitura na lateral direita */}
       <div aria-hidden="true" className="fixed right-1 top-0 z-50 hidden h-screen w-[3px] sm:block">
         <div
-          className="h-full w-full origin-top rounded-full bg-gradient-to-b from-brand-400 to-brand-700 shadow-[0_0_10px_#548cff]"
+          className="h-full w-full origin-top rounded-full bg-gradient-to-b from-brand-400 to-neon-magenta shadow-[0_0_10px_var(--color-ember)]"
           style={{ transform: `scaleY(${progress})` }}
         />
       </div>
@@ -62,7 +62,7 @@ export default function Navbar() {
           </div>
 
           <SectionLink id="inicio" className="relative flex items-center gap-2.5" onClick={() => setOpen(false)}>
-            <Logo className="size-9 drop-shadow-[0_0_10px_rgb(84_140_255/0.6)]" />
+            <Logo className="size-9 drop-shadow-[0_0_10px_color-mix(in_srgb,var(--color-ember)_60%,transparent)]" />
             <span className="hidden text-xs tracking-[0.3em] text-neutral-200 sm:inline">LUCAS</span>
           </SectionLink>
 
@@ -81,7 +81,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}
               aria-label={t.nav.language}
-              className="rounded-full bg-gradient-to-r from-ember to-flame px-4 py-1.5 text-xs transition-transform hover:scale-105"
+              className="rounded-full bg-gradient-to-r from-ember to-flame px-4 text-on-neon py-1.5 text-xs transition-transform hover:scale-105"
             >
               {lang === 'pt' ? 'PT' : 'EN'}
             </button>

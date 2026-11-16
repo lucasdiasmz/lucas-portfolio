@@ -1,5 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import './GlassFolder.css'
+import { cssVar, rgbOf } from '../theme.js'
 
 /*
  * Pasta de vidro: um projeto desenhado como objeto, em três camadas.
@@ -11,50 +12,43 @@ import './GlassFolder.css'
  * - Aberta (clique, Enter, Espaço): as folhas saem e se abrem em leque.
  *
  * Adaptado do componente "Glass Folder Cards" para o tema do site:
- * só vidro escuro, arte em laranja/vermelho, fonte do site, sem botão de
+ * só vidro escuro, arte em neon, fonte do site, sem botão de
  * adicionar nem menu. A arte é pintada em canvas uma vez por receita e
  * compartilhada entre as pastas.
  */
 
 // #region arte
 const ART_PRESETS = {
-  // tinta laranja dobrando em água escura
+  // tinta neon dobrando em água escura
   brasa: {
     style: 'marble',
-    colors: ['#05070d', '#0a1020', '#1d3670', '#080b14', '#3d73e6', '#548cff', '#93b3ff'],
+    colors: ['surface-1', 'surface-2', 'surface-7', 'surface-1', 'flame', 'ember', 'glow'],
     scale: 0.62,
     warp: 3.2,
     angle: -0.5,
     gloss: 0.5,
     veins: 0.55,
   },
-  // exposição longa: laranja e vermelho puxados pelo quadro
+  // exposição longa: neon puxado pelo quadro
   chama: {
     style: 'streak',
-    colors: ['#070a12', '#0f1d3d', '#3d73e6', '#548cff', '#93b3ff', '#0a1020', '#050505'],
+    colors: ['surface-1', 'surface-5', 'flame', 'ember', 'glow', 'surface-2', 'night'],
     scale: 0.7,
     warp: 1.5,
     angle: -0.62,
     gloss: 0.2,
     veins: 0,
   },
-  // carvão com veios de cobre
+  // carvão com veios neon
   carvao: {
     style: 'marble',
-    colors: ['#050505', '#141414', '#1a2030', '#0a0c10', '#274a99', '#6f9bff', '#cfe0ff'],
+    colors: ['night', 'surface-5', 'surface-6', 'surface-2', 'brand-800', 'brand-400', 'brand-100'],
     scale: 0.75,
     warp: 3.6,
     angle: 0.8,
     gloss: 0.45,
     veins: 0.5,
   },
-}
-
-function hexToRgb(hex) {
-  let h = hex.trim().replace(/^#/, '')
-  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
-  const n = /^[0-9a-f]{6}$/i.test(h) ? parseInt(h, 16) : 0x808080
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
 }
 
 // PRNG pequeno e com semente (mulberry32)
@@ -133,7 +127,7 @@ function makeFbm(seed) {
 function createArtJob(width, height, recipe, seed) {
   const w = Math.max(1, Math.round(width))
   const h = Math.max(1, Math.round(height))
-  const stops = recipe.colors.map((c, i) => ({ t: i / (recipe.colors.length - 1), c: hexToRgb(c) }))
+  const stops = recipe.colors.map((c, i) => ({ t: i / (recipe.colors.length - 1), c: rgbOf(c) }))
   const scale = recipe.scale ?? 0.7
   const warp = recipe.warp ?? 3
   const gloss = recipe.gloss ?? 0.4
@@ -491,9 +485,9 @@ export default function GlassFolder({
               <svg className="gf-rim gf-front-rim" viewBox={`0 0 ${W} ${FRONT_H}`} aria-hidden="true">
                 <defs>
                   <linearGradient id={`gf-rim-${uid}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stopColor="#93b3ff" stopOpacity="0.9" />
-                    <stop offset="0.35" stopColor="#fff" stopOpacity="0.25" />
-                    <stop offset="1" stopColor="#fff" stopOpacity="0.08" />
+                    <stop offset="0" style={{ stopColor: cssVar('glow') }} stopOpacity="0.9" />
+                    <stop offset="0.35" style={{ stopColor: cssVar('paper') }} stopOpacity="0.25" />
+                    <stop offset="1" style={{ stopColor: cssVar('paper') }} stopOpacity="0.08" />
                   </linearGradient>
                 </defs>
                 <path d={FRONT_PATH} stroke={`url(#gf-rim-${uid})`} />

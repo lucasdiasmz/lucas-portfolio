@@ -73,7 +73,7 @@ export default function Footer() {
                 target={c.type === 'email' ? undefined : '_blank'}
                 rel="noopener noreferrer"
                 aria-label={c.label}
-                className="grid size-12 place-items-center text-2xl text-brand-500 transition-[transform,color,filter] duration-300 hover:-translate-y-1 hover:text-brand-300 hover:drop-shadow-[0_0_12px_#548cff]"
+                className="grid size-12 place-items-center text-2xl text-brand-500 transition-[transform,color,filter] duration-300 hover:-translate-y-1 hover:text-brand-300 hover:drop-shadow-[0_0_12px_var(--color-ember)]"
               >
                 <ContactIcon type={c.type} />
               </a>

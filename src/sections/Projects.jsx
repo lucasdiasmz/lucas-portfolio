@@ -44,7 +44,7 @@ function ProjectDetail({ project, onClose }) {
           {project.period ?? formatYearMonth(project.date, lang)}
         </span>
         {project.status === 'in-progress' && (
-          <span className="flex items-center gap-1.5 rounded-full bg-brand-500 px-3 py-1 text-black">
+          <span className="flex items-center gap-1.5 rounded-full bg-brand-500 px-3 py-1 text-on-neon">
             <span className="size-1.5 animate-pulse rounded-full bg-black" /> {t.projects.inProgress}
           </span>
         )}
@@ -124,12 +124,12 @@ export default function Projects() {
             onClick={() => setFilter(g)}
             className={`flex items-center gap-2 rounded-full border px-4 py-2 text-[0.65rem] transition-[background-color,border-color,color] duration-300 ${
               filter === g
-                ? 'border-brand-500 bg-brand-500 text-black'
+                ? 'border-brand-500 bg-brand-500 text-on-neon'
                 : 'border-white/10 bg-black/40 text-neutral-300 backdrop-blur hover:border-brand-500/60 hover:text-white'
             }`}
           >
             {t.projects.groups[g]}
-            <span className={filter === g ? 'text-black/60' : 'text-neutral-500'}>{counts[g]}</span>
+            <span className={filter === g ? 'text-on-neon/60' : 'text-neutral-500'}>{counts[g]}</span>
           </button>
         ))}
       </Reveal>

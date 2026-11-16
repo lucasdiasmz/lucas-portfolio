@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-// Cursor laranja: ponto que segue o mouse e anel que vem atrás com atraso.
+// Cursor neon: ponto que segue o mouse e anel que vem atrás com atraso.
 // Só liga em telas com mouse e sem preferência por menos movimento.
 export default function Cursor() {
   const dot = useRef(null)
@@ -51,7 +51,7 @@ export default function Cursor() {
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[100] hidden [.has-cursor_&]:block [.cursor-out_&]:opacity-0">
-      <div ref={dot} className="absolute -left-1 -top-1 size-2 rounded-full bg-brand-500 shadow-[0_0_12px_#548cff]" />
+      <div ref={dot} className="absolute -left-1 -top-1 size-2 rounded-full bg-brand-500 shadow-[0_0_12px_var(--color-ember)]" />
       <div
         ref={ring}
         className="absolute -left-5 -top-5 size-10 rounded-full border border-brand-500/70 transition-[scale,background-color] duration-300"
