@@ -19,7 +19,7 @@ export const profile = {
   },
   // Salve sua foto como public/foto.png. Enquanto o arquivo não existir,
   // o site mostra a inicial do nome no lugar da foto.
-  photo: '/foto.png',
+  photo: '/foto.webp',
 
   // Frases que se alternam no topo da página, como se fossem digitadas.
   typing: [

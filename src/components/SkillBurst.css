@@ -1,9 +1,16 @@
-/* Pasta "HABILIDADES" que explode em habilidades (ver SkillBurst.jsx).
-   Fases em data-phase: idle → crack → charge → burst → done. */
+/* Pasta "HABILIDADES" que a pessoa carrega e explode (ver SkillBurst.jsx).
+   Fases em data-phase: idle → burst → done. Durante o idle, --charge (0–1)
+   é gravado por frame enquanto a pessoa segura; data-charging marca a subida. */
+
+.sbw {
+  --charge: 0;
+}
 
 .sb {
   --sb-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --sb-fw: clamp(210px, 36cqw, 340px);
+  --px: 0;
+  --py: 0;
   position: relative;
   width: 100%;
   max-width: 64rem;
@@ -23,22 +30,44 @@
   left: 50%;
   top: 50%;
   z-index: 5;
-  width: clamp(210px, 36cqw, 340px);
+  width: var(--sb-fw);
   aspect-ratio: 32 / 20;
   translate: -50% -50%;
   border-radius: 12px;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
 }
+.sb[data-charging] .sb__folder {
+  cursor: grabbing;
+}
+.sb__folder:focus-visible {
+  outline: none;
+}
+.sb__folder:focus-visible .sb__edge {
+  stroke: #fff1dc;
+  stroke-width: 3;
+}
+
 .sb__body {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   transform-origin: 50% 50%;
+  /* inclina seguindo o mouse; cresce um pouco com a carga */
+  transform: perspective(900px) rotateX(calc(var(--py) * -10deg)) rotateY(calc(var(--px) * 14deg));
+  scale: calc(1 + var(--charge) * 0.07);
   transition:
+    transform 0.5s var(--sb-ease),
     scale 0.55s var(--sb-ease),
     opacity 0.4s;
+}
+.sb[data-charging] .sb__body {
+  transition: transform 0.5s var(--sb-ease);
 }
 .sb__svg {
   position: absolute;
@@ -46,16 +75,23 @@
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 0 6px rgb(250 110 0 / 0.55));
+  filter: drop-shadow(0 0 calc(6px + var(--charge) * 18px) rgb(250 110 0 / calc(0.5 + var(--charge) * 0.4)));
 }
 .sb__panel {
-  fill: rgb(18 12 8 / 0.82);
+  fill: color-mix(in srgb, rgb(130 50 4) calc(var(--charge) * 100%), rgb(18 12 8));
+  fill-opacity: 0.88;
   transition: fill 0.5s;
 }
 .sb__edge {
   fill: none;
   stroke: rgb(255 154 60 / 0.55);
   stroke-width: 1.5;
+  transition:
+    stroke 0.3s,
+    stroke-width 0.3s;
+}
+.sb[data-phase='idle'] .sb__folder:hover .sb__edge {
+  stroke: #ff9a3c;
 }
 .sb__bar {
   fill: none;
@@ -63,19 +99,34 @@
   stroke-width: 3.5;
   stroke-linecap: round;
 }
+
+/* Calor que nasce do ponto apertado */
+.sb__heat {
+  opacity: calc(var(--charge) * 1.1);
+  scale: calc(0.3 + var(--charge) * 0.9);
+}
+
+/* Rachaduras: troncos desenham primeiro, galhos a partir de ~35% da carga */
 .sb__cracks path {
   fill: none;
-  stroke: #ffb066;
-  stroke-width: 2.2;
+  stroke: #ffd6a8;
   stroke-linejoin: round;
   stroke-linecap: round;
   stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition:
-    stroke-dashoffset 0.7s cubic-bezier(0.5, 0, 0.2, 1),
-    stroke-width 0.5s,
-    opacity 0.3s;
+  transition: opacity 0.3s;
 }
+.sb__trunk {
+  stroke-width: calc(1 + var(--charge) * 1.8);
+  stroke-dashoffset: max(0, 1 - var(--charge) * 1.6);
+}
+.sb__twig {
+  stroke-width: calc(0.6 + var(--charge) * 1);
+  stroke-dashoffset: clamp(0, 1.8 - var(--charge) * 2.2, 1);
+}
+.sb__cracks {
+  filter: drop-shadow(0 0 3px #fa6e00);
+}
+
 .sb__label {
   position: relative;
   padding-top: 6%;
@@ -84,58 +135,38 @@
   color: rgb(255 154 60 / 0.14);
   -webkit-text-stroke: 1px #ff9a3c;
   text-shadow: 0 0 14px rgb(250 110 0 / 0.55);
+  opacity: calc(1 - var(--charge) * 0.7);
+  pointer-events: none;
   transition: opacity 0.3s;
 }
 
-/* Parado: respira e balança de leve, convidando o clique */
-.sb[data-phase='idle'] .sb__body {
-  animation: sb-nudge 2.4s ease-in-out 1s infinite;
-}
-.sb[data-phase='idle'] .sb__folder:hover .sb__body,
-.sb[data-phase='idle'] .sb__folder:focus-visible .sb__body {
-  animation: none;
-  scale: 1.04;
+/* Parado: balança de leve de tempos em tempos, convidando o toque */
+.sb[data-phase='idle']:not([data-charging]) .sb__svg {
+  animation: sb-nudge 3s ease-in-out 1.2s infinite;
 }
 @keyframes sb-nudge {
   0%,
-  60%,
+  70%,
   100% {
     rotate: 0deg;
   }
-  68% {
-    rotate: -1.5deg;
-  }
   76% {
+    rotate: -1.6deg;
+  }
+  82% {
     rotate: 1.3deg;
   }
-  84% {
-    rotate: -0.8deg;
+  88% {
+    rotate: -0.7deg;
   }
-  92% {
+  94% {
     rotate: 0.3deg;
   }
 }
 
-/* Racha */
-.sb[data-phase='crack'] .sb__cracks path,
-.sb[data-phase='charge'] .sb__cracks path {
-  stroke-dashoffset: 0;
-}
-.sb[data-phase='crack'] .sb__body {
-  animation: sb-shake 0.12s linear infinite;
-}
-
-/* Carrega: brilha por dentro e treme forte */
-.sb[data-phase='charge'] .sb__cracks path {
-  stroke-width: 4;
-  stroke: #fff1dc;
-}
-.sb[data-phase='charge'] .sb__panel {
-  fill: rgb(120 48 4 / 0.85);
-}
-.sb[data-phase='charge'] .sb__body {
-  animation: sb-shake 0.07s linear infinite;
-  scale: 1.06;
+/* Carregando: treme cada vez mais forte */
+.sb[data-charging] .sb__svg {
+  animation: sb-shake 0.08s linear infinite;
 }
 @keyframes sb-shake {
   0%,
@@ -143,13 +174,13 @@
     translate: 0 0;
   }
   25% {
-    translate: 1.5px -1px;
+    translate: calc(var(--charge) * 2.6px) calc(var(--charge) * -1.8px);
   }
   50% {
-    translate: -1.5px 1px;
+    translate: calc(var(--charge) * -2.6px) calc(var(--charge) * 1.6px);
   }
   75% {
-    translate: 1px 1.5px;
+    translate: calc(var(--charge) * 1.8px) calc(var(--charge) * 2.6px);
   }
 }
 
@@ -158,15 +189,20 @@
   scale: 0.3;
 }
 .sb[data-open] .sb__label,
-.sb[data-open] .sb__cracks path {
+.sb[data-open] .sb__cracks path,
+.sb[data-open] .sb__heat {
   opacity: 0;
 }
 .sb[data-open] .sb__panel {
-  fill: rgb(14 9 6 / 0.97);
+  fill: rgb(14 9 6);
+  fill-opacity: 0.97;
 }
 .sb[data-open] .sb__edge {
   stroke: #ff9a3c;
   stroke-width: 4;
+}
+.sb[data-open] .sb__folder {
+  cursor: pointer;
 }
 .sb[data-phase='done'] .sb__svg {
   animation: sb-core 2.6s ease-in-out infinite;
@@ -200,28 +236,22 @@
   left: 50%;
   top: 50%;
 }
+
+/* Raios e órbitas acendem na segunda metade da carga */
 .sb__rays {
   width: 110cqmin;
   aspect-ratio: 1;
   margin: -55cqmin 0 0 -55cqmin;
   border-radius: 50%;
-  background: repeating-conic-gradient(rgb(255 170 90 / 0.55) 0 1.5deg, transparent 1.5deg 14deg);
+  background: repeating-conic-gradient(rgb(255 170 90 / 0.5) 0 1.2deg, transparent 1.2deg 14deg);
   -webkit-mask: radial-gradient(closest-side, #000 8%, transparent 70%);
   mask: radial-gradient(closest-side, #000 8%, transparent 70%);
-  opacity: 0;
-  scale: 0.3;
-  transition:
-    opacity 0.5s,
-    scale 0.7s var(--sb-ease);
-}
-.sb[data-phase='charge'] .sb__rays {
-  opacity: 1;
-  scale: 1;
-  animation: sb-spin 6s linear infinite;
+  opacity: calc((var(--charge) - 0.4) * 1.7);
+  scale: calc(0.4 + var(--charge) * 0.6);
+  animation: sb-spin 8s linear infinite;
 }
 .sb[data-phase='burst'] .sb__rays {
   opacity: 0;
-  scale: 1.8;
 }
 @keyframes sb-spin {
   to {
@@ -229,14 +259,12 @@
   }
 }
 
-/* Anéis em órbita, inclinados em perspectiva */
 .sb__orbit {
   width: calc(var(--sb-fw) * 1.5);
   aspect-ratio: 1;
   margin: calc(var(--sb-fw) * -0.75) 0 0 calc(var(--sb-fw) * -0.75);
   transform: perspective(700px) rotateX(74deg) rotateY(-14deg);
-  opacity: 0;
-  transition: opacity 0.35s;
+  opacity: calc((var(--charge) - 0.55) * 2.4);
 }
 .sb__orbit--b {
   transform: perspective(700px) rotateX(70deg) rotateY(22deg);
@@ -246,18 +274,15 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   border-top-color: #ffb066;
-  border-right-color: rgb(255 154 60 / 0.4);
+  border-right-color: rgb(255 154 60 / 0.35);
   filter: drop-shadow(0 0 6px #fa6e00);
   animation: sb-spin 0.9s linear infinite;
 }
 .sb__orbit--b > span {
   animation-duration: 1.3s;
   animation-direction: reverse;
-}
-.sb[data-phase='charge'] .sb__orbit {
-  opacity: 1;
 }
 
 .sb__flash {
@@ -342,11 +367,19 @@
   stroke-width: 1;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.25s;
+  transition:
+    stroke-dashoffset 0.25s,
+    stroke 0.3s,
+    stroke-width 0.3s,
+    opacity 0.3s;
 }
 .sb[data-open] .sb__line {
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.8s var(--sb-ease) calc(var(--d) + 120ms);
+  transition:
+    stroke-dashoffset 0.8s var(--sb-ease) calc(var(--d) + 120ms),
+    stroke 0.3s,
+    stroke-width 0.3s,
+    opacity 0.3s;
 }
 .sb__pulse {
   stroke: #ffb066;
@@ -369,13 +402,28 @@
   }
 }
 
-/* Símbolos soltos de código, como no fundo do vídeo */
+/* Hover numa habilidade: a ligação dela acende na cor da marca, as outras recuam */
+.sb[data-hot] .sb__links g:not(.is-hot) .sb__line {
+  opacity: 0.35;
+}
+.sb__links g.is-hot .sb__line {
+  stroke: var(--brand);
+  stroke-width: 2;
+}
+.sb__links g.is-hot .sb__pulse {
+  stroke: var(--brand);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 4px var(--brand));
+}
+
+/* Símbolos soltos de código, no fundo da rede */
 .sb__glyph {
   position: absolute;
   left: calc(var(--x) * 1%);
   top: calc(var(--y) * 1%);
   z-index: 1;
   translate: -50% -50%;
+  transform: translate(calc(var(--px) * -10px), calc(var(--py) * -8px));
   font-family: ui-monospace, Consolas, monospace;
   font-size: 0.7rem;
   color: #ff9a3c;
@@ -384,14 +432,16 @@
   pointer-events: none;
   transition:
     opacity 0.25s,
-    scale 0.25s;
+    scale 0.25s,
+    transform 0.6s var(--sb-ease);
 }
 .sb[data-open] .sb__glyph {
   opacity: 0.4;
   scale: 1;
   transition:
     opacity 0.6s var(--d),
-    scale 0.8s var(--sb-ease) var(--d);
+    scale 0.8s var(--sb-ease) var(--d),
+    transform 0.6s var(--sb-ease);
 }
 
 /* ---------- Habilidades ---------- */
@@ -421,7 +471,7 @@
   opacity: 1;
   pointer-events: auto;
   transition:
-    translate 1s var(--sb-ease) var(--d),
+    translate 1s cubic-bezier(0.34, 1.4, 0.5, 1) var(--d),
     scale 1s var(--sb-ease) var(--d),
     opacity 0.2s var(--d);
 }
@@ -434,6 +484,23 @@
     translate: calc(-50% + (var(--mx) - 50) * 1cqw) calc(-50% + (var(--my) - 50) * 1cqh);
   }
 }
+
+/* Profundidade: cada card anda com o mouse numa intensidade (--dp) */
+.sb__par {
+  width: 100%;
+  height: 100%;
+  transform: translate(calc(var(--px) * var(--dp) * 16px), calc(var(--py) * var(--dp) * 12px));
+  transition:
+    transform 0.6s var(--sb-ease),
+    opacity 0.3s,
+    scale 0.3s var(--sb-ease);
+}
+.sb[data-hot] .sb__skill:not(.is-hot) .sb__par {
+  opacity: 0.45;
+}
+.sb__skill.is-hot .sb__par {
+  scale: 1.06;
+}
 .sb__float {
   width: 100%;
   height: 100%;
@@ -445,6 +512,30 @@
   50% {
     translate: 0 -5px;
   }
+}
+
+/* ---------- Dica abaixo do palco ---------- */
+.sb-hint {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  min-height: 2.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: rgb(255 255 255 / 0.55);
+  transition: opacity 0.4s;
+}
+.sb-hint[data-phase='burst'] {
+  opacity: 0;
+}
+.sb-hint__bar {
+  width: 9rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #fa6e00, #ffd6a8) left / calc(var(--charge) * 100%) 100% no-repeat, rgb(255 255 255 / 0.1);
+}
+.sb-hint:not([data-phase='idle']) .sb-hint__bar {
+  visibility: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {

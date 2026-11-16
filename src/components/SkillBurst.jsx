@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { FaCode } from 'react-icons/fa6'
 import { SiCss, SiHtml5, SiJavascript, SiOpenjdk, SiPython, SiReact, SiSpringboot } from 'react-icons/si'
 import './SkillBurst.css'
@@ -18,7 +18,7 @@ const brands = {
 const WIDE = { rx: 39, ry: 35 }
 const TALL = { rx: 35, ry: 37 }
 const GLYPHS = ['{ }', '</>', 'API', '[ ]', '=>', '( )', '::', '#', '&&', '<>', '[]', '{}', '//', '0x']
-const clamp = (v) => Math.min(94, Math.max(6, v))
+const clamp = (v, lo = 6, hi = 94) => Math.min(hi, Math.max(lo, v))
 
 function point(i, n, f, { rx, ry }, offset = 0) {
   const a = ((-90 + ((i + offset) * 360) / n) * Math.PI) / 180
@@ -38,26 +38,70 @@ const SPARKS = Array.from({ length: 28 }, (_, i) => {
   return { '--sx': `${(Math.cos(a) * d).toFixed(1)}cqmin`, '--sy': `${(Math.sin(a) * d).toFixed(1)}cqmin`, '--sd': `${(i % 5) * 40}ms` }
 })
 
-// Linha do tempo da animação (ms)
-const T_CHARGE = 750
-const T_BURST = 1450
-const T_REPLAY = 650
+// Rachaduras geradas uma vez (semente fixa) a partir de (0,0); o grupo é movido
+// para o ponto onde a pessoa apertou. Troncos primeiro, galhos depois.
+const CRACKS = (() => {
+  let s = 11
+  const r = () => (s = (s * 16807) % 2147483647) / 2147483647
+  const trunks = []
+  const twigs = []
+  const N = 8
+  for (let i = 0; i < N; i++) {
+    let a = (i / N) * Math.PI * 2 + (r() - 0.5) * 0.5
+    let x = 0
+    let y = 0
+    let d = 'M0 0'
+    for (let k = 0; k < 5; k++) {
+      const len = 12 + r() * 20 + k * 7
+      a += (r() - 0.5) * 0.8
+      x += Math.cos(a) * len
+      y += Math.sin(a) * len * 0.8
+      d += ` L${x.toFixed(1)} ${y.toFixed(1)}`
+      if (k >= 1 && k <= 3 && r() > 0.4) {
+        const b = a + (r() > 0.5 ? 1 : -1) * (0.5 + r() * 0.6)
+        const bl = 9 + r() * 15
+        twigs.push(`M${x.toFixed(1)} ${y.toFixed(1)} l${(Math.cos(b) * bl).toFixed(1)} ${(Math.sin(b) * bl).toFixed(1)}`)
+      }
+    }
+    trunks.push(d)
+  }
+  return { trunks, twigs }
+})()
+
+const FOLDER = 'M10 44 L30 22 L128 22 L144 38 L290 38 L310 58 L310 170 L290 190 L30 190 L10 170 Z'
+const CENTER = [160, 114]
+
+// Tempos (ms)
+const HOLD_MS = 1100 // segurando
+const AUTO_MS = 850 // toque rápido ou teclado: carrega sozinha
+const TAP_MS = 220 // abaixo disso, conta como toque
+const DECAY_MS = 450 // soltou antes da hora: a carga volta
 
 const prefersReduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /*
- * Pasta "HABILIDADES" que racha, carrega energia e explode, espalhando as
- * habilidades numa rede ligada ao núcleo. Toca sozinha quando entra na tela;
- * clicar na pasta adianta, e clicar no núcleo depois explode de novo.
+ * Pasta "HABILIDADES" que a pessoa carrega segurando: as rachaduras nascem
+ * de onde ela apertou e crescem com a carga; soltar antes da hora faz a
+ * pasta se recompor. Carga cheia → explode e espalha as habilidades numa
+ * rede ligada ao núcleo. Um toque rápido (ou Enter/Espaço) carrega sozinho.
  *
- * Só translate/scale/opacity animam (compositor); as linhas são SVG simples.
+ * Aberta, as habilidades seguem o mouse em profundidade e, ao passar por
+ * uma, a ligação dela acende na cor da marca. Clicar no núcleo guarda tudo.
+ *
+ * A carga vive numa variável CSS (--charge) gravada por frame; o React só
+ * re-renderiza nas trocas de fase e no hover.
  */
-export default function SkillBurst({ skills, label, openLabel, replayLabel }) {
-  const ref = useRef(null)
+export default function SkillBurst({ skills, label, openLabel, replayLabel, holdHint, closeHint }) {
+  const uid = useId().replace(/:/g, '')
+  const wrap = useRef(null)
+  const root = useRef(null)
+  const cracks = useRef(null)
   const timers = useRef([])
+  const charge = useRef({ v: 0, holding: false, auto: false, downAt: 0, last: 0, raf: 0 })
+  const pointer = useRef({ x: 0, y: 0, raf: 0 })
   const [phase, setPhase] = useState(() => (prefersReduced() ? 'done' : 'idle'))
+  const [hot, setHot] = useState(null)
   const n = skills.length
-  const busy = phase !== 'idle' && phase !== 'done'
 
   const clear = () => {
     timers.current.forEach(clearTimeout)
@@ -65,60 +109,121 @@ export default function SkillBurst({ skills, label, openLabel, replayLabel }) {
   }
   const at = (ms, fn) => timers.current.push(setTimeout(fn, ms))
 
-  const play = () => {
+  const burst = () => {
     clear()
-    if (prefersReduced()) return setPhase('done')
-    setPhase('crack')
-    at(T_CHARGE, () => setPhase('charge'))
-    at(T_BURST, () => setPhase('burst'))
-    at(T_BURST + 1100 + n * 90, () => setPhase('done'))
+    setPhase('burst')
+    at(1100 + n * 90, () => setPhase('done'))
   }
-
-  const playRef = useRef(play)
+  const burstRef = useRef(burst)
   useEffect(() => {
-    playRef.current = play
+    burstRef.current = burst
   })
 
-  // Toca uma vez quando o palco aparece de verdade na tela
-  useEffect(() => {
-    const el = ref.current
-    if (!el || phase !== 'idle') return
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          io.disconnect()
-          at(350, () => playRef.current())
-        }
-      },
-      { threshold: 0.55 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-    // só no primeiro idle
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const tick = (now) => {
+    const c = charge.current
+    const el = root.current
+    if (!el) return
+    const dt = Math.min(50, now - c.last)
+    c.last = now
+    const rising = c.holding || c.auto
+    c.v = rising ? Math.min(1, c.v + dt / (c.auto ? AUTO_MS : HOLD_MS)) : Math.max(0, c.v - dt / DECAY_MS)
+    wrap.current?.style.setProperty('--charge', c.v.toFixed(3))
+    if (rising) el.dataset.charging = ''
+    else delete el.dataset.charging
 
-  useEffect(() => clear, [])
-
-  const onFolder = () => {
-    if (busy) return
-    if (phase === 'idle') return play()
-    // Implode de volta para o núcleo e explode de novo
-    clear()
-    setPhase('idle')
-    at(T_REPLAY, play)
+    if (c.v >= 1) {
+      Object.assign(c, { holding: false, auto: false, raf: 0, v: 0 })
+      delete el.dataset.charging
+      wrap.current?.style.setProperty('--charge', 0)
+      burstRef.current()
+      return
+    }
+    c.raf = c.v > 0 || rising ? requestAnimationFrame(tick) : 0
   }
+  const run = () => {
+    const c = charge.current
+    if (c.raf) return
+    c.last = performance.now()
+    c.raf = requestAnimationFrame(tick)
+  }
+
+  // Leva o ponto de origem das rachaduras para onde a pessoa apertou
+  const aim = (x, y) => {
+    cracks.current?.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`)
+  }
+
+  const onPointerDown = (e) => {
+    if (phase !== 'idle' || e.button !== 0) return
+    const r = e.currentTarget.getBoundingClientRect()
+    aim(clamp(((e.clientX - r.left) / r.width) * 320, 50, 270), clamp(((e.clientY - r.top) / r.height) * 200, 64, 166))
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+    Object.assign(charge.current, { holding: true, auto: false, downAt: performance.now() })
+    run()
+  }
+  const release = (tap) => {
+    const c = charge.current
+    if (!c.holding) return
+    c.holding = false
+    if (tap && performance.now() - c.downAt < TAP_MS) c.auto = true
+    run()
+  }
+
+  const onClick = (e) => {
+    if (phase === 'done') {
+      // Guarda as habilidades de volta na pasta
+      clear()
+      setHot(null)
+      setPhase('idle')
+      return
+    }
+    // Teclado (Enter/Espaço) não tem ponteiro: carrega sozinho a partir do centro
+    if (phase === 'idle' && e.detail === 0) {
+      aim(...CENTER)
+      charge.current.auto = true
+      run()
+    }
+  }
+
+  // Mouse no palco: inclina a pasta e dá profundidade à rede aberta
+  const onMove = (e) => {
+    if (e.pointerType === 'touch') return
+    const r = root.current.getBoundingClientRect()
+    const p = pointer.current
+    p.x = clamp(((e.clientX - r.left) / r.width) * 2 - 1, -1, 1)
+    p.y = clamp(((e.clientY - r.top) / r.height) * 2 - 1, -1, 1)
+    if (!p.raf)
+      p.raf = requestAnimationFrame(() => {
+        p.raf = 0
+        root.current?.style.setProperty('--px', p.x.toFixed(3))
+        root.current?.style.setProperty('--py', p.y.toFixed(3))
+      })
+  }
+  const onLeave = () => {
+    Object.assign(pointer.current, { x: 0, y: 0 })
+    root.current?.style.setProperty('--px', 0)
+    root.current?.style.setProperty('--py', 0)
+  }
+
+  useEffect(
+    () => () => {
+      clear()
+      cancelAnimationFrame(charge.current.raf)
+      cancelAnimationFrame(pointer.current.raf)
+    },
+    [],
+  )
 
   const items = skills.map((name, i) => ({ name, ...place(i, n, i % 2 ? 0.84 : 1, 0, 1) })) // no celular, elipse regular para os cards não se tocarem
   const glyphs = GLYPHS.slice(0, n * 2).map((g, i) => ({ g, ...place(i % n, n, i < n ? 1.24 : 0.52, 0.5) }))
   const open = phase === 'burst' || phase === 'done'
+  const brandOf = (name) => brands[name] ?? { Icon: FaCode, color: '#fa6e00' }
 
   const links = (key) => (
     <svg className={`sb__links sb__links--${key}`} aria-hidden="true">
       {items.map(({ name, ...p }, i) => {
         const end = { x1: '50%', y1: '50%', x2: `${p[key].x}%`, y2: `${p[key].y}%`, pathLength: 1 }
         return (
-          <g key={name} style={{ '--d': `${i * 90}ms` }}>
+          <g key={name} className={hot === i ? 'is-hot' : undefined} style={{ '--d': `${i * 90}ms`, '--brand': brandOf(name).color }}>
             <line className="sb__line" {...end} />
             <line className="sb__pulse" {...end} style={{ '--pd': `${(i * 530) % 2400}ms` }} />
           </g>
@@ -127,77 +232,119 @@ export default function SkillBurst({ skills, label, openLabel, replayLabel }) {
     </svg>
   )
 
-  return (
-    <div ref={ref} className="sb" data-phase={phase} data-open={open || undefined}>
-      {links('w')}
-      {links('t')}
+  const hint = phase === 'idle' ? holdHint : phase === 'done' ? closeHint : ''
 
-      <div className="sb__fx" aria-hidden="true">
-        <span className="sb__rays" />
-        <span className="sb__orbit">
-          <span />
-        </span>
-        <span className="sb__orbit sb__orbit--b">
-          <span />
-        </span>
-        <span className="sb__flash" />
-        {SPARKS.map((s, i) => (
-          <span key={i} className="sb__spark" style={s} />
+  return (
+    <div ref={wrap} className="sbw">
+      <div
+        ref={root}
+        className="sb"
+        data-phase={phase}
+        data-open={open || undefined}
+        data-hot={hot !== null || undefined}
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+      >
+        {links('w')}
+        {links('t')}
+
+        <div className="sb__fx" aria-hidden="true">
+          <span className="sb__rays" />
+          <span className="sb__orbit">
+            <span />
+          </span>
+          <span className="sb__orbit sb__orbit--b">
+            <span />
+          </span>
+          <span className="sb__flash" />
+          {SPARKS.map((s, i) => (
+            <span key={i} className="sb__spark" style={s} />
+          ))}
+        </div>
+
+        {glyphs.map(({ g, style }, i) => (
+          <span key={i} aria-hidden="true" className="sb__glyph" style={{ ...style, '--d': `${200 + i * 60}ms` }}>
+            {g}
+          </span>
         ))}
+
+        <ul className="sb__skills">
+          {items.map(({ name, style }, i) => {
+            const { Icon, color } = brandOf(name)
+            return (
+              <li
+                key={name}
+                className={`sb__skill${hot === i ? ' is-hot' : ''}`}
+                style={{ ...style, '--d': `${i * 90}ms`, '--brand': color, '--dp': (0.55 + ((i * 3) % 5) * 0.16).toFixed(2) }}
+                onPointerEnter={() => phase === 'done' && setHot(i)}
+                onPointerLeave={() => setHot((h) => (h === i ? null : h))}
+              >
+                <div className="sb__par">
+                  <div className="sb__float" style={{ '--fd': `${-i * 700}ms` }}>
+                    <div className="glass glass-hover group flex size-full flex-col items-center justify-center gap-2 !rounded-2xl sm:gap-3">
+                      <Icon
+                        aria-hidden="true"
+                        className="text-3xl text-[var(--brand)] transition-transform duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_14px_var(--brand)] sm:text-4xl lg:text-5xl"
+                      />
+                      <span className="text-[0.55rem] whitespace-nowrap text-[var(--brand)] sm:text-xs">{name}</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            )
+          })}
+        </ul>
+
+        <button
+          type="button"
+          className="sb__folder"
+          onPointerDown={onPointerDown}
+          onPointerUp={() => release(true)}
+          onPointerCancel={() => release(false)}
+          onLostPointerCapture={() => release(false)}
+          onContextMenu={(e) => e.preventDefault()}
+          onClick={onClick}
+          aria-label={phase === 'done' ? replayLabel : openLabel}
+          title={phase === 'done' ? replayLabel : undefined}
+        >
+          <span className="sb__body">
+            <svg viewBox="0 0 320 200" className="sb__svg" aria-hidden="true">
+              <defs>
+                <clipPath id={`${uid}-clip`}>
+                  <path d={FOLDER} />
+                </clipPath>
+                <radialGradient id={`${uid}-glow`}>
+                  <stop offset="0" stopColor="#ffd9ad" stopOpacity="0.95" />
+                  <stop offset="0.35" stopColor="#fa6e00" stopOpacity="0.55" />
+                  <stop offset="1" stopColor="#fa6e00" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <path className="sb__panel" d={FOLDER} />
+              <g clipPath={`url(#${uid}-clip)`}>
+                <g ref={cracks} transform={`translate(${CENTER.join(' ')})`}>
+                  <circle className="sb__heat" r="130" fill={`url(#${uid}-glow)`} />
+                  <g className="sb__cracks">
+                    {CRACKS.trunks.map((d) => (
+                      <path key={d} d={d} pathLength="1" className="sb__trunk" />
+                    ))}
+                    {CRACKS.twigs.map((d) => (
+                      <path key={d} d={d} pathLength="1" className="sb__twig" />
+                    ))}
+                  </g>
+                </g>
+              </g>
+              <path className="sb__edge" d={FOLDER} />
+              <path className="sb__bar" d="M38 22 L120 22 M90 190 L230 190 M310 80 L310 140" />
+            </svg>
+            <span className="sb__label">{label}</span>
+          </span>
+        </button>
       </div>
 
-      {glyphs.map(({ g, style }, i) => (
-        <span key={i} aria-hidden="true" className="sb__glyph" style={{ ...style, '--d': `${200 + i * 60}ms` }}>
-          {g}
-        </span>
-      ))}
-
-      <ul className="sb__skills">
-        {items.map(({ name, style }, i) => {
-          const { Icon, color } = brands[name] ?? { Icon: FaCode, color: '#fa6e00' }
-          return (
-            <li key={name} className="sb__skill" style={{ ...style, '--d': `${i * 90}ms`, '--brand': color }}>
-              <div className="sb__float" style={{ '--fd': `${-i * 700}ms` }}>
-                <div className="glass glass-hover group flex size-full flex-col items-center justify-center gap-2 !rounded-2xl sm:gap-3">
-                  <Icon
-                    aria-hidden="true"
-                    className="text-3xl text-[var(--brand)] transition-transform duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_14px_var(--brand)] sm:text-4xl lg:text-5xl"
-                  />
-                  <span className="text-[0.55rem] whitespace-nowrap text-[var(--brand)] sm:text-xs">{name}</span>
-                </div>
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-
-      <button
-        type="button"
-        className="sb__folder"
-        onClick={onFolder}
-        aria-label={phase === 'done' ? replayLabel : openLabel}
-        title={phase === 'done' ? replayLabel : undefined}
-      >
-        <span className="sb__body">
-          <svg viewBox="0 0 320 200" className="sb__svg" aria-hidden="true">
-            <path className="sb__panel" d="M10 44 L30 22 L128 22 L144 38 L290 38 L310 58 L310 170 L290 190 L30 190 L10 170 Z" />
-            <path className="sb__edge" d="M10 44 L30 22 L128 22 L144 38 L290 38 L310 58 L310 170 L290 190 L30 190 L10 170 Z" />
-            <path className="sb__bar" d="M38 22 L120 22 M90 190 L230 190 M310 80 L310 140" />
-            <g className="sb__cracks">
-              {[
-                'M160 114 L140 100 L128 104 L104 82 L80 72 L50 52',
-                'M160 114 L182 98 L196 102 L222 78 L250 66 L284 52',
-                'M160 114 L138 130 L120 126 L96 152 L70 164 L38 180',
-                'M160 114 L184 132 L202 128 L226 154 L256 166 L292 180',
-                'M104 82 L98 60 M222 78 L234 58 M96 152 L104 176 M226 154 L218 178',
-              ].map((d) => (
-                <path key={d} d={d} pathLength="1" />
-              ))}
-            </g>
-          </svg>
-          <span className="sb__label">{label}</span>
-        </span>
-      </button>
+      <p className="sb-hint" data-phase={phase} aria-hidden="true">
+        <span className="sb-hint__text">{hint}</span>
+        <span className="sb-hint__bar" />
+      </p>
     </div>
   )
 }

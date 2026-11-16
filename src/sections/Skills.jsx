@@ -20,6 +20,8 @@ export default function Skills() {
           label={t.skills.title.toUpperCase()}
           openLabel={t.skills.open}
           replayLabel={t.skills.replay}
+          holdHint={t.skills.hold}
+          closeHint={t.skills.close}
         />
       </div>
     </section>

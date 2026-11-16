@@ -1,7 +1,7 @@
 /* ---- Retrato do hero (HeroPortrait.jsx) ----
  * --fw/--fh: moldura | --ci: largura interna | --pw/--ph: recorte da foto.
  * O recorte é 20% mais largo que a moldura e mais alto que ela, então a
- * cabeça passa da borda de cima. 0.542 = centro da cabeça na largura da foto,
+ * cabeça passa da borda de cima. 0.512 = centro da cabeça na largura da foto,
  * 1.1226 = altura/largura do PNG.
  */
 @property --r {
@@ -17,7 +17,7 @@
   --radius: 1.25rem;
   --ci: calc(var(--fw) - 2 * var(--pad));
   --pw: calc(var(--ci) * 1.2);
-  --ph: calc(var(--pw) * 1.1226);
+  --ph: calc(var(--pw) * 1.1847);
   --tx: 0;
   --ty: 0;
   position: relative;
@@ -133,7 +133,7 @@
 .hp__img {
   position: absolute;
   bottom: 0;
-  left: calc(var(--ci) / 2 - var(--pw) * 0.542);
+  left: calc(var(--ci) / 2 - var(--pw) * 0.512);
   width: var(--pw);
   max-width: none;
   height: auto;
@@ -272,8 +272,8 @@
     linear-gradient(rgb(255 123 0 / 0.14) 1px, transparent 1px) 0 0 / 24px 24px,
     linear-gradient(90deg, rgb(255 123 0 / 0.14) 1px, transparent 1px) 0 0 / 24px 24px,
     rgb(10 10 10 / 0.9);
-  -webkit-mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.542) bottom 0 / var(--pw) auto;
-  mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.542) bottom 0 / var(--pw) auto;
+  -webkit-mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.512) bottom 0 / var(--pw) auto;
+  mask: var(--photo) no-repeat left calc(var(--ci) / 2 - var(--pw) * 0.512) bottom 0 / var(--pw) auto;
 }
 .xray__photo--scan {
   opacity: 0.6;

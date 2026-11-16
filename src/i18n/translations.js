@@ -39,7 +39,9 @@ export const translations = {
       title: 'Habilidades',
       subtitle: 'Linguagens e ferramentas que estudo e uso nos projetos.',
       open: 'Abrir a pasta de habilidades',
-      replay: 'Explodir a pasta de novo',
+      replay: 'Guardar as habilidades na pasta',
+      hold: 'Segure a pasta para abrir',
+      close: 'Clique no centro para guardar tudo',
     },
     focus: {
       title: 'O que estudo',
@@ -157,7 +159,9 @@ export const translations = {
       title: 'Skills',
       subtitle: 'Languages and tools I study and use in my projects.',
       open: 'Open the skills folder',
-      replay: 'Burst the folder again',
+      replay: 'Pack the skills back into the folder',
+      hold: 'Hold the folder to open it',
+      close: 'Click the center to pack everything up',
     },
     focus: {
       title: 'What I work on',
