@@ -3,7 +3,8 @@ import { useEffect } from 'react'
 // Peças que pulverizam: blocos de conteúdo. Só a peça mais externa conta
 // (um parágrafo dentro de um cartão vai junto com o cartão).
 const PIECES = [
-  'h1', 'h2', 'h3', 'h4', 'h5', 'p', 'li', 'img', 'picture', 'video', 'canvas', 'svg',
+  // li.ss__arm é o braço da órbita (altura zero): a peça é o disco dentro dele
+  'h1', 'h2', 'h3', 'h4', 'h5', 'p', 'li:not(.ss__arm)', 'img', 'picture', 'video', 'canvas', 'svg',
   'figure', 'blockquote', 'button', 'a', 'label', 'input', 'textarea', 'select', 'form',
   '.glass', '.ss__sky', '.ss__ground',
 ].join(',')
@@ -51,11 +52,15 @@ export default function useDust(deps) {
         pieces = collect(root)
         dirty = false
       }
-      const line = window.innerHeight * LINE
+      const vh = window.innerHeight
+      const line = vh * LINE
       for (const el of pieces) {
         const r = el.getBoundingClientRect()
         if (!r.height) continue
-        const gone = r.top + r.height / 2 < line
+        // peça pequena: conta o meio. Peça grande (anéis e planeta das
+        // Habilidades): conta a base, para voltar junto com o que está nela
+        const anchor = r.height > vh * 0.4 ? r.bottom - vh * 0.12 : r.top + r.height / 2
+        const gone = anchor < line
         const state = el.dataset.dust
         if (gone && state !== 'out') el.dataset.dust = 'out'
         else if (!gone && state === 'out') el.dataset.dust = 'in'
