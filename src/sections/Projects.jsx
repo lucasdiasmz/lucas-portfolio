@@ -33,18 +33,18 @@ function ProjectDetail({ project, onClose }) {
         type="button"
         onClick={onClose}
         aria-label={`${t.projects.close}: ${pick(project.name)}`}
-        className="absolute top-4 right-4 grid size-9 place-items-center rounded-full border border-white/10 text-neutral-400 transition-colors hover:border-orange-500/60 hover:text-white"
+        className="absolute top-4 right-4 grid size-9 place-items-center rounded-full border border-white/10 text-neutral-400 transition-colors hover:border-brand-500/60 hover:text-white"
       >
         <FaXmark aria-hidden="true" />
       </button>
 
       <div className="flex flex-wrap items-center gap-2 pr-10 text-[0.6rem]">
-        <span className="text-orange-500">{num(project)}</span>
+        <span className="text-brand-500">{num(project)}</span>
         <span className="rounded-full border border-white/10 bg-black/50 px-3 py-1 text-neutral-300">
           {project.period ?? formatYearMonth(project.date, lang)}
         </span>
         {project.status === 'in-progress' && (
-          <span className="flex items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1 text-black">
+          <span className="flex items-center gap-1.5 rounded-full bg-brand-500 px-3 py-1 text-black">
             <span className="size-1.5 animate-pulse rounded-full bg-black" /> {t.projects.inProgress}
           </span>
         )}
@@ -54,8 +54,8 @@ function ProjectDetail({ project, onClose }) {
       <p className="mt-4 text-sm leading-relaxed text-neutral-300">{pick(project.description)}</p>
 
       {project.role && (
-        <p className="mt-5 border-l-2 border-orange-500/70 pl-4 text-xs leading-relaxed text-neutral-400">
-          <span className="block text-[0.6rem] uppercase tracking-[0.2em] text-orange-400">{t.projects.role}</span>
+        <p className="mt-5 border-l-2 border-brand-500/70 pl-4 text-xs leading-relaxed text-neutral-400">
+          <span className="block text-[0.6rem] uppercase tracking-[0.2em] text-brand-400">{t.projects.role}</span>
           <span className="mt-1 block">{pick(project.role)}</span>
         </p>
       )}
@@ -124,8 +124,8 @@ export default function Projects() {
             onClick={() => setFilter(g)}
             className={`flex items-center gap-2 rounded-full border px-4 py-2 text-[0.65rem] transition-[background-color,border-color,color] duration-300 ${
               filter === g
-                ? 'border-orange-500 bg-orange-500 text-black'
-                : 'border-white/10 bg-black/40 text-neutral-300 backdrop-blur hover:border-orange-500/60 hover:text-white'
+                ? 'border-brand-500 bg-brand-500 text-black'
+                : 'border-white/10 bg-black/40 text-neutral-300 backdrop-blur hover:border-brand-500/60 hover:text-white'
             }`}
           >
             {t.projects.groups[g]}

@@ -49,7 +49,7 @@
   width: calc(var(--fw) * 1.32);
   aspect-ratio: 1;
   translate: calc(-50% + var(--tx) * -10px) calc(-50% + var(--ty) * -10px);
-  border: 1px dashed rgb(254 81 1 / 0.32);
+  border: 1px dashed rgb(84 140 255 / 0.32);
   border-radius: 50%;
   animation: hp-spin 40s linear infinite;
 }
@@ -57,7 +57,7 @@
   content: "";
   position: absolute;
   inset: 14%;
-  border: 1px solid rgb(254 81 1 / 0.12);
+  border: 1px solid rgb(84 140 255 / 0.12);
   border-radius: 50%;
 }
 .hp__orbit::after {
@@ -69,8 +69,8 @@
   height: 8px;
   margin-left: -4px;
   border-radius: 50%;
-  background: #fe5101;
-  box-shadow: 0 0 12px 2px rgb(254 81 1 / 0.8);
+  background: #548cff;
+  box-shadow: 0 0 12px 2px rgb(84 140 255 / 0.8);
 }
 
 .hp .hp__frame {
@@ -87,9 +87,9 @@
   border-radius: var(--radius);
   border: 1px solid rgb(255 255 255 / 0.06);
   background:
-    linear-gradient(rgb(254 81 1 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(90deg, rgb(254 81 1 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(135deg, #5c1d00, #171717 55%, #000);
+    linear-gradient(rgb(84 140 255 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgb(84 140 255 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(135deg, #1d3670, #0d1119 55%, #050505);
 }
 .hp__halo {
   position: absolute;
@@ -99,7 +99,7 @@
   aspect-ratio: 1;
   translate: calc(-50% + var(--tx) * -14px) calc(-50% + var(--ty) * -14px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(254 81 1 / 0.55), rgb(254 81 1 / 0.16) 45%, transparent 70%);
+  background: radial-gradient(circle, rgb(84 140 255 / 0.55), rgb(84 140 255 / 0.16) 45%, transparent 70%);
   animation: hp-breathe 7s ease-in-out infinite;
 }
 
@@ -145,10 +145,10 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.5rem;
-  border: 1px solid rgb(254 81 1 / 0.3);
+  border: 1px solid rgb(84 140 255 / 0.3);
   border-radius: 999px;
   background: rgb(0 0 0 / 0.72);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45), 0 0 18px rgb(254 81 1 / 0.15);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45), 0 0 18px rgb(84 140 255 / 0.15);
   backdrop-filter: blur(8px);
   color: #ffffff;
   font-size: 0.72rem;

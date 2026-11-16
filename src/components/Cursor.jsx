@@ -24,7 +24,7 @@ export default function Cursor() {
       y = e.clientY
       const hot = e.target.closest?.('a, button, input, textarea, label, [role="button"]')
       ring.current?.classList.toggle('scale-150', Boolean(hot))
-      ring.current?.classList.toggle('bg-orange-500/15', Boolean(hot))
+      ring.current?.classList.toggle('bg-brand-500/15', Boolean(hot))
     }
     const tick = () => {
       rx += (x - rx) * 0.18
@@ -51,10 +51,10 @@ export default function Cursor() {
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[100] hidden [.has-cursor_&]:block [.cursor-out_&]:opacity-0">
-      <div ref={dot} className="absolute -left-1 -top-1 size-2 rounded-full bg-orange-500 shadow-[0_0_12px_#fe5101]" />
+      <div ref={dot} className="absolute -left-1 -top-1 size-2 rounded-full bg-brand-500 shadow-[0_0_12px_#548cff]" />
       <div
         ref={ring}
-        className="absolute -left-5 -top-5 size-10 rounded-full border border-orange-500/70 transition-[scale,background-color] duration-300"
+        className="absolute -left-5 -top-5 size-10 rounded-full border border-brand-500/70 transition-[scale,background-color] duration-300"
       />
     </div>
   )

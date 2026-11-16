@@ -51,12 +51,12 @@ export default function Hero() {
     >
       <div className="w-full max-w-xl animate-rise text-center lg:text-left">
         <p className="text-sm text-neutral-300 sm:text-base">{t.hero.greeting}</p>
-        <h1 className="glow-text mt-2 text-[clamp(2.1rem,6vw,3.9rem)] leading-[1.05] tracking-wide text-orange-500">
+        <h1 className="glow-text mt-2 text-[clamp(2.1rem,6vw,3.9rem)] leading-[1.05] tracking-wide text-brand-500">
           {first} <span className="block">{rest.join(' ')}</span>
         </h1>
         <p className="mt-5 min-h-[1.8em] text-base text-white sm:text-xl" aria-label={phrases.join(', ')}>
           <span aria-hidden="true">{typed}</span>
-          <span aria-hidden="true" className="ml-1 inline-block h-[1em] w-[2px] translate-y-[0.15em] animate-blink bg-orange-500" />
+          <span aria-hidden="true" className="ml-1 inline-block h-[1em] w-[2px] translate-y-[0.15em] animate-blink bg-brand-500" />
         </p>
         <p className="mx-auto mt-5 max-w-[46ch] text-sm text-neutral-400 lg:mx-0">{pick(profile.tagline)}</p>
 
@@ -68,7 +68,7 @@ export default function Hero() {
                 target={c.type === 'email' ? undefined : '_blank'}
                 rel="noopener noreferrer"
                 aria-label={c.label}
-                className="grid size-10 place-items-center rounded-lg border border-orange-500/30 bg-orange-500/10 text-lg text-orange-500 transition-[transform,background-color,color] duration-300 hover:-translate-y-1 hover:bg-orange-500 hover:text-white"
+                className="grid size-10 place-items-center rounded-lg border border-brand-500/30 bg-brand-500/10 text-lg text-brand-500 transition-[transform,background-color,color] duration-300 hover:-translate-y-1 hover:bg-brand-500 hover:text-white"
               >
                 <ContactIcon type={c.type} />
               </a>
@@ -98,9 +98,9 @@ export default function Hero() {
       <a
         href="#sobre"
         aria-label={t.hero.scroll}
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[0.6rem] tracking-[0.3em] text-neutral-500 uppercase transition-colors hover:text-orange-400 lg:flex"
+        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[0.6rem] tracking-[0.3em] text-neutral-500 uppercase transition-colors hover:text-brand-400 lg:flex"
       >
-        <FaComputerMouse aria-hidden="true" className="animate-bounce text-lg text-orange-500" />
+        <FaComputerMouse aria-hidden="true" className="animate-bounce text-lg text-brand-500" />
         {t.hero.scroll}
       </a>
     </section>

@@ -25,7 +25,7 @@ export default function About() {
           <ul className="grid gap-4 pt-4 sm:grid-cols-2">
             {profile.highlights.map((h, i) => (
               <Reveal as="li" key={i} delay={i * 90} className="glass glass-hover p-6">
-                <p className="text-lg leading-snug text-orange-500">{pick(h.title)}</p>
+                <p className="text-lg leading-snug text-brand-500">{pick(h.title)}</p>
                 <p className="mt-2 text-xs text-neutral-400">{pick(h.text)}</p>
               </Reveal>
             ))}
@@ -36,9 +36,9 @@ export default function About() {
         <Reveal delay={150} className="glass relative overflow-hidden p-8 lg:sticky lg:top-28">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-orange-500/20 blur-[90px]"
+            className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-brand-500/20 blur-[90px]"
           />
-          <FaGraduationCap aria-hidden="true" className="relative text-4xl text-orange-500" />
+          <FaGraduationCap aria-hidden="true" className="relative text-4xl text-brand-500" />
           <p className="relative mt-6 text-[0.65rem] tracking-[0.3em] text-neutral-500 uppercase">
             {pick({ pt: 'Formação', en: 'Education' })}
           </p>
@@ -49,7 +49,7 @@ export default function About() {
           <p className="relative mt-2 text-sm leading-relaxed text-white">{pick(about.interests)}</p>
           <ul className="relative mt-8 flex flex-wrap gap-2">
             {about.skills.map((s) => (
-              <li key={s} className="rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1 text-[0.65rem] text-orange-300">
+              <li key={s} className="rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-[0.65rem] text-brand-300">
                 {s}
               </li>
             ))}

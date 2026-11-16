@@ -15,10 +15,10 @@ const brands = {
   React: { Icon: SiReact, color: '#61dafb' },
 }
 
-// Paleta (index.css): Flame Orange, dois tons dele e branco
-const DOME_COLORS = ['#fe5101', '#ff8550', '#ffd9c7', '#ffffff']
+// Paleta (index.css): Cornflower Blue, dois tons dele e branco
+const DOME_COLORS = ['#548cff', '#93b3ff', '#cfe0ff', '#ffffff']
 // Globo: oceano (pontos brancos fracos), terra, terra clara e luzes das cidades
-const GLOBE_COLORS = ['#ffffff', '#fe5101', '#ff8550', '#fff0e8']
+const GLOBE_COLORS = ['#ffffff', '#548cff', '#93b3ff', '#e6efff']
 const GLOBE_ALPHA = [0.08, 0.95, 1, 1]
 const GLOBE_SIZE = [1.1, 2, 2, 2.6]
 
@@ -189,7 +189,7 @@ export default function SkillOrbit({ skills, labels }) {
   // Distribui as habilidades pelos anéis: 2, 2 e o resto no de fora
   const placed = skills.map((skill, i) => {
     const ring = i < 6 ? i % 3 : 2
-    return { ...skill, ring, ...(brands[skill.name] ?? { Icon: FaCode, color: '#fe5101' }) }
+    return { ...skill, ring, ...(brands[skill.name] ?? { Icon: FaCode, color: '#548cff' }) }
   })
   const perRing = [0, 1, 2].map((r) => placed.filter((p) => p.ring === r).length)
   const slot = [0, 0, 0]
@@ -259,11 +259,11 @@ export default function SkillOrbit({ skills, labels }) {
       const top = g.cy - ry
       const bottom = g.cy + ry
       const glow = ctx.createLinearGradient(0, top, 0, bottom)
-      glow.addColorStop(0, `rgb(255 133 80 / ${0.05 * boost})`)
-      glow.addColorStop(1, `rgb(255 133 80 / ${0.15 * boost})`)
+      glow.addColorStop(0, `rgb(147 179 255 / ${0.05 * boost})`)
+      glow.addColorStop(1, `rgb(147 179 255 / ${0.15 * boost})`)
       const line = ctx.createLinearGradient(0, top, 0, bottom)
-      line.addColorStop(0, `rgb(255 180 145 / ${Math.min(1, 0.16 * boost)})`)
-      line.addColorStop(1, `rgb(255 180 145 / ${Math.min(1, 0.66 * boost)})`)
+      line.addColorStop(0, `rgb(186 208 255 / ${Math.min(1, 0.16 * boost)})`)
+      line.addColorStop(1, `rgb(186 208 255 / ${Math.min(1, 0.66 * boost)})`)
       ctx.beginPath()
       ctx.ellipse(g.cx, g.cy, rx, ry, 0, isFront ? 0 : Math.PI, isFront ? Math.PI : Math.PI * 2)
       ctx.strokeStyle = glow
@@ -325,7 +325,7 @@ export default function SkillOrbit({ skills, labels }) {
 
       // --- Fundo: poeira e metade de trás dos anéis ---
       cb.clearRect(0, 0, w, h)
-      cb.fillStyle = '#ff8550'
+      cb.fillStyle = '#93b3ff'
       for (const d of dust) {
         d.y -= d.v * dt
         if (d.y < -0.02) d.y = 1.02
@@ -343,16 +343,16 @@ export default function SkillOrbit({ skills, labels }) {
       if (e < 1) {
         cf.globalAlpha = 1 - e
         const body = cf.createRadialGradient(X0, Y0 - R * 0.2, R * 0.1, X0, Y0, R * 1.05)
-        body.addColorStop(0, `rgb(254 81 1 / ${0.28 + heat * 0.22})`)
-        body.addColorStop(0.6, 'rgb(12 4 0 / 0.92)')
+        body.addColorStop(0, `rgb(84 140 255 / ${0.28 + heat * 0.22})`)
+        body.addColorStop(0.6, 'rgb(5 8 18 / 0.92)')
         body.addColorStop(1, 'rgb(0 0 0 / 0.96)')
         cf.fillStyle = body
         cf.beginPath()
         cf.arc(X0, Y0, R, 0, Math.PI * 2)
         cf.fill()
         const halo = cf.createRadialGradient(X0, Y0, R * 0.9, X0, Y0, R * 1.6)
-        halo.addColorStop(0, `rgb(254 81 1 / ${0.22 + heat * 0.2})`)
-        halo.addColorStop(1, 'rgb(254 81 1 / 0)')
+        halo.addColorStop(0, `rgb(84 140 255 / ${0.22 + heat * 0.2})`)
+        halo.addColorStop(1, 'rgb(84 140 255 / 0)')
         cf.fillStyle = halo
         cf.beginPath()
         cf.arc(X0, Y0, R * 1.6, 0, Math.PI * 2)
@@ -396,16 +396,16 @@ export default function SkillOrbit({ skills, labels }) {
       if (e > 0) {
         cf.globalAlpha = e
         const atm = cf.createRadialGradient(X0, Y0, R * 0.95, X0, Y0, R * 1.3)
-        atm.addColorStop(0, 'rgb(254 81 1 / 0.32)')
-        atm.addColorStop(1, 'rgb(254 81 1 / 0)')
+        atm.addColorStop(0, 'rgb(84 140 255 / 0.32)')
+        atm.addColorStop(1, 'rgb(84 140 255 / 0)')
         cf.fillStyle = atm
         cf.beginPath()
         cf.arc(X0, Y0, R * 1.3, 0, Math.PI * 2)
         cf.fill()
         const body = cf.createRadialGradient(X0 - R * 0.35, Y0 - R * 0.4, R * 0.05, X0, Y0, R)
-        body.addColorStop(0, 'rgb(40 16 4)')
-        body.addColorStop(0.55, 'rgb(10 4 0)')
-        body.addColorStop(1, '#000000')
+        body.addColorStop(0, 'rgb(14 22 44)')
+        body.addColorStop(0.55, 'rgb(6 8 16)')
+        body.addColorStop(1, '#050505')
         cf.fillStyle = body
         cf.beginPath()
         cf.arc(X0, Y0, R, 0, Math.PI * 2)
@@ -427,7 +427,7 @@ export default function SkillOrbit({ skills, labels }) {
 
         // Arcos de Belo Horizonte para o mundo, com uma luz correndo em cada um
         cf.lineWidth = 1.1
-        cf.strokeStyle = '#ff8550'
+        cf.strokeStyle = '#93b3ff'
         const tmp = { x: [0], y: [0], z: [0] }
         ARCS.forEach((pts, a) => {
           const count = pts.length / 3
@@ -460,7 +460,7 @@ export default function SkillOrbit({ skills, labels }) {
             cf.beginPath()
             cf.arc(end[0], end[1], 2 + pulse * 7, 0, Math.PI * 2)
             cf.stroke()
-            cf.strokeStyle = '#ff8550'
+            cf.strokeStyle = '#93b3ff'
           }
         })
 
@@ -489,7 +489,7 @@ export default function SkillOrbit({ skills, labels }) {
           const z = Math.sin(a)
           const ctx = z >= 0 ? cf : cb
           ctx.globalAlpha = (1 - j / 18) * (0.25 + 0.6 * ((z + 1) / 2))
-          ctx.fillStyle = j === 0 ? '#fff0e8' : '#ffa47a'
+          ctx.fillStyle = j === 0 ? '#e6efff' : '#93b3ff'
           const s = j === 0 ? 3 : 2
           ctx.fillRect(cx + Math.cos(a) * rx - s / 2, cy + Math.sin(a) * ry - s / 2, s, s)
         }
@@ -506,7 +506,7 @@ export default function SkillOrbit({ skills, labels }) {
       cb.globalCompositeOperation = 'lighter'
       cf.globalCompositeOperation = 'lighter'
       cb.lineWidth = cf.lineWidth = 1.2
-      cb.strokeStyle = cf.strokeStyle = '#ff8550'
+      cb.strokeStyle = cf.strokeStyle = '#93b3ff'
       for (let i = rays.length - 1; i >= 0; i--) {
         const r = rays[i]
         r.life += dt
@@ -526,7 +526,7 @@ export default function SkillOrbit({ skills, labels }) {
         ctx.moveTo(x0, y0)
         ctx.lineTo(cx + ca * (r.r + r.len), cy + sa * (r.r + r.len) * k)
         ctx.stroke()
-        ctx.fillStyle = '#fff0e8'
+        ctx.fillStyle = '#e6efff'
         ctx.fillRect(cx + ca * (r.r + r.len) - 1, cy + sa * (r.r + r.len) * k - 1, 2, 2)
       }
 
@@ -536,8 +536,8 @@ export default function SkillOrbit({ skills, labels }) {
         if (q1 < 1) {
           const fl = cf.createRadialGradient(X0, Y0, 0, X0, Y0, R * (0.7 + q1 * 2.2))
           fl.addColorStop(0, `rgb(255 255 255 / ${0.9 * (1 - q1)})`)
-          fl.addColorStop(0.3, `rgb(255 133 80 / ${0.7 * (1 - q1)})`)
-          fl.addColorStop(1, 'rgb(254 81 1 / 0)')
+          fl.addColorStop(0.3, `rgb(147 179 255 / ${0.7 * (1 - q1)})`)
+          fl.addColorStop(1, 'rgb(84 140 255 / 0)')
           cf.globalAlpha = 1
           cf.fillStyle = fl
           cf.beginPath()
@@ -548,8 +548,8 @@ export default function SkillOrbit({ skills, labels }) {
         if (q2 > 0 && q2 < 1) {
           const rb = R * (1 + 0.9 * easeOut(q2))
           const fill = cf.createRadialGradient(X0, Y0, rb * 0.5, X0, Y0, rb)
-          fill.addColorStop(0, 'rgb(254 81 1 / 0)')
-          fill.addColorStop(1, `rgb(254 81 1 / ${0.18 * (1 - q2)})`)
+          fill.addColorStop(0, 'rgb(84 140 255 / 0)')
+          fill.addColorStop(1, `rgb(84 140 255 / ${0.18 * (1 - q2)})`)
           cf.globalAlpha = 1
           cf.fillStyle = fill
           cf.beginPath()
@@ -567,10 +567,10 @@ export default function SkillOrbit({ skills, labels }) {
           cf.translate(cx, cy)
           cf.scale(1, k)
           const sh = cf.createRadialGradient(0, 0, rs * 0.3, 0, 0, rs)
-          sh.addColorStop(0, 'rgb(254 81 1 / 0)')
-          sh.addColorStop(0.72, `rgb(254 81 1 / ${0.4 * (1 - q3)})`)
-          sh.addColorStop(0.94, `rgb(255 217 199 / ${0.85 * (1 - q3)})`)
-          sh.addColorStop(1, 'rgb(254 81 1 / 0)')
+          sh.addColorStop(0, 'rgb(84 140 255 / 0)')
+          sh.addColorStop(0.72, `rgb(84 140 255 / ${0.4 * (1 - q3)})`)
+          sh.addColorStop(0.94, `rgb(207 224 255 / ${0.85 * (1 - q3)})`)
+          sh.addColorStop(1, 'rgb(84 140 255 / 0)')
           cf.globalAlpha = 1
           cf.fillStyle = sh
           cf.beginPath()

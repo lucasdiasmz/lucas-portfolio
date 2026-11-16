@@ -6,9 +6,9 @@ import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 const icons = {
   backend: { Icon: FaServer, color: 'text-sky-400' },
-  frontend: { Icon: FaLaptopCode, color: 'text-orange-400' },
+  frontend: { Icon: FaLaptopCode, color: 'text-brand-400' },
   oop: { Icon: FaCubes, color: 'text-violet-400' },
-  web: { Icon: FaRocket, color: 'text-orange-300' },
+  web: { Icon: FaRocket, color: 'text-brand-300' },
   ai: { Icon: FaBrain, color: 'text-emerald-400' },
   games: { Icon: FaGamepad, color: 'text-emerald-400' },
   api: { Icon: FaGraduationCap, color: 'text-rose-400' },
@@ -22,7 +22,7 @@ export default function Focus() {
     <section id="foco" aria-labelledby="foco-titulo" className="relative px-6 py-14 md:px-16 md:py-16">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-40 top-1/3 size-[400px] rounded-full bg-orange-500/10 blur-[160px]"
+        className="pointer-events-none absolute -left-40 top-1/3 size-[400px] rounded-full bg-brand-500/10 blur-[160px]"
       />
       <SplitTitle id="foco-titulo" text={t.focus.title} />
 

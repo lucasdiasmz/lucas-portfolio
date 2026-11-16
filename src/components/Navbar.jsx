@@ -42,7 +42,7 @@ export default function Navbar() {
       {/* Barra de progresso de leitura na lateral direita */}
       <div aria-hidden="true" className="fixed right-1 top-0 z-50 hidden h-screen w-[3px] sm:block">
         <div
-          className="h-full w-full origin-top rounded-full bg-gradient-to-b from-orange-400 to-orange-700 shadow-[0_0_10px_#fe5101]"
+          className="h-full w-full origin-top rounded-full bg-gradient-to-b from-brand-400 to-brand-700 shadow-[0_0_10px_#548cff]"
           style={{ transform: `scaleY(${progress})` }}
         />
       </div>
@@ -62,7 +62,7 @@ export default function Navbar() {
           </div>
 
           <SectionLink id="inicio" className="relative flex items-center gap-2.5" onClick={() => setOpen(false)}>
-            <Logo className="size-9 drop-shadow-[0_0_10px_rgb(250_110_0/0.6)]" />
+            <Logo className="size-9 drop-shadow-[0_0_10px_rgb(84_140_255/0.6)]" />
             <span className="hidden text-xs tracking-[0.3em] text-neutral-200 sm:inline">LUCAS</span>
           </SectionLink>
 
@@ -106,10 +106,10 @@ export default function Navbar() {
                 <SectionLink
                   id={s.id}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm hover:bg-white/5 hover:text-orange-400"
+                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm hover:bg-white/5 hover:text-brand-400"
                 >
                   {t.nav[s.key]}
-                  <span aria-hidden="true" className="text-orange-500">
+                  <span aria-hidden="true" className="text-brand-500">
                     →
                   </span>
                 </SectionLink>

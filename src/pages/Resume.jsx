@@ -16,7 +16,7 @@ export default function Resume() {
       <div className="mt-14">
         {!resume.file ? (
           <div className="glass relative overflow-hidden p-8 text-center sm:p-12">
-            <div aria-hidden="true" className="pointer-events-none absolute -top-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-orange-500/20 blur-[100px]" />
+            <div aria-hidden="true" className="pointer-events-none absolute -top-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-brand-500/20 blur-[100px]" />
             <p className="relative mx-auto max-w-[44ch] text-base leading-relaxed text-neutral-200">{t.resume.empty}</p>
             <div className="relative mt-8 flex flex-wrap justify-center gap-3">
               <SectionLink id="projetos" className="btn-fire">

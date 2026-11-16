@@ -2,33 +2,33 @@
 
 /*
   Identidade visual: estúdio noturno.
-  Três cores: Jet Black (#000000) no fundo, Soft White (#FFFFFF) no texto e
-  Flame Orange (#FE5101) como único destaque. Os outros tons são só variações
-  dessas três (laranja mais claro ou mais escuro, branco com transparência).
+  Três cores: Ink Black (#050505) no fundo, Paper White (#FFFFFF) no texto e
+  Cornflower Blue (#548cff) como único destaque. Os outros tons são só variações
+  dessas três (azul mais claro ou mais escuro, branco com transparência).
   Tipografia larga e técnica (Michroma), vidro fosco nos cartões.
 */
 @theme {
   --font-sans: "Michroma", ui-sans-serif, system-ui, sans-serif;
 
-  --color-night: #000000;
+  --color-night: #050505;
   --color-coal: #0a0a0a;
-  --color-ember: #fe5101;
-  --color-flame: #c93f00;
-  --color-glow: #ff8550;
+  --color-ember: #548cff;
+  --color-flame: #3d73e6;
+  --color-glow: #93b3ff;
   --color-mist: #a3a3a3;
 
-  /* A escala orange do Tailwind passa a derivar do Flame Orange (500) */
-  --color-orange-50: #fff4ee;
-  --color-orange-100: #ffe3d4;
-  --color-orange-200: #ffc5a8;
-  --color-orange-300: #ff9e72;
-  --color-orange-400: #ff763a;
-  --color-orange-500: #fe5101;
-  --color-orange-600: #db4300;
-  --color-orange-700: #b03600;
-  --color-orange-800: #8a2b00;
-  --color-orange-900: #5c1d00;
-  --color-orange-950: #331000;
+  /* A escala brand do Tailwind passa a derivar do Cornflower Blue (500) */
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #dbe7ff;
+  --color-brand-200: #bad0ff;
+  --color-brand-300: #93b3ff;
+  --color-brand-400: #7199ff;
+  --color-brand-500: #548cff;
+  --color-brand-600: #3d73e6;
+  --color-brand-700: #2f5bbf;
+  --color-brand-800: #274a99;
+  --color-brand-900: #1d3670;
+  --color-brand-950: #0f1d3d;
 
   --color-danger: #ff6b6b;
   --color-success: #4ade80;
@@ -92,7 +92,7 @@
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(var(--color-ember), var(--color-flame));
@@ -115,7 +115,7 @@
   height: 100%;
   object-fit: cover;
   /* Desfoque leve: o código vira textura, sem disputar atenção com o conteúdo */
-  filter: blur(6px) saturate(0.9);
+  filter: blur(6px) saturate(0.9) hue-rotate(195deg); /* o vídeo é laranja: gira o matiz para o azul da marca */
   transform: scale(1.08); /* esconde a borda clara que o blur cria */
 }
 .site-bg::before {
@@ -124,7 +124,7 @@
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(60rem 40rem at 50% -10%, rgb(254 81 1 / 0.14), transparent 70%),
+    radial-gradient(60rem 40rem at 50% -10%, rgb(84 140 255 / 0.14), transparent 70%),
     linear-gradient(rgb(255 255 255 / 0.03) 1px, transparent 1px) 0 0 / 56px 56px,
     linear-gradient(90deg, rgb(255 255 255 / 0.03) 1px, transparent 1px) 0 0 / 56px 56px,
     radial-gradient(ellipse at center, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0.9));
@@ -138,7 +138,7 @@
   width: 34rem;
   height: 34rem;
   border-radius: 9999px;
-  background: rgb(254 81 1 / 0.1);
+  background: rgb(84 140 255 / 0.1);
   filter: blur(140px);
   animation: orb 22s ease-in-out infinite;
 }
@@ -158,10 +158,10 @@
   transition: border-color 0.4s, box-shadow 0.4s;
 }
 .navbar:hover {
-  border-color: rgb(255 133 80 / 0.5);
+  border-color: rgb(147 179 255 / 0.5);
   box-shadow:
-    0 0 25px rgb(254 81 1 / 0.45),
-    0 0 45px rgb(254 81 1 / 0.25);
+    0 0 25px rgb(84 140 255 / 0.45),
+    0 0 45px rgb(84 140 255 / 0.25);
 }
 .navbar-shine {
   position: absolute;
@@ -222,14 +222,14 @@
   font-size: 0.8rem;
   color: #fff;
   background: linear-gradient(90deg, var(--color-ember), var(--color-flame));
-  box-shadow: 0 6px 24px rgb(254 81 1 / 0.3);
+  box-shadow: 0 6px 24px rgb(84 140 255 / 0.3);
   transition:
     transform 0.3s var(--ease-out-expo),
     box-shadow 0.3s;
 }
 .btn-fire:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 34px rgb(254 81 1 / 0.55);
+  box-shadow: 0 10px 34px rgb(84 140 255 / 0.55);
 }
 .btn-ghost {
   display: inline-flex;
@@ -265,9 +265,9 @@
     box-shadow 0.4s;
 }
 .glass-hover:hover {
-  border-color: rgb(254 81 1 / 0.45);
+  border-color: rgb(84 140 255 / 0.45);
   transform: translateY(-6px);
-  box-shadow: 0 18px 50px -12px rgb(254 81 1 / 0.35);
+  box-shadow: 0 18px 50px -12px rgb(84 140 255 / 0.35);
 }
 
 /* Moldura com brilho em movimento (foto do topo) */
@@ -282,7 +282,7 @@
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(45deg, #c93f00, #fe5101, #ff8550, #c93f00) 0 0 / 300% auto;
+  background: linear-gradient(45deg, #3d73e6, #548cff, #93b3ff, #3d73e6) 0 0 / 300% auto;
   filter: blur(8px);
   opacity: 0.5;
   animation: glow-move 5s linear infinite;
@@ -302,8 +302,8 @@
 
 .glow-text {
   text-shadow:
-    0 0 10px rgb(254 81 1 / 0.55),
-    0 0 26px rgb(254 81 1 / 0.35);
+    0 0 10px rgb(84 140 255 / 0.55),
+    0 0 26px rgb(84 140 255 / 0.35);
 }
 
 /* ---------- Animações de entrada ---------- */

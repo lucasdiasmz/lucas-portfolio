@@ -41,7 +41,7 @@ const fields = ['name', 'email', 'message']
 const inputClass = (hasError) =>
   [
     'w-full rounded-xl border bg-black/40 px-4 py-3 text-sm text-white placeholder:text-neutral-600 transition-colors',
-    'focus:border-orange-500 focus:bg-black/60 focus:outline-none',
+    'focus:border-brand-500 focus:bg-black/60 focus:outline-none',
     hasError ? 'border-danger' : 'border-white/10',
   ].join(' ')
 
@@ -134,7 +134,7 @@ function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="glass relative overflow-hidden p-6 sm:p-10">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-orange-500/15 blur-[100px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-brand-500/15 blur-[100px]" />
       <h3 id="formulario" className="relative text-xl text-white">
         {t.contact.formTitle}
       </h3>
@@ -242,10 +242,10 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="glass glass-hover group flex h-full flex-col p-6"
               >
-                <ContactIcon type={c.type} className="text-2xl text-orange-500 transition-transform duration-500 group-hover:scale-110" />
+                <ContactIcon type={c.type} className="text-2xl text-brand-500 transition-transform duration-500 group-hover:scale-110" />
                 <span className="mt-4 text-base text-white">{c.label}</span>
                 <span className="mt-1 text-xs text-neutral-400">{t.contact.hints[c.type]}</span>
-                <span className="mt-3 truncate text-xs text-orange-300/80 group-hover:text-orange-300">{c.value}</span>
+                <span className="mt-3 truncate text-xs text-brand-300/80 group-hover:text-brand-300">{c.value}</span>
               </a>
             </Reveal>
           ))}

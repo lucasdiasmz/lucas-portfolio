@@ -232,7 +232,7 @@ export default function HeroPortrait() {
         <div className="frame-glow hp__frame">
           <div className="hp__card">
             <span aria-hidden="true" className="hp__halo" />
-            {!photoOk && <span className="grid size-full place-items-center text-8xl text-orange-500">{profile.name[0]}</span>}
+            {!photoOk && <span className="grid size-full place-items-center text-8xl text-brand-500">{profile.name[0]}</span>}
           </div>
         </div>
 
@@ -254,14 +254,14 @@ export default function HeroPortrait() {
         <ul aria-hidden="true" className="hp__chips">
           {chips.map(({ Icon, label }, i) => (
             <li key={label} className="hp__chip" style={{ '--i': i }}>
-              <Icon className="text-orange-500" />
+              <Icon className="text-brand-500" />
               <span className="hp__chip-label">{label}</span>
             </li>
           ))}
         </ul>
 
         <p className="hp__badge">
-          <FaCode aria-hidden="true" className="text-orange-500" />
+          <FaCode aria-hidden="true" className="text-brand-500" />
           {pick(profile.badge)}
         </p>
       </div>

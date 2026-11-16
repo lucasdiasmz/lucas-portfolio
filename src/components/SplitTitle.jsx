@@ -9,7 +9,7 @@ export default function SplitTitle({ text, as: Tag = 'h2', id, className = '' })
       ref={ref}
       id={id}
       aria-label={text}
-      className={`split glow-text text-center text-[clamp(2rem,6vw,4.5rem)] leading-[1.15] tracking-tight text-orange-400 select-none ${className}`}
+      className={`split glow-text text-center text-[clamp(2rem,6vw,4.5rem)] leading-[1.15] tracking-tight text-brand-400 select-none ${className}`}
     >
       {text.split(' ').map((word, w) => (
         <span key={w} aria-hidden="true" className="inline-block whitespace-nowrap">
