@@ -69,7 +69,9 @@ const CRACKS = (() => {
 })()
 
 const FOLDER = 'M10 44 L30 22 L128 22 L144 38 L290 38 L310 58 L310 170 L290 190 L30 190 L10 170 Z'
-const CENTER = [160, 114]
+// Capa da frente: mais baixa que o fundo, deixando a aba e os documentos à mostra
+const COVER = 'M10 76 L28 58 L292 58 L310 76 L310 172 L292 190 L28 190 L10 172 Z'
+const CENTER = [160, 124]
 
 // Tempos (ms)
 const HOLD_MS = 1100 // segurando
@@ -91,7 +93,7 @@ const prefersReduced = () => typeof window !== 'undefined' && window.matchMedia(
  * A carga vive numa variável CSS (--charge) gravada por frame; o React só
  * re-renderiza nas trocas de fase e no hover.
  */
-export default function SkillBurst({ skills, label, openLabel, replayLabel, holdHint, closeHint }) {
+export default function SkillBurst({ skills, label, countLabel, openLabel, replayLabel, holdHint, closeHint }) {
   const uid = useId().replace(/:/g, '')
   const wrap = useRef(null)
   const root = useRef(null)
@@ -155,7 +157,7 @@ export default function SkillBurst({ skills, label, openLabel, replayLabel, hold
   const onPointerDown = (e) => {
     if (phase !== 'idle' || e.button !== 0) return
     const r = e.currentTarget.getBoundingClientRect()
-    aim(clamp(((e.clientX - r.left) / r.width) * 320, 50, 270), clamp(((e.clientY - r.top) / r.height) * 200, 64, 166))
+    aim(clamp(((e.clientX - r.left) / r.width) * 320, 50, 270), clamp(((e.clientY - r.top) / r.height) * 200, 80, 172))
     e.currentTarget.setPointerCapture?.(e.pointerId)
     Object.assign(charge.current, { holding: true, auto: false, downAt: performance.now() })
     run()
@@ -217,6 +219,7 @@ export default function SkillBurst({ skills, label, openLabel, replayLabel, hold
   const glyphs = GLYPHS.slice(0, n * 2).map((g, i) => ({ g, ...place(i % n, n, i < n ? 1.24 : 0.52, 0.5) }))
   const open = phase === 'burst' || phase === 'done'
   const brandOf = (name) => brands[name] ?? { Icon: FaCode, color: '#fa6e00' }
+  const papers = skills.slice(0, 3).map((name) => ({ name, ...brandOf(name) }))
 
   const links = (key) => (
     <svg className={`sb__links sb__links--${key}`} aria-hidden="true">
@@ -308,35 +311,63 @@ export default function SkillBurst({ skills, label, openLabel, replayLabel, hold
           title={phase === 'done' ? replayLabel : undefined}
         >
           <span className="sb__body">
-            <svg viewBox="0 0 320 200" className="sb__svg" aria-hidden="true">
-              <defs>
-                <clipPath id={`${uid}-clip`}>
-                  <path d={FOLDER} />
-                </clipPath>
-                <radialGradient id={`${uid}-glow`}>
-                  <stop offset="0" stopColor="#ffd9ad" stopOpacity="0.95" />
-                  <stop offset="0.35" stopColor="#fa6e00" stopOpacity="0.55" />
-                  <stop offset="1" stopColor="#fa6e00" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <path className="sb__panel" d={FOLDER} />
-              <g clipPath={`url(#${uid}-clip)`}>
-                <g ref={cracks} transform={`translate(${CENTER.join(' ')})`}>
-                  <circle className="sb__heat" r="130" fill={`url(#${uid}-glow)`} />
-                  <g className="sb__cracks">
-                    {CRACKS.trunks.map((d) => (
-                      <path key={d} d={d} pathLength="1" className="sb__trunk" />
-                    ))}
-                    {CRACKS.twigs.map((d) => (
-                      <path key={d} d={d} pathLength="1" className="sb__twig" />
-                    ))}
+            <span className="sb__stack" aria-hidden="true">
+              {/* Fundo da pasta, com a aba */}
+              <svg viewBox="0 0 320 200" className="sb__svg sb__back">
+                <path className="sb__back-fill" d={FOLDER} />
+                <path className="sb__back-edge" d={FOLDER} />
+                <path className="sb__bar" d="M38 22 L120 22" />
+              </svg>
+              <span className="sb__tab">~/{label.toLowerCase()}</span>
+
+              {/* Documentos guardados: espiam por cima da capa e sobem ao abrir */}
+              <span className="sb__papers">
+                {papers.map(({ name, Icon, color }, i) => (
+                  <span key={name} className="sb__paper" style={{ '--i': i - 1, '--brand': color }}>
+                    <Icon className="sb__paper-icon" />
+                    <span className="sb__paper-lines" />
+                  </span>
+                ))}
+              </span>
+
+              {/* Capa articulada pela base: tomba no hover, abre com a carga */}
+              <span className="sb__front">
+                <svg viewBox="0 0 320 200" className="sb__svg">
+                  <defs>
+                    <clipPath id={`${uid}-clip`}>
+                      <path d={COVER} />
+                    </clipPath>
+                    <radialGradient id={`${uid}-glow`}>
+                      <stop offset="0" stopColor="#ffd9ad" stopOpacity="0.95" />
+                      <stop offset="0.35" stopColor="#fa6e00" stopOpacity="0.55" />
+                      <stop offset="1" stopColor="#fa6e00" stopOpacity="0" />
+                    </radialGradient>
+                    <pattern id={`${uid}-grid`} width="12" height="12" patternUnits="userSpaceOnUse">
+                      <path d="M12 0 H0 V12" fill="none" stroke="rgb(255 154 60 / 0.07)" />
+                    </pattern>
+                  </defs>
+                  <path className="sb__panel" d={COVER} />
+                  <path d={COVER} fill={`url(#${uid}-grid)`} />
+                  <g clipPath={`url(#${uid}-clip)`}>
+                    <g ref={cracks} transform={`translate(${CENTER.join(' ')})`}>
+                      <circle className="sb__heat" r="130" fill={`url(#${uid}-glow)`} />
+                      <g className="sb__cracks">
+                        {CRACKS.trunks.map((d) => (
+                          <path key={d} d={d} pathLength="1" className="sb__trunk" />
+                        ))}
+                        {CRACKS.twigs.map((d) => (
+                          <path key={d} d={d} pathLength="1" className="sb__twig" />
+                        ))}
+                      </g>
+                    </g>
                   </g>
-                </g>
-              </g>
-              <path className="sb__edge" d={FOLDER} />
-              <path className="sb__bar" d="M38 22 L120 22 M90 190 L230 190 M310 80 L310 140" />
-            </svg>
-            <span className="sb__label">{label}</span>
+                  <path className="sb__edge" d={COVER} />
+                  <path className="sb__bar" d="M90 190 L230 190 M310 96 L310 150 M10 112 L10 150" />
+                </svg>
+                <span className="sb__label">{label}</span>
+                <span className="sb__count">{countLabel}</span>
+              </span>
+            </span>
           </span>
         </button>
       </div>

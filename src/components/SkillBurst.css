@@ -52,15 +52,13 @@
   stroke-width: 3;
 }
 
+/* Corpo: inclina seguindo o mouse e cresce um pouco com a carga */
 .sb__body {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
   transform-origin: 50% 50%;
-  /* inclina seguindo o mouse; cresce um pouco com a carga */
   transform: perspective(900px) rotateX(calc(var(--py) * -10deg)) rotateY(calc(var(--px) * 14deg));
-  scale: calc(1 + var(--charge) * 0.07);
+  scale: calc(1 + var(--charge) * 0.06);
   transition:
     transform 0.5s var(--sb-ease),
     scale 0.55s var(--sb-ease),
@@ -69,35 +67,132 @@
 .sb[data-charging] .sb__body {
   transition: transform 0.5s var(--sb-ease);
 }
+.sb__stack {
+  position: absolute;
+  inset: 0;
+  /* quanto a capa tomba (graus) e os documentos sobem (% da altura deles) */
+  --lift: calc(var(--charge) * 38);
+  --rise: calc(var(--charge) * 46);
+}
+.sb[data-phase='idle'] .sb__folder:hover .sb__stack,
+.sb[data-phase='idle'] .sb__folder:focus-visible .sb__stack {
+  --lift: calc(14 + var(--charge) * 26);
+  --rise: calc(16 + var(--charge) * 32);
+}
 .sb__svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 0 calc(6px + var(--charge) * 18px) rgb(250 110 0 / calc(0.5 + var(--charge) * 0.4)));
 }
-.sb__panel {
-  fill: color-mix(in srgb, rgb(130 50 4) calc(var(--charge) * 100%), rgb(18 12 8));
-  fill-opacity: 0.88;
-  transition: fill 0.5s;
+
+/* Fundo e aba */
+.sb__back {
+  filter: drop-shadow(0 0 6px rgb(250 110 0 / 0.35));
 }
-.sb__edge {
+.sb__back-fill {
+  fill: rgb(10 7 5 / 0.92);
+}
+.sb__back-edge {
   fill: none;
-  stroke: rgb(255 154 60 / 0.55);
-  stroke-width: 1.5;
-  transition:
-    stroke 0.3s,
-    stroke-width 0.3s;
-}
-.sb[data-phase='idle'] .sb__folder:hover .sb__edge {
-  stroke: #ff9a3c;
+  stroke: rgb(255 154 60 / 0.4);
+  stroke-width: 1.2;
 }
 .sb__bar {
   fill: none;
   stroke: #ff9a3c;
   stroke-width: 3.5;
   stroke-linecap: round;
+}
+.sb__tab {
+  position: absolute;
+  left: 12%;
+  top: 13.5%;
+  font-family: 'Chakra Petch', var(--font-sans);
+  font-weight: 500;
+  font-size: calc(var(--sb-fw) * 0.036);
+  line-height: 1;
+  color: rgb(255 176 102 / 0.75);
+  pointer-events: none;
+}
+
+/* Documentos guardados */
+.sb__papers {
+  position: absolute;
+  left: 40%;
+  right: 8%;
+  top: 17%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  gap: 5%;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.sb__paper {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 10%;
+  width: 30%;
+  padding-top: 9%;
+  border: 1px solid rgb(255 154 60 / 0.45);
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(rgb(40 26 16), rgb(22 15 10));
+  box-shadow: 0 -4px 14px rgb(0 0 0 / 0.5);
+  transform-origin: 50% 100%;
+  translate: 0 calc(var(--rise) * -1% + abs(var(--i)) * 4%);
+  rotate: calc(var(--i) * (2deg + var(--rise) * 0.14deg));
+  transition:
+    translate 0.5s cubic-bezier(0.34, 1.5, 0.5, 1) calc((var(--i) + 1) * 40ms),
+    rotate 0.5s var(--sb-ease);
+}
+.sb[data-charging] .sb__paper {
+  transition: none;
+}
+.sb__paper-icon {
+  width: 34%;
+  height: auto;
+  color: var(--brand);
+  filter: drop-shadow(0 0 calc(var(--rise) * 0.2px) var(--brand));
+}
+.sb__paper-lines {
+  width: 62%;
+  height: 22%;
+  background: repeating-linear-gradient(rgb(255 176 102 / 0.28) 0 1px, transparent 1px 5px);
+}
+
+/* Capa articulada pela base */
+.sb__front {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 95%;
+  transform: perspective(700px) rotateX(calc(var(--lift) * -1deg));
+  transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+.sb[data-charging] .sb__front {
+  transition: none;
+}
+.sb__front .sb__svg {
+  filter: drop-shadow(0 0 calc(6px + var(--charge) * 18px) rgb(250 110 0 / calc(0.5 + var(--charge) * 0.4)));
+}
+.sb__panel {
+  fill: color-mix(in srgb, rgb(130 50 4) calc(var(--charge) * 100%), rgb(26 16 9));
+  fill-opacity: 0.96;
+  transition: fill 0.5s;
+}
+.sb__edge {
+  fill: none;
+  stroke: rgb(255 154 60 / 0.6);
+  stroke-width: 1.5;
+  transition:
+    stroke 0.3s,
+    stroke-width 0.3s;
+}
+.sb[data-phase='idle'] .sb__folder:hover .sb__edge {
+  stroke: #ffb066;
 }
 
 /* Calor que nasce do ponto apertado */
@@ -127,22 +222,40 @@
   filter: drop-shadow(0 0 3px #fa6e00);
 }
 
-.sb__label {
-  position: relative;
-  padding-top: 6%;
-  font-size: calc(var(--sb-fw) * 0.062);
-  letter-spacing: 0.06em;
-  color: rgb(255 154 60 / 0.14);
-  -webkit-text-stroke: 1px #ff9a3c;
-  text-shadow: 0 0 14px rgb(250 110 0 / 0.55);
-  opacity: calc(1 - var(--charge) * 0.7);
+.sb__label,
+.sb__count {
+  position: absolute;
+  left: 50%;
+  translate: -50% -50%;
+  font-family: 'Chakra Petch', var(--font-sans);
+  white-space: nowrap;
   pointer-events: none;
   transition: opacity 0.3s;
 }
+.sb__label {
+  top: 58%;
+  font-weight: 600;
+  font-size: calc(var(--sb-fw) * 0.112);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: #ffb066;
+  text-shadow: 0 0 12px rgb(250 110 0 / 0.6);
+  opacity: calc(1 - var(--charge) * 0.7);
+}
+.sb__count {
+  top: 76%;
+  font-weight: 500;
+  font-size: calc(var(--sb-fw) * 0.036);
+  color: rgb(255 176 102 / 0.6);
+  opacity: calc(1 - var(--charge));
+}
 
 /* Parado: balança de leve de tempos em tempos, convidando o toque */
-.sb[data-phase='idle']:not([data-charging]) .sb__svg {
+.sb[data-phase='idle']:not([data-charging]) .sb__stack {
   animation: sb-nudge 3s ease-in-out 1.2s infinite;
+}
+.sb[data-phase='idle'] .sb__folder:hover .sb__stack {
+  animation: none;
 }
 @keyframes sb-nudge {
   0%,
@@ -165,7 +278,7 @@
 }
 
 /* Carregando: treme cada vez mais forte */
-.sb[data-charging] .sb__svg {
+.sb[data-charging] .sb__stack {
   animation: sb-shake 0.08s linear infinite;
 }
 @keyframes sb-shake {
@@ -184,13 +297,20 @@
   }
 }
 
-/* Explodiu: a pasta encolhe e vira o núcleo da rede */
+/* Explodiu: a pasta fecha, encolhe e vira o núcleo da rede */
 .sb[data-open] .sb__body {
   scale: 0.3;
 }
+.sb[data-open] .sb__stack {
+  --lift: 0;
+  --rise: -30;
+}
 .sb[data-open] .sb__label,
+.sb[data-open] .sb__count,
+.sb[data-open] .sb__tab,
 .sb[data-open] .sb__cracks path,
-.sb[data-open] .sb__heat {
+.sb[data-open] .sb__heat,
+.sb[data-open] .sb__papers {
   opacity: 0;
 }
 .sb[data-open] .sb__panel {
@@ -204,7 +324,7 @@
 .sb[data-open] .sb__folder {
   cursor: pointer;
 }
-.sb[data-phase='done'] .sb__svg {
+.sb[data-phase='done'] .sb__stack {
   animation: sb-core 2.6s ease-in-out infinite;
 }
 .sb[data-phase='done'] .sb__folder:hover .sb__body,

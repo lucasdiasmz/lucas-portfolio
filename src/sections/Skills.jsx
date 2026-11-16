@@ -17,7 +17,8 @@ export default function Skills() {
       <div className="mt-10">
         <SkillBurst
           skills={profile.about.skills}
-          label={t.skills.title.toUpperCase()}
+          label={t.skills.title}
+          countLabel={t.skills.files.replace('{n}', profile.about.skills.length)}
           openLabel={t.skills.open}
           replayLabel={t.skills.replay}
           holdHint={t.skills.hold}

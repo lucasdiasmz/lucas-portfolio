@@ -41,6 +41,7 @@ export const translations = {
       open: 'Abrir a pasta de habilidades',
       replay: 'Guardar as habilidades na pasta',
       hold: 'Segure a pasta para abrir',
+      files: '{n} arquivos',
       close: 'Clique no centro para guardar tudo',
     },
     focus: {
@@ -161,6 +162,7 @@ export const translations = {
       open: 'Open the skills folder',
       replay: 'Pack the skills back into the folder',
       hold: 'Hold the folder to open it',
+      files: '{n} files',
       close: 'Click the center to pack everything up',
     },
     focus: {
