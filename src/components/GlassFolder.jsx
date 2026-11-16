@@ -21,7 +21,7 @@ const ART_PRESETS = {
   // tinta laranja dobrando em água escura
   brasa: {
     style: 'marble',
-    colors: ['#070605', '#1a0d05', '#4a1c04', '#120807', '#c2410c', '#fa6e00', '#ffb36b'],
+    colors: ['#070605', '#1a0d05', '#5c1d00', '#120807', '#db4300', '#fe5101', '#ffa47a'],
     scale: 0.62,
     warp: 3.2,
     angle: -0.5,
@@ -31,7 +31,7 @@ const ART_PRESETS = {
   // exposição longa: laranja e vermelho puxados pelo quadro
   chama: {
     style: 'streak',
-    colors: ['#0b0706', '#3a0a0f', '#e60026', '#fa6e00', '#ff9a3c', '#1a0d05', '#090909'],
+    colors: ['#0b0706', '#3d1300', '#c93f00', '#fe5101', '#ff8550', '#1a0d05', '#000000'],
     scale: 0.7,
     warp: 1.5,
     angle: -0.62,
@@ -41,7 +41,7 @@ const ART_PRESETS = {
   // carvão com veios de cobre
   carvao: {
     style: 'marble',
-    colors: ['#050505', '#141414', '#2a2622', '#0c0b0a', '#7c3a12', '#d97706', '#fde2c4'],
+    colors: ['#050505', '#141414', '#2a2622', '#0c0b0a', '#8a2b00', '#ff7334', '#ffd9c7'],
     scale: 0.75,
     warp: 3.6,
     angle: 0.8,
@@ -491,7 +491,7 @@ export default function GlassFolder({
               <svg className="gf-rim gf-front-rim" viewBox={`0 0 ${W} ${FRONT_H}`} aria-hidden="true">
                 <defs>
                   <linearGradient id={`gf-rim-${uid}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stopColor="#ff9a3c" stopOpacity="0.9" />
+                    <stop offset="0" stopColor="#ff8550" stopOpacity="0.9" />
                     <stop offset="0.35" stopColor="#fff" stopOpacity="0.25" />
                     <stop offset="1" stopColor="#fff" stopOpacity="0.08" />
                   </linearGradient>

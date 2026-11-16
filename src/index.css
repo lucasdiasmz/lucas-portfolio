@@ -2,19 +2,33 @@
 
 /*
   Identidade visual: estúdio noturno.
-  Fundo quase preto com grade fina, laranja como única cor de destaque
-  (gradiente laranja → vermelho nas ações), tipografia larga e técnica (Michroma),
-  vidro fosco nos cartões e brilho laranja no hover.
+  Três cores: Jet Black (#000000) no fundo, Soft White (#FFFFFF) no texto e
+  Flame Orange (#FE5101) como único destaque. Os outros tons são só variações
+  dessas três (laranja mais claro ou mais escuro, branco com transparência).
+  Tipografia larga e técnica (Michroma), vidro fosco nos cartões.
 */
 @theme {
   --font-sans: "Michroma", ui-sans-serif, system-ui, sans-serif;
 
-  --color-night: #090909;
-  --color-coal: #121212;
-  --color-ember: #fa6e00;
-  --color-flame: #e60026;
-  --color-glow: #ff9a3c;
+  --color-night: #000000;
+  --color-coal: #0a0a0a;
+  --color-ember: #fe5101;
+  --color-flame: #c93f00;
+  --color-glow: #ff8550;
   --color-mist: #a3a3a3;
+
+  /* A escala orange do Tailwind passa a derivar do Flame Orange (500) */
+  --color-orange-50: #fff4ee;
+  --color-orange-100: #ffe3d4;
+  --color-orange-200: #ffc5a8;
+  --color-orange-300: #ff9e72;
+  --color-orange-400: #ff763a;
+  --color-orange-500: #fe5101;
+  --color-orange-600: #db4300;
+  --color-orange-700: #b03600;
+  --color-orange-800: #8a2b00;
+  --color-orange-900: #5c1d00;
+  --color-orange-950: #331000;
 
   --color-danger: #ff6b6b;
   --color-success: #4ade80;
@@ -42,6 +56,8 @@
   html {
     background: var(--color-night);
     color-scheme: dark;
+    /* os brilhos decorativos que vazam pelas laterais não alargam a página no celular */
+    overflow-x: clip;
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
     -webkit-text-size-adjust: 100%;
@@ -76,7 +92,7 @@
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #080808;
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(var(--color-ember), var(--color-flame));
@@ -108,10 +124,10 @@
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(60rem 40rem at 50% -10%, rgb(250 110 0 / 0.14), transparent 70%),
+    radial-gradient(60rem 40rem at 50% -10%, rgb(254 81 1 / 0.14), transparent 70%),
     linear-gradient(rgb(255 255 255 / 0.03) 1px, transparent 1px) 0 0 / 56px 56px,
     linear-gradient(90deg, rgb(255 255 255 / 0.03) 1px, transparent 1px) 0 0 / 56px 56px,
-    radial-gradient(ellipse at center, rgb(8 8 8 / 0.72), rgb(8 8 8 / 0.9));
+    radial-gradient(ellipse at center, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0.9));
 }
 .site-bg::after {
   content: "";
@@ -122,7 +138,7 @@
   width: 34rem;
   height: 34rem;
   border-radius: 9999px;
-  background: rgb(250 110 0 / 0.1);
+  background: rgb(254 81 1 / 0.1);
   filter: blur(140px);
   animation: orb 22s ease-in-out infinite;
 }
@@ -142,10 +158,10 @@
   transition: border-color 0.4s, box-shadow 0.4s;
 }
 .navbar:hover {
-  border-color: rgb(255 150 50 / 0.5);
+  border-color: rgb(255 133 80 / 0.5);
   box-shadow:
-    0 0 25px rgb(255 140 0 / 0.45),
-    0 0 45px rgb(255 90 0 / 0.25);
+    0 0 25px rgb(254 81 1 / 0.45),
+    0 0 45px rgb(254 81 1 / 0.25);
 }
 .navbar-shine {
   position: absolute;
@@ -206,14 +222,14 @@
   font-size: 0.8rem;
   color: #fff;
   background: linear-gradient(90deg, var(--color-ember), var(--color-flame));
-  box-shadow: 0 6px 24px rgb(250 110 0 / 0.3);
+  box-shadow: 0 6px 24px rgb(254 81 1 / 0.3);
   transition:
     transform 0.3s var(--ease-out-expo),
     box-shadow 0.3s;
 }
 .btn-fire:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 34px rgb(250 110 0 / 0.55);
+  box-shadow: 0 10px 34px rgb(254 81 1 / 0.55);
 }
 .btn-ghost {
   display: inline-flex;
@@ -249,9 +265,9 @@
     box-shadow 0.4s;
 }
 .glass-hover:hover {
-  border-color: rgb(250 110 0 / 0.45);
+  border-color: rgb(254 81 1 / 0.45);
   transform: translateY(-6px);
-  box-shadow: 0 18px 50px -12px rgb(250 110 0 / 0.35);
+  box-shadow: 0 18px 50px -12px rgb(254 81 1 / 0.35);
 }
 
 /* Moldura com brilho em movimento (foto do topo) */
@@ -266,7 +282,7 @@
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(45deg, #ff0000, #ff4d00, #ff8800, #ff0000) 0 0 / 300% auto;
+  background: linear-gradient(45deg, #c93f00, #fe5101, #ff8550, #c93f00) 0 0 / 300% auto;
   filter: blur(8px);
   opacity: 0.5;
   animation: glow-move 5s linear infinite;
@@ -286,8 +302,8 @@
 
 .glow-text {
   text-shadow:
-    0 0 10px rgb(255 153 0 / 0.55),
-    0 0 26px rgb(255 102 0 / 0.35);
+    0 0 10px rgb(254 81 1 / 0.55),
+    0 0 26px rgb(254 81 1 / 0.35);
 }
 
 /* ---------- Animações de entrada ---------- */

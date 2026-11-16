@@ -42,7 +42,7 @@ export default function Navbar() {
       {/* Barra de progresso de leitura na lateral direita */}
       <div aria-hidden="true" className="fixed right-1 top-0 z-50 hidden h-screen w-[3px] sm:block">
         <div
-          className="h-full w-full origin-top rounded-full bg-gradient-to-b from-orange-400 to-red-600 shadow-[0_0_10px_#fa6e00]"
+          className="h-full w-full origin-top rounded-full bg-gradient-to-b from-orange-400 to-orange-700 shadow-[0_0_10px_#fe5101]"
           style={{ transform: `scaleY(${progress})` }}
         />
       </div>

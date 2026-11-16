@@ -51,7 +51,7 @@ export default function Cursor() {
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[100] hidden [.has-cursor_&]:block [.cursor-out_&]:opacity-0">
-      <div ref={dot} className="absolute -left-1 -top-1 size-2 rounded-full bg-orange-500 shadow-[0_0_12px_#fa6e00]" />
+      <div ref={dot} className="absolute -left-1 -top-1 size-2 rounded-full bg-orange-500 shadow-[0_0_12px_#fe5101]" />
       <div
         ref={ring}
         className="absolute -left-5 -top-5 size-10 rounded-full border border-orange-500/70 transition-[scale,background-color] duration-300"

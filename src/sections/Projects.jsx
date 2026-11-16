@@ -112,10 +112,10 @@ export default function Projects() {
   ]
 
   return (
-    <section id="projetos" aria-labelledby="projetos-titulo" className="px-6 py-24 md:px-16">
+    <section id="projetos" aria-labelledby="projetos-titulo" className="px-6 py-14 md:px-16 md:py-16">
       <SplitTitle id="projetos-titulo" text={t.projects.title} />
 
-      <Reveal className="mx-auto mt-12 flex max-w-6xl flex-wrap justify-center gap-2" role="group" aria-label={t.projects.filter}>
+      <Reveal className="mx-auto mt-10 flex max-w-6xl flex-wrap justify-center gap-2" role="group" aria-label={t.projects.filter}>
         {GROUPS.filter((g) => counts[g] > 0).map((g) => (
           <button
             key={g}
@@ -134,7 +134,7 @@ export default function Projects() {
         ))}
       </Reveal>
 
-      <ul className="mx-auto mt-14 grid max-w-6xl justify-items-center gap-x-8 gap-y-12 sm:grid-cols-2 xl:grid-cols-4">
+      <ul className="mx-auto mt-10 grid max-w-6xl justify-items-center gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
         {visible.map((p, i) => {
           const idx = ordered.indexOf(p)
           return (
@@ -162,7 +162,7 @@ export default function Projects() {
       {openProject ? (
         <ProjectDetail key={openProject.id} project={openProject} onClose={() => setOpenId(null)} />
       ) : (
-        <p className="mt-14 text-center text-[0.6rem] uppercase tracking-[0.2em] text-neutral-500">{t.projects.hint}</p>
+        <p className="mt-8 text-center text-[0.6rem] uppercase tracking-[0.2em] text-neutral-500">{t.projects.hint}</p>
       )}
     </section>
   )

@@ -9,10 +9,10 @@ export default function About() {
   const { about } = profile
 
   return (
-    <section id="sobre" aria-labelledby="sobre-titulo" className="px-6 py-24 sm:px-10">
+    <section id="sobre" aria-labelledby="sobre-titulo" className="px-6 py-14 sm:px-10 md:py-16">
       <SplitTitle id="sobre-titulo" text={t.about.title} />
 
-      <div className="mx-auto mt-16 grid max-w-6xl items-start gap-12 lg:grid-cols-[1.25fr_1fr]">
+      <div className="mx-auto mt-10 grid max-w-6xl items-start gap-10 sm:mt-12 lg:grid-cols-[1.25fr_1fr]">
         <div className="space-y-6 text-[0.95rem] leading-[1.9] text-neutral-200">
           <Reveal as="p">{pick(about.summary)}</Reveal>
           <Reveal as="p" delay={100}>

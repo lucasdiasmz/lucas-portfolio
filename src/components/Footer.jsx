@@ -11,7 +11,7 @@ export default function Footer() {
   const { t } = useLanguage()
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-transparent to-black/60 px-6 pb-10 pt-24 md:px-16">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-transparent to-black/60 px-6 pb-10 pt-16 md:px-16">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-40 left-1/2 h-80 w-[60rem] max-w-[200vw] -translate-x-1/2 rounded-full bg-orange-600/15 blur-[140px]"
@@ -56,7 +56,7 @@ export default function Footer() {
         </Reveal>
       </div>
 
-      <div className="relative mx-auto mt-16 max-w-6xl border-t border-orange-500/30 pt-6">
+      <div className="relative mx-auto mt-12 max-w-6xl border-t border-orange-500/30 pt-6">
         <div className="flex flex-col justify-between gap-3 text-[0.65rem] tracking-[0.2em] text-neutral-500 uppercase sm:flex-row">
           <p>{t.footer.stack}</p>
           <p>
@@ -64,7 +64,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <p className="mt-12 text-[0.7rem] tracking-[0.35em] text-neutral-500 uppercase">{t.footer.socials}</p>
+        <p className="mt-8 text-[0.7rem] tracking-[0.35em] text-neutral-500 uppercase">{t.footer.socials}</p>
         <ul className="mt-6 grid grid-cols-4 place-items-center">
           {contacts.map((c) => (
             <li key={c.type}>
@@ -73,7 +73,7 @@ export default function Footer() {
                 target={c.type === 'email' ? undefined : '_blank'}
                 rel="noopener noreferrer"
                 aria-label={c.label}
-                className="grid size-12 place-items-center text-2xl text-orange-500 transition-[transform,color,filter] duration-300 hover:-translate-y-1 hover:text-orange-300 hover:drop-shadow-[0_0_12px_#fa6e00]"
+                className="grid size-12 place-items-center text-2xl text-orange-500 transition-[transform,color,filter] duration-300 hover:-translate-y-1 hover:text-orange-300 hover:drop-shadow-[0_0_12px_#fe5101]"
               >
                 <ContactIcon type={c.type} />
               </a>

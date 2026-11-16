@@ -226,13 +226,13 @@ export default function Contact() {
   const { t } = useLanguage()
 
   return (
-    <section id="contato" aria-labelledby="contato-titulo" className="relative px-6 py-24 md:px-16">
+    <section id="contato" aria-labelledby="contato-titulo" className="relative px-6 py-14 md:px-16 md:py-16">
       <SplitTitle id="contato-titulo" text={t.contact.title} />
       <Reveal as="p" className="mx-auto mt-8 max-w-2xl text-center text-sm text-neutral-400">
         {t.contact.subtitle}
       </Reveal>
 
-      <div className="mx-auto mt-14 max-w-5xl">
+      <div className="mx-auto mt-10 max-w-5xl sm:mt-12">
         <ul className="grid gap-5 sm:grid-cols-2">
           {contacts.map((c, i) => (
             <Reveal as="li" key={c.type} delay={(i % 2) * 110}>
@@ -251,7 +251,7 @@ export default function Contact() {
           ))}
         </ul>
 
-        <Reveal delay={150} className="mt-10">
+        <Reveal delay={150} className="mt-8">
           <ContactForm />
         </Reveal>
       </div>

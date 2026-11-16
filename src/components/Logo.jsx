@@ -7,9 +7,9 @@ export default function Logo({ className = '' }) {
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ffb347" />
-          <stop offset="0.55" stopColor="#fa6e00" />
-          <stop offset="1" stopColor="#e60026" />
+          <stop offset="0" stopColor="#ffa47a" />
+          <stop offset="0.55" stopColor="#fe5101" />
+          <stop offset="1" stopColor="#c93f00" />
         </linearGradient>
       </defs>
       <path fill={`url(#${id})`} d="M17 8h11v33h19v11H22a5 5 0 0 1-5-5Z" />

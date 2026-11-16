@@ -37,6 +37,15 @@ export const translations = {
     skills: {
       title: 'Habilidades',
       subtitle: 'Linguagens e ferramentas que estudo e uso nos projetos.',
+      expand: 'Abrir o globo das habilidades',
+      collapse: 'Recolher o globo',
+      hint: 'Clique na cúpula para abrir o globo.',
+      hintOpen: 'Clique numa tecnologia para ver onde a usei. Clique no globo para recolher.',
+      usedIn: 'Usada em',
+      project: 'projeto',
+      projects: 'projetos',
+      noProjects: 'Ainda sem projeto publicado. Estou estudando agora.',
+      close: 'Fechar',
     },
     focus: {
       title: 'O que estudo',
@@ -149,6 +158,15 @@ export const translations = {
     skills: {
       title: 'Skills',
       subtitle: 'Languages and tools I study and use in my projects.',
+      expand: 'Open the skills globe',
+      collapse: 'Collapse the globe',
+      hint: 'Click the dome to open the globe.',
+      hintOpen: 'Click a technology to see where I used it. Click the globe to collapse it.',
+      usedIn: 'Used in',
+      project: 'project',
+      projects: 'projects',
+      noProjects: 'No published project yet. I am studying it now.',
+      close: 'Close',
     },
     focus: {
       title: 'What I work on',
