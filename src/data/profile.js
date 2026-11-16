@@ -101,6 +101,59 @@ export const profile = {
   },
 }
 
+// Descrição curta de cada habilidade, mostrada no painel da aba Habilidades
+export const skillInfo = {
+  Python: {
+    kind: { pt: 'Linguagem', en: 'Language' },
+    text: {
+      pt: 'Linguagem de sintaxe limpa e direta, boa para lógica, automação, scripts e jogos.',
+      en: 'A language with clean, direct syntax, great for logic, automation, scripts and games.',
+    },
+  },
+  Java: {
+    kind: { pt: 'Linguagem', en: 'Language' },
+    text: {
+      pt: 'Linguagem orientada a objetos e fortemente tipada, muito usada no back-end e em sistemas corporativos.',
+      en: 'An object-oriented, strongly typed language, widely used for back-end and enterprise systems.',
+    },
+  },
+  HTML: {
+    kind: { pt: 'Marcação', en: 'Markup' },
+    text: {
+      pt: 'Dá estrutura e significado às páginas web: títulos, seções, formulários e acessibilidade.',
+      en: 'Gives web pages structure and meaning: headings, sections, forms and accessibility.',
+    },
+  },
+  CSS: {
+    kind: { pt: 'Estilos', en: 'Styling' },
+    text: {
+      pt: 'Define cores, tipografia, layout e animações das páginas, do celular ao desktop.',
+      en: 'Defines the colors, typography, layout and animations of a page, from phone to desktop.',
+    },
+  },
+  JavaScript: {
+    kind: { pt: 'Linguagem', en: 'Language' },
+    text: {
+      pt: 'A linguagem do navegador: dá interatividade às páginas, reage a eventos e conversa com APIs.',
+      en: 'The language of the browser: it makes pages interactive, reacts to events and talks to APIs.',
+    },
+  },
+  'Spring Boot': {
+    kind: { pt: 'Framework', en: 'Framework' },
+    text: {
+      pt: 'Framework Java para criar APIs REST e serviços back-end com pouca configuração.',
+      en: 'A Java framework for building REST APIs and back-end services with little configuration.',
+    },
+  },
+  React: {
+    kind: { pt: 'Biblioteca', en: 'Library' },
+    text: {
+      pt: 'Biblioteca JavaScript para montar interfaces com componentes reutilizáveis e estado.',
+      en: 'A JavaScript library for building interfaces from reusable components and state.',
+    },
+  },
+}
+
 // -----------------------------------------------------------------------------
 //  PROJETOS — os cards aparecem do mais recente ao mais antigo (pelo campo `date`).
 //  `date` ('AAAA-MM') só serve para ordenar. O que aparece no card é `period`
