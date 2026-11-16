@@ -504,18 +504,72 @@
 }
 
 /*
- * Saída das seções: quando a seção passa da linha de 30% do topo da tela,
- * o Layout marca data-gone e ela some num fade rápido (só opacity e
- * translate, que rodam na GPU). Rolando de volta, a marca sai e ela
- * reaparece. A última seção (contato) fica de fora.
+ * Pulverização (ver useDust.js): a peça que passa do topo da tela vira uma
+ * grade de grãos que encolhem enquanto ela sobe e se espalha (--dx/--dy e o
+ * atraso --dd são sorteados por peça). Ao voltar, reaparece por igual, sem
+ * grãos e sem atraso. O deslocamento soma ao translate que a peça já tenha.
  */
-#conteudo > section {
-  transition:
-    opacity 0.4s ease-out,
-    translate 0.5s var(--ease-out-expo);
+@property --dust {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 3.6px;
 }
-#conteudo > section[data-gone] {
-  opacity: 0;
-  translate: 0 -2.5rem;
+[data-dust='out'] {
   pointer-events: none;
+  --grain: radial-gradient(circle, #000 var(--dust), transparent calc(var(--dust) + 0.6px));
+  -webkit-mask-image: var(--grain), var(--grain);
+  mask-image: var(--grain), var(--grain);
+  -webkit-mask-size: 5px 5px, 7px 7px;
+  mask-size: 5px 5px, 7px 7px;
+  -webkit-mask-position: 0 0, 2px 3px;
+  mask-position: 0 0, 2px 3px;
+  animation:
+    dust-grain 0.55s cubic-bezier(0.2, 0.7, 0.4, 1) var(--dd) both,
+    dust-drift 0.8s cubic-bezier(0.5, 0, 0.6, 1) var(--dd) both,
+    dust-fade 0.75s ease-in var(--dd) both;
+  animation-composition: replace, add, replace;
+}
+[data-dust='in'] {
+  animation:
+    dust-in-fade 0.5s ease-out both,
+    dust-in-drift 0.6s var(--ease-out-expo) both;
+  animation-composition: replace, add;
+}
+@keyframes dust-grain {
+  from {
+    --dust: 3.6px;
+  }
+  to {
+    --dust: 0px;
+  }
+}
+@keyframes dust-drift {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: var(--dx) var(--dy);
+  }
+}
+@keyframes dust-fade {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes dust-in-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes dust-in-drift {
+  from {
+    translate: 0 -12px;
+  }
+  to {
+    translate: 0 0;
+  }
 }

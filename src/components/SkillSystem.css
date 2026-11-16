@@ -25,8 +25,10 @@
 /* ---------- Céu: anéis ----------
    Maior que o palco (posição vinda do JSX): os anéis passam das bordas, somem
    no topo e na base, e o gradiente radial os apaga ao longe. */
-.ss__sky,
-.ss__ground {
+/* .ss na frente: vence a máscara de grãos da pulverização, que aqui fica só
+   no fade (os grãos num SVG de 3800px seriam pesados) */
+.ss .ss__sky,
+.ss .ss__ground {
   position: absolute;
   overflow: hidden;
   pointer-events: none;

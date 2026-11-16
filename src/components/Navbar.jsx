@@ -7,7 +7,8 @@ import { sections } from '../data/sections.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 // Pílula de vidro flutuante com brilho que atravessa, links com letras que rolam
-// e botão de idioma em gradiente. Some ao rolar para baixo e volta ao subir.
+// e botão de idioma em gradiente. Na home só aparece enquanto a hero está na
+// tela; nas outras páginas some ao rolar para baixo e volta ao subir.
 export default function Navbar() {
   const { lang, setLang, t } = useLanguage()
   const [open, setOpen] = useState(false)
@@ -18,7 +19,8 @@ export default function Navbar() {
     let last = window.scrollY
     const onScroll = () => {
       const y = window.scrollY
-      setHidden(y > 160 && y > last)
+      const hero = document.getElementById('inicio')
+      setHidden(hero ? hero.getBoundingClientRect().bottom < window.innerHeight * 0.35 : y > 160 && y > last)
       last = y
       const max = document.documentElement.scrollHeight - window.innerHeight
       setProgress(max > 0 ? y / max : 0)
