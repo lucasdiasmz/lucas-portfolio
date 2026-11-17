@@ -1,12 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar.jsx'
+import SectionRail from './SectionRail.jsx'
 import Footer from './Footer.jsx'
 import Cursor from './Cursor.jsx'
 import Intro from './Intro.jsx'
 import BackgroundVideo from './BackgroundVideo.jsx'
 import useDust from './useDust.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { startPointerEffects } from '../motion/pointer.js'
+import { trackSections } from '../motion/sections.js'
 
 export default function Layout() {
   const { pathname, hash } = useLocation()
@@ -25,6 +28,13 @@ export default function Layout() {
     }
   }, [pathname, hash])
 
+  // Luz e ímã do cursor: um listener para o site todo
+  useEffect(() => startPointerEffects(), [])
+
+  // Seções da página atual: pausa o que está fora da tela e diz qual está ativa.
+  // Antes da pintura, para a navbar já nascer no estado certo ao trocar de página.
+  useLayoutEffect(() => trackSections(document.getElementById('conteudo')), [pathname])
+
   // Conteúdo que passa do topo da tela pulveriza; volta ao rolar de volta
   useDust([pathname])
 
@@ -40,6 +50,7 @@ export default function Layout() {
       <Intro />
       <Cursor />
       <Navbar />
+      <SectionRail />
       <main id="conteudo" className="flex-1">
         <Outlet />
       </main>

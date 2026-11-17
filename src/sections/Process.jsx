@@ -1,21 +1,25 @@
+import { useRef } from 'react'
 import { FaCode, FaLightbulb, FaRocket } from 'react-icons/fa6'
 import Reveal from '../components/Reveal.jsx'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
-import { useReveal } from '../utils/useReveal.js'
+import { useReveal, useScrollProgress } from '../motion/hooks.js'
 
 const stepIcons = [FaLightbulb, FaCode, FaRocket]
+// ponto do progresso (0..1) em que cada etapa acende
+const stepAt = [0.06, 0.5, 0.96]
 
 // "Ideias → Código" e o bloco grande "Não só código."
 export default function Process() {
   const { t } = useLanguage()
   const arrow = useReveal(0.5)
+  const steps = useRef(null)
+
+  // As três etapas acendem em ordem conforme a lista sobe pela tela (--p)
+  useScrollProgress(steps, { from: 0.82, to: 0.42 })
 
   return (
     <section aria-labelledby="processo-titulo" className="relative overflow-hidden px-6 py-14 text-center md:py-16">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-1/3 mx-auto h-96 max-w-4xl rounded-full bg-brand-600/10 blur-[160px]"
-      />
+      <div aria-hidden="true" className="aura inset-x-0 top-[8%] mx-auto h-[46rem] max-w-[86rem] [--aura-a:0.09] [--aura:var(--color-flame)]" />
 
       <Reveal as="p" className="text-[0.7rem] tracking-[0.4em] text-neutral-400 uppercase">
         {t.process.kicker}
@@ -36,16 +40,19 @@ export default function Process() {
         <path d="M280 2 L294 12 L280 22" fill="none" stroke="currentColor" strokeWidth="1.5" pathLength="1" />
       </svg>
 
-      <ol className="mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4">
+      <ol ref={steps} className="steps mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4">
+        <li aria-hidden="true" className="steps__track">
+          <span className="steps__fill" />
+        </li>
         {t.process.steps.map((step, i) => {
           const Icon = stepIcons[i]
           return (
-            <Reveal as="li" key={step} delay={300 + i * 150} className="flex flex-col items-center gap-4">
-              <span className="grid size-14 place-items-center rounded-2xl border border-brand-500/30 bg-brand-500/10 text-xl text-brand-500 shadow-[0_0_30px_-8px_var(--color-ember)]">
+            <li key={step} className="step flex flex-col items-center gap-4" style={{ '--at': stepAt[i] }}>
+              <span className="step__tile">
                 <Icon aria-hidden="true" />
               </span>
-              <span className="text-[0.55rem] tracking-[0.1em] text-neutral-300 uppercase sm:text-xs sm:tracking-[0.3em]">{step}</span>
-            </Reveal>
+              <span className="step__name text-[0.62rem] tracking-[0.1em] text-neutral-200 uppercase sm:text-xs sm:tracking-[0.3em]">{step}</span>
+            </li>
           )
         })}
       </ol>

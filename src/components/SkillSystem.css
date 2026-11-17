@@ -81,7 +81,6 @@
   stroke-width: 1.4;
   stroke-linecap: round;
   rotate: var(--start);
-  will-change: rotate;
   animation: ss-spin var(--spin) linear infinite var(--dir);
 }
 .ss__spin circle {
@@ -201,6 +200,9 @@
     box-shadow 0.35s,
     scale 0.45s var(--ease-out-expo),
     opacity 0.35s;
+}
+.ss .ss__disc:active {
+  scale: 0.98;
 }
 .ss__disc:hover,
 .ss__disc:focus-visible {

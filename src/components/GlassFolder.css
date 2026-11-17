@@ -45,7 +45,13 @@
   position: absolute;
   inset: 0;
   transform: perspective(1400px) rotateX(calc(var(--gf-py) * -3deg)) rotateY(calc(var(--gf-px) * 4deg));
-  transition: transform 0.9s var(--gf-ease);
+  transition:
+    transform 0.9s var(--gf-ease),
+    scale 0.25s var(--gf-ease);
+}
+/* pressionada: a pasta afunda um pouco */
+.gf-root:has(.gf-hit:active) .gf-tilt {
+  scale: 0.975;
 }
 
 .gf-shadow {

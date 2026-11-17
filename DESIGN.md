@@ -1,57 +1,70 @@
 ---
 name: Lucas Dias Melo — Portfólio
-description: Página única em modo escuro, com grade fina, brilho laranja, tipografia larga e cartões de vidro.
+description: Página única em modo escuro, preto e branco com dois acentos neon, tipografia larga e vidro fosco. O cursor é a fonte de luz.
 colors:
-  night: "#090909"
-  coal: "#121212"
-  ember: "#fa6e00"
-  flame: "#e60026"
-  glow: "#ff9a3c"
-  accent-text: "#fb923c" # orange-400 (títulos de seção)
-  accent-strong: "#f97316" # orange-500 (nome, ícones)
-  text: "#ffffff"
-  text-muted: "#a3a3a3"
+  night: "#000000"
+  paper: "#ffffff"
+  neon-cyan: "#00f0ff" # destaque principal (ember / brand-500)
+  neon-magenta: "#ff2bd6" # contraponto
+  glow: "#7df9ff" # brand-300
+  flame: "#00b8d9" # brand-600
+  mist: "#a3a3a3"
   danger: "#ff6b6b"
   success: "#4ade80"
   warning: "#fbbf24"
 typography:
   family: "Michroma, ui-sans-serif, system-ui, sans-serif"
   body: "0.9375rem / 1.8"
-  section-title: "clamp(2rem, 6vw, 4.5rem), orange-400, brilho laranja"
-  hero-name: "clamp(2.1rem, 6vw, 3.9rem), orange-500"
+  section-title: "clamp(2rem, 6vw, 4.5rem), branco com brilho ciano + magenta"
+  hero-name: "clamp(2.3rem, 6.4vw, 4.2rem)"
   statement: "clamp(2.6rem, 11vw, 8rem), caixa alta"
-  label: "0.65–0.7rem, tracking 0.3–0.4em, caixa alta"
+  label: "0.62–0.7rem, tracking 0.2–0.4em, caixa alta"
 ---
 
 # Design
 
 ## Direção
 
-Portfólio de página única em modo escuro, no estilo de estúdio digital: fundo quase preto, uma única cor de destaque (laranja) e movimento em quase tudo que entra na tela. A estrutura segue um modelo de referência (topo → sobre → processo → habilidades → serviços/foco → projetos → contato → rodapé), com o conteúdo e os textos do Lucas.
+Portfólio de página única em modo escuro: fundo preto, texto branco e dois acentos neon (ciano principal, magenta de contraponto). A ideia central é uma só: **o cursor é a fonte de luz**. Ele acende a grade do fundo, a borda e o interior dos cartões de vidro, o reflexo dos botões, o vidro das pastas e a versão colorida da foto. Todo o resto fica quieto.
+
+Os tokens de cor vivem no `@theme` de `src/index.css`; o JS lê por `src/theme.js`.
 
 ## Superfícies
 
-- **Fundo (`.site-bg`):** `#090909` + grade de 56px a 3,5% de branco + dois brilhos radiais (laranja no topo, vermelho no canto) + uma esfera laranja desfocada que passeia devagar.
-- **Vidro (`.glass`):** borda branca a 8%, gradiente de branco 6% para preto 35%, `backdrop-filter: blur(6px)`, raio 24px. Com `.glass-hover`, sobe 6px e ganha borda e sombra laranja.
-- **Navbar (`.navbar`):** pílula de vidro flutuante com brilho que atravessa a cada 5s; borda e sombra laranja no hover. Some ao rolar para baixo e volta ao subir.
+- **Fundo (`.site-bg`):** quadro parado desfocado, trocado pelo vídeo desenhado num canvas de 256 × 144 ampliado (sem filtro de blur em tela cheia), grade de 56px a 4% de branco, brilho ciano no topo e uma esfera magenta em degradê radial.
+- **Vidro (`.glass`):** borda branca a 8%, `backdrop-filter: blur(6px)`, raio 24px. A borda acende perto do cursor (`--lx/--ly`). Com `.glass-hover`, sobe 6px.
+- **Brilhos de seção (`.aura`):** degradê radial, nunca `blur()` grande.
+- **Navbar:** pílula de vidro, visível só na hero. Depois dela, a navegação é o trilho lateral (`.rail`): linha de progresso com um ponto por seção. No celular, botão de voltar ao topo.
 
 ## Ações
 
-- **`.btn-fire`:** pílula com gradiente `ember → flame`, sombra laranja, sobe 2px no hover. Ação principal (contato, enviar).
-- **`.btn-ghost`:** pílula transparente com borda branca a 25%; borda e texto laranja no hover. Ação secundária.
-- Botão de idioma: mesma pílula em gradiente, menor.
+- **`.btn-fire`:** gradiente ciano → magenta com texto preto. **`.btn-ghost`:** contorno. **`.icon-tile`:** ícones de contato.
+- Os três são puxados alguns pixels pelo cursor (ímã) e voltam com mola; todos têm estado de pressionado.
 
 ## Movimento
 
-- **Abertura (`Intro`):** marca e nome com desfoque, cortina sobe em 1,3s. Uma vez por sessão.
-- **`SplitTitle`:** títulos de seção surgem letra a letra (subida + desfoque, 35ms entre letras).
-- **`Reveal`:** blocos sobem 32px e perdem desfoque ao entrar na tela; atrasos em passos de ~100ms.
-- **`RollText`:** links da navbar trocam a letra de cima pela de baixo, em laranja, no hover.
-- **Texto digitado** no topo, **cursor laranja** (ponto + anel com atraso; só com mouse), **barra de progresso** de leitura na lateral direita e **moldura com brilho** em movimento na foto.
-- Curva padrão: `cubic-bezier(0.16, 1, 0.3, 1)`. Tudo é desligado com `prefers-reduced-motion`.
+Quem decide quando algo anima é o núcleo em `src/motion/`; o CSS só descreve como.
+
+| Módulo | Papel |
+| --- | --- |
+| `frame.js` | Um `requestAnimationFrame` para o site, leituras antes das escritas; sem tarefa, não há quadro |
+| `scroll.js` | Um listener de scroll; assinantes recebem o estado uma vez por quadro |
+| `inview.js` | `IntersectionObserver` compartilhado |
+| `sections.js` | Seção ativa, hero visível e `[data-idle]` (pausa animações em laço fora da tela) |
+| `pointer.js` | Luz e ímã do cursor, delegados no documento |
+| `store.js`, `hooks.js` | Stores reativos e hooks (`useReveal`, `useScrollProgress`, `useFlip`, `usePointerVars`) |
+
+- **Abertura + hero:** uma sequência só. A hero espera a cortina (`--boot`) e os blocos entram em cascata.
+- **Entradas (`Reveal`, `SplitTitle`):** opacidade e transform; ao terminar (`data-seen="done"`) o elemento volta às transições dele.
+- **Processo:** as três etapas acendem conforme a rolagem (`--p`).
+- **Pulverização (`useDust`):** o que passa do topo vira poeira e volta ao rolar de volta.
+- Curvas: `--ease-out-expo` para entradas, `--ease-spring` para o que volta ao lugar.
 
 ## Regras
 
-- Laranja é a única cor de marca; as cores de outras marcas aparecem só nos ícones de tecnologia.
-- Texto corrido em `neutral-200/300`, apoio em `neutral-400`; nada abaixo de `neutral-500` para texto.
-- Sem texto em gradiente: títulos usam laranja sólido com `text-shadow` de brilho (`.glow-text`).
+- Animar só `transform` e `opacity`. Nada de `blur()` animado nem `backdrop-filter` em elemento que se move em laço.
+- Estado que muda a cada quadro vai direto para o DOM (variável CSS ou transform), nunca por `setState`.
+- Ciano e magenta são as únicas cores de marca; cores de outras marcas só nos ícones de tecnologia.
+- Texto sobre neon é preto. Nada abaixo de `neutral-400` para texto.
+- Tudo é desligado com `prefers-reduced-motion`.
+- Todo texto novo precisa das versões PT e EN.

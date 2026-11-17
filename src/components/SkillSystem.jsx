@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { FaArrowLeft, FaCode } from 'react-icons/fa6'
 import { SiCss, SiHtml5, SiJavascript, SiOpenjdk, SiPython, SiReact, SiSpringboot } from 'react-icons/si'
 import SplitTitle from './SplitTitle.jsx'
+import { mediaStore, useStore } from '../motion/store.js'
 import './SkillSystem.css'
 
 // Ícone e cor de marca de cada tecnologia (a cor só aparece no destaque)
@@ -52,7 +53,7 @@ const LAYOUTS = {
     c: [110, 820],
     r: 230,
     rings: ringsFrom(300, 75, 30),
-    spin: 14, // quantos anéis (de dentro para fora) têm arcos girando
+    spin: 10, // quantos anéis (de dentro para fora) têm arcos girando
     angles: [58, 28, 70, 40, 62, 22, 46],
   },
   narrow: {
@@ -61,24 +62,14 @@ const LAYOUTS = {
     c: [20, 640],
     r: 95,
     rings: ringsFrom(135, 42, 22),
-    spin: 12,
+    spin: 9,
     angles: [60, 25, 72, 40, 66, 30, 48],
   },
 }
 
 const pct = (v, total) => `${((v / total) * 100).toFixed(3)}%`
 
-function useNarrow() {
-  const query = '(max-width: 767px)'
-  const [narrow, setNarrow] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches)
-  useEffect(() => {
-    const mq = window.matchMedia(query)
-    const on = () => setNarrow(mq.matches)
-    mq.addEventListener('change', on)
-    return () => mq.removeEventListener('change', on)
-  }, [])
-  return narrow
-}
+const narrowScreen = mediaStore('(max-width: 767px)')
 
 /*
  * Habilidades como um sistema solar: o planeta no canto de baixo à esquerda,
@@ -87,7 +78,7 @@ function useNarrow() {
  * descrição curta dela; clicar de novo, em "voltar" ou Esc volta ao título.
  */
 export default function SkillSystem({ skills, labels }) {
-  const narrow = useNarrow()
+  const narrow = useStore(narrowScreen)
   const L = narrow ? LAYOUTS.narrow : LAYOUTS.wide
   const [sel, setSel] = useState(null)
 

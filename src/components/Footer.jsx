@@ -1,7 +1,6 @@
-import { contacts } from '../data/profile.js'
 import { sections } from '../data/sections.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
-import ContactIcon from './ContactIcon.jsx'
+import ContactLinks from './ContactLinks.jsx'
 import Reveal from './Reveal.jsx'
 import SectionLink from './SectionLink.jsx'
 
@@ -14,7 +13,7 @@ export default function Footer() {
     <footer className="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-transparent to-black/60 px-6 pb-10 pt-16 md:px-16">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 left-1/2 h-80 w-[60rem] max-w-[200vw] -translate-x-1/2 rounded-full bg-brand-600/15 blur-[140px]"
+        className="aura -bottom-[22rem] left-1/2 h-[44rem] w-[90rem] max-w-[220vw] -translate-x-1/2 [--aura-a:0.12] [--aura:var(--color-flame)]"
       />
 
       <div className="relative mx-auto grid max-w-6xl gap-14 lg:grid-cols-[1.6fr_1fr_1fr]">
@@ -65,21 +64,7 @@ export default function Footer() {
         </div>
 
         <p className="mt-8 text-[0.7rem] tracking-[0.35em] text-neutral-500 uppercase">{t.footer.socials}</p>
-        <ul className="mt-6 grid grid-cols-4 place-items-center">
-          {contacts.map((c) => (
-            <li key={c.type}>
-              <a
-                href={c.href}
-                target={c.type === 'email' ? undefined : '_blank'}
-                rel="noopener noreferrer"
-                aria-label={c.label}
-                className="grid size-12 place-items-center text-2xl text-brand-500 transition-[transform,color,filter] duration-300 hover:-translate-y-1 hover:text-brand-300 hover:drop-shadow-[0_0_12px_var(--color-ember)]"
-              >
-                <ContactIcon type={c.type} />
-              </a>
-            </li>
-          ))}
-        </ul>
+        <ContactLinks bare className="mt-6 grid grid-cols-4 place-items-center" />
       </div>
     </footer>
   )

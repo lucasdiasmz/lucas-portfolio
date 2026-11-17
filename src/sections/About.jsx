@@ -5,7 +5,7 @@ import { profile } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 // Brilho do cartão alterna entre ciano e magenta a cada aba
-const glows = ['bg-brand-500/20', 'bg-neon-magenta/20', 'bg-brand-500/20']
+const glows = ['var(--color-ember)', 'var(--color-neon-magenta)']
 
 export default function About() {
   const { pick, t } = useLanguage()
@@ -55,10 +55,14 @@ export default function About() {
             aria-labelledby={`sobre-aba-${active}`}
             className="glass relative min-h-[21rem] overflow-hidden p-8 sm:p-9"
           >
-            <div
-              aria-hidden="true"
-              className={`pointer-events-none absolute -right-24 -top-28 size-64 rounded-full blur-[80px] transition-colors duration-700 ${glows[active % glows.length]}`}
-            />
+            {glows.map((color, i) => (
+              <div
+                key={color}
+                aria-hidden="true"
+                className="aura -right-56 -top-60 size-[34rem] transition-opacity duration-700"
+                style={{ '--aura': color, opacity: active % glows.length === i ? 0.16 : 0 }}
+              />
+            ))}
             {/* key remonta o conteúdo para a troca de aba animar */}
             <div key={active} className="about-swap relative">
               <p className="text-[clamp(2.2rem,5.5vw,3.5rem)] leading-[1.05] text-brand-500">{pick(tab.big)}</p>

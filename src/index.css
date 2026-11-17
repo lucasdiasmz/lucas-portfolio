@@ -10,6 +10,10 @@
   color-mix(); o JS (canvas, SVG) lê pelo src/theme.js. Trocar a paleta é
   mexer só aqui. "static" garante que todos virem variáveis CSS, mesmo os
   que nenhuma classe usa, porque o JS depende deles.
+
+  Movimento: quem decide QUANDO algo anima é o núcleo em src/motion (um quadro,
+  um scroll, um observador de viewport, um ponteiro). Este arquivo só descreve
+  COMO, sempre com transform e opacity.
 */
 @theme static {
   --font-sans: "Michroma", ui-sans-serif, system-ui, sans-serif;
@@ -57,19 +61,13 @@
 
   /* Gradientes e brilhos neon */
   --gradient-neon: linear-gradient(90deg, var(--color-neon-cyan), var(--color-neon-magenta));
-  --gradient-neon-frame: linear-gradient(
-    45deg,
-    var(--color-flame),
-    var(--color-neon-cyan),
-    var(--color-neon-magenta),
-    var(--color-neon-cyan),
-    var(--color-flame)
-  );
   --text-shadow-title:
     0 0 22px color-mix(in srgb, var(--color-neon-cyan) 45%, transparent),
     0 0 60px color-mix(in srgb, var(--color-neon-magenta) 18%, transparent);
 
+  /* Curvas: saída longa para entradas, mola para o que volta ao lugar */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.5, 1);
 
   --animate-rise: rise 0.9s var(--ease-out-expo) both;
   --animate-blink: blink 1s steps(1) infinite;
@@ -115,6 +113,10 @@
   h2 {
     color: var(--color-paper);
     text-shadow: var(--text-shadow-title);
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
   }
   :focus-visible {
     outline: 2px solid var(--color-glow);
@@ -125,6 +127,10 @@
   html.has-cursor,
   html.has-cursor * {
     cursor: none !important;
+  }
+  /* em campos de texto vale o cursor de texto do sistema */
+  html.has-cursor :is(input, textarea) {
+    cursor: text !important;
   }
 }
 
@@ -149,16 +155,27 @@
   pointer-events: none;
   background: var(--color-night);
 }
+/* O código vira textura, sem disputar atenção: preto e branco, a cor fica só com o neon */
 .site-bg__video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Desfoque leve: o código vira textura, sem disputar atenção com o conteúdo */
   opacity: 0.22;
-  filter: blur(6px) grayscale(1) contrast(1.15); /* textura em preto e branco: a cor fica só com o neon */
-  transform: scale(1.08); /* esconde a borda clara que o blur cria */
+  filter: grayscale(1) contrast(1.15);
+  transform: scale(1.08);
+  transition: opacity 1.4s ease-out;
+}
+/* Quadro parado: o desfoque é pintado uma vez só */
+img.site-bg__video {
+  filter: blur(6px) grayscale(1) contrast(1.15);
+}
+/* Vídeo: desenhado pequeno num canvas e ampliado, o que já desfoca sem filtro
+   de blur em tela cheia a cada quadro (ver BackgroundVideo.jsx) */
+canvas.site-bg__video:not([data-live]),
+.site-bg[data-live] img.site-bg__video {
+  opacity: 0;
 }
 .site-bg::before {
   content: "";
@@ -171,17 +188,22 @@
     linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px) 0 0 / 56px 56px,
     radial-gradient(ellipse at center, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.88));
 }
+/* Esfera magenta que passeia: degradê radial (sem filtro), movida só com transform */
 .site-bg::after {
   content: "";
   position: absolute;
   z-index: 1;
-  top: 20%;
-  left: -10%;
-  width: 34rem;
-  height: 34rem;
+  top: 0;
+  left: -28%;
+  width: 62rem;
+  height: 62rem;
   border-radius: 9999px;
-  background: color-mix(in srgb, var(--color-neon-magenta) 7%, transparent);
-  filter: blur(140px);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-neon-magenta) 7%, transparent),
+    color-mix(in srgb, var(--color-neon-magenta) 3%, transparent) 50%,
+    transparent
+  );
   animation: orb 22s ease-in-out infinite;
 }
 @keyframes orb {
@@ -190,38 +212,357 @@
   }
 }
 
-/* ---------- Navbar em pílula de vidro ---------- */
-.navbar {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: linear-gradient(135deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.04));
-  border: 1px solid rgb(255 255 255 / 0.18);
-  box-shadow: 0 8px 32px rgb(0 0 0 / 0.35);
-  transition: border-color 0.4s, box-shadow 0.4s;
+/* Luz do cursor: mancha suave que acende a grade por onde ele passa (Cursor.jsx) */
+.cursor-light {
+  position: fixed;
+  left: -22rem;
+  top: -22rem;
+  z-index: -1;
+  width: 44rem;
+  height: 44rem;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-neon-cyan) 9%, transparent),
+    color-mix(in srgb, var(--color-neon-cyan) 3.5%, transparent) 45%,
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.6s;
 }
-.navbar:hover {
-  border-color: color-mix(in srgb, var(--color-glow) 50%, transparent);
-  box-shadow:
-    0 0 25px color-mix(in srgb, var(--color-ember) 45%, transparent),
-    0 0 45px color-mix(in srgb, var(--color-ember) 25%, transparent);
+.has-cursor:not(.cursor-out) .cursor-light {
+  opacity: 1;
 }
-.navbar-shine {
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgb(255 255 255 / 0.35), transparent);
-  transform: skew(-25deg);
-  animation: shine 5s ease infinite;
+
+/* Cursor neon: ponto + anel. O anel muda de forma conforme o que está embaixo */
+.cursor-ring {
+  transition:
+    scale 0.35s var(--ease-out-expo),
+    background-color 0.3s,
+    border-color 0.3s;
 }
+.cursor-ring[data-mode="hot"] {
+  scale: 1.5;
+  background: color-mix(in srgb, var(--color-ember) 15%, transparent);
+}
+.cursor-ring[data-press] {
+  scale: 0.8;
+}
+.cursor-ring[data-mode="hot"][data-press] {
+  scale: 1.2;
+}
+
+@layer components {
+  /* ---------- Navbar em pílula de vidro ---------- */
+  .navbar {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.04));
+    border: 1px solid rgb(255 255 255 / 0.18);
+    box-shadow: 0 8px 32px rgb(0 0 0 / 0.35);
+    transition:
+      border-color 0.4s,
+      box-shadow 0.4s;
+  }
+  .navbar:hover {
+    border-color: color-mix(in srgb, var(--color-glow) 50%, transparent);
+    box-shadow:
+      0 0 25px color-mix(in srgb, var(--color-ember) 45%, transparent),
+      0 0 45px color-mix(in srgb, var(--color-ember) 25%, transparent);
+  }
+  .navbar-shine {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 50%;
+    background: linear-gradient(120deg, transparent, rgb(255 255 255 / 0.35), transparent);
+    transform: translateX(-150%) skewX(-25deg);
+    animation: shine 5s ease infinite;
+  }
+
+  /* ---------- Botões ----------
+     --mx/--my vêm do ímã (src/motion/pointer.js): o botão segue o cursor de
+     perto e volta com mola quando ele sai. */
+  .btn-fire,
+  .btn-ghost {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 9999px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+    translate: var(--mx, 0px) var(--my, 0px);
+    transition:
+      translate var(--mag-t, 0.55s) var(--mag-e, var(--ease-spring)),
+      transform 0.3s var(--ease-out-expo),
+      scale 0.2s var(--ease-out-expo),
+      box-shadow 0.3s,
+      border-color 0.3s,
+      color 0.3s;
+  }
+  .btn-fire:hover,
+  .btn-ghost:hover,
+  .icon-tile:hover {
+    --mag-t: 0.12s;
+    --mag-e: ease-out;
+  }
+  .btn-fire:active,
+  .btn-ghost:active {
+    scale: 0.96;
+  }
+  .btn-fire {
+    isolation: isolate;
+    overflow: hidden;
+    color: var(--color-on-neon);
+    background: var(--gradient-neon);
+    box-shadow: 0 6px 28px color-mix(in srgb, var(--color-neon-cyan) 35%, transparent);
+  }
+  /* reflexo que acompanha o cursor, entre o gradiente e o texto */
+  .btn-fire::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(4.5rem circle at var(--lx, 50%) var(--ly, 50%), rgb(255 255 255 / 0.6), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-fire:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 38px color-mix(in srgb, var(--color-neon-magenta) 50%, transparent);
+  }
+  .btn-fire:hover::after {
+    opacity: 1;
+  }
+  .btn-ghost {
+    color: var(--color-paper);
+    border: 1px solid rgb(255 255 255 / 0.25);
+    background: rgb(255 255 255 / 0.04);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-ember);
+    color: var(--color-glow);
+    transform: translateY(-2px);
+  }
+
+  /* Ícone de contato em quadrado (hero) ou solto (rodapé) */
+  .icon-tile {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-ember) 30%, transparent);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--color-ember) 10%, transparent);
+    font-size: 1.125rem;
+    color: var(--color-ember);
+    translate: var(--mx, 0px) var(--my, 0px);
+    transition:
+      translate var(--mag-t, 0.55s) var(--mag-e, var(--ease-spring)),
+      scale 0.2s var(--ease-out-expo),
+      background-color 0.3s,
+      color 0.3s,
+      box-shadow 0.3s;
+  }
+  .icon-tile:hover {
+    background: var(--color-ember);
+    color: var(--color-on-neon);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--color-ember) 45%, transparent);
+  }
+  .icon-tile:active {
+    scale: 0.9;
+  }
+  .icon-tile--bare {
+    width: 3rem;
+    height: 3rem;
+    border: 0;
+    background: none;
+    font-size: 1.5rem;
+  }
+  .icon-tile--bare:hover {
+    background: none;
+    color: var(--color-glow);
+    box-shadow: none;
+    filter: drop-shadow(0 0 12px var(--color-ember));
+  }
+
+  /* ---------- Cartões de vidro ----------
+     --lx/--ly: posição do cursor dentro do cartão. A borda acende perto dele
+     (::before, recortado em anel) e o interior ganha um reflexo (::after). */
+  .glass {
+    position: relative;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.06), rgb(0 0 0 / 0.35));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 1.5rem;
+    transition:
+      border-color 0.4s,
+      transform 0.5s var(--ease-out-expo),
+      box-shadow 0.4s;
+  }
+  .glass::before,
+  .glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+  }
+  .glass::before {
+    padding: 1px;
+    background: radial-gradient(
+      15rem circle at var(--lx, 50%) var(--ly, 0%),
+      var(--color-neon-cyan),
+      color-mix(in srgb, var(--color-neon-magenta) 55%, transparent) 45%,
+      transparent 75%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+  .glass::after {
+    background: radial-gradient(
+      22rem circle at var(--lx, 50%) var(--ly, 0%),
+      color-mix(in srgb, var(--color-neon-cyan) 8%, transparent),
+      transparent 65%
+    );
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .glass:hover::before,
+    .glass:hover::after {
+      opacity: 1;
+    }
+  }
+  .glass-hover:hover {
+    border-color: color-mix(in srgb, var(--color-ember) 30%, transparent);
+    transform: translateY(-6px);
+    box-shadow: 0 18px 50px -12px color-mix(in srgb, var(--color-ember) 35%, transparent);
+  }
+  .glass-hover:active {
+    transform: translateY(-2px) scale(0.99);
+    transition-duration: 0.15s;
+  }
+
+  /* Moldura com brilho (foto do topo): duas luzes paradas e desfocadas que se
+     alternam só por opacidade, sem repintar nada */
+  .frame-glow {
+    position: relative;
+    border-radius: 1.75rem;
+    padding: 10px;
+  }
+  .frame-glow::before,
+  .frame-glow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    filter: blur(9px);
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .frame-glow::before {
+    background: linear-gradient(45deg, var(--color-flame), var(--color-neon-cyan) 50%, var(--color-neon-magenta));
+    animation: glow-a 5s ease-in-out infinite alternate;
+  }
+  .frame-glow::after {
+    background: linear-gradient(45deg, var(--color-neon-magenta), var(--color-neon-cyan) 50%, var(--color-flame));
+    animation: glow-b 5s ease-in-out infinite alternate;
+  }
+  .frame-glow:hover {
+    --glow-peak: 1;
+  }
+  .frame-glow:hover::before,
+  .frame-glow:hover::after {
+    transform: scale(1.035);
+  }
+
+  .glow-text {
+    text-shadow:
+      0 0 10px color-mix(in srgb, var(--color-ember) 55%, transparent),
+      0 0 26px color-mix(in srgb, var(--color-ember) 35%, transparent);
+  }
+
+  /* Brilho decorativo de seção: degradê radial no lugar de blur() gigante.
+     --aura: cor | --aura-a: intensidade */
+  .aura {
+    position: absolute;
+    pointer-events: none;
+    background: radial-gradient(
+      closest-side,
+      var(--aura, var(--color-ember)),
+      color-mix(in srgb, var(--aura, var(--color-ember)) 42%, transparent) 45%,
+      transparent
+    );
+    opacity: var(--aura-a, 0.13);
+  }
+
+  /* ---------- Campos do formulário ---------- */
+  .field {
+    width: 100%;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 0.75rem;
+    background: rgb(0 0 0 / 0.4);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--color-paper);
+    transition:
+      border-color 0.25s,
+      background-color 0.25s,
+      box-shadow 0.25s;
+  }
+  .field::placeholder {
+    color: #6b6b6b;
+  }
+  .field:hover {
+    border-color: rgb(255 255 255 / 0.22);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-ember);
+    background: rgb(0 0 0 / 0.6);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--color-ember) 16%, transparent),
+      0 0 26px -6px color-mix(in srgb, var(--color-ember) 45%, transparent);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  .field[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger) 18%, transparent);
+  }
+}
+
 @keyframes shine {
   0% {
-    left: -75%;
+    transform: translateX(-150%) skewX(-25deg);
   }
   50%,
   100% {
-    left: 125%;
+    transform: translateX(250%) skewX(-25deg);
+  }
+}
+@keyframes glow-a {
+  from {
+    opacity: var(--glow-peak, 0.55);
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes glow-b {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: var(--glow-peak, 0.55);
   }
 }
 
@@ -254,141 +595,193 @@
   transform: translateY(0);
 }
 
-/* ---------- Botões ---------- */
-.btn-fire {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.8rem;
-  color: var(--color-on-neon);
-  background: var(--gradient-neon);
-  box-shadow: 0 6px 28px color-mix(in srgb, var(--color-neon-cyan) 35%, transparent);
+/* ---------- Menu do celular: abre e fecha com escala e as linhas em cascata ---------- */
+.menu-sheet {
+  transform-origin: 50% 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.97);
   transition:
-    transform 0.3s var(--ease-out-expo),
-    box-shadow 0.3s;
+    opacity 0.25s,
+    transform 0.4s var(--ease-out-expo),
+    visibility 0s 0.4s;
 }
-.btn-fire:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 38px color-mix(in srgb, var(--color-neon-magenta) 50%, transparent);
-}
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.8rem;
-  color: var(--color-paper);
-  border: 1px solid rgb(255 255 255 / 0.25);
-  background: rgb(255 255 255 / 0.04);
-  transition:
-    border-color 0.3s,
-    color 0.3s,
-    transform 0.3s var(--ease-out-expo);
-}
-.btn-ghost:hover {
-  border-color: var(--color-ember);
-  color: var(--color-glow);
-  transform: translateY(-2px);
-}
-
-/* ---------- Cartões de vidro ---------- */
-.glass {
-  border: 1px solid rgb(255 255 255 / 0.08);
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.06), rgb(0 0 0 / 0.35));
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 1.5rem;
-  transition:
-    border-color 0.4s,
-    transform 0.5s var(--ease-out-expo),
-    box-shadow 0.4s;
-}
-.glass-hover:hover {
-  border-color: color-mix(in srgb, var(--color-ember) 45%, transparent);
-  transform: translateY(-6px);
-  box-shadow: 0 18px 50px -12px color-mix(in srgb, var(--color-ember) 35%, transparent);
-}
-
-/* Moldura com brilho em movimento (foto do topo) */
-.frame-glow {
-  position: relative;
-  border-radius: 1.75rem;
-  padding: 10px;
-}
-.frame-glow::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: var(--gradient-neon-frame) 0 0 / 300% auto;
-  filter: blur(8px);
-  opacity: 0.5;
-  animation: glow-move 5s linear infinite;
-  transition:
-    opacity 0.4s,
-    filter 0.4s;
-}
-.frame-glow:hover::before {
+.menu-sheet[data-open] {
   opacity: 1;
-  filter: blur(14px);
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
 }
-@keyframes glow-move {
-  50% {
-    background-position: 200% 0;
+.menu-sheet li {
+  opacity: 0;
+  translate: 0 -6px;
+  transition:
+    opacity 0.3s,
+    translate 0.4s var(--ease-out-expo);
+}
+.menu-sheet[data-open] li {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: calc(60ms + var(--i) * 35ms);
+}
+
+/* ---------- Trilho lateral: progresso de leitura + índice das seções ---------- */
+.rail {
+  position: fixed;
+  right: 0.85rem;
+  top: 20vh;
+  bottom: 20vh;
+  z-index: 45;
+  display: none;
+  width: 1.5rem;
+}
+@media (min-width: 768px) {
+  .rail {
+    display: block;
   }
 }
-
-.glow-text {
-  text-shadow:
-    0 0 10px color-mix(in srgb, var(--color-ember) 55%, transparent),
-    0 0 26px color-mix(in srgb, var(--color-ember) 35%, transparent);
+.rail__track {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 2px;
+  margin-left: -1px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.12);
 }
-
-/* ---------- Animações de entrada ---------- */
-/* Sem JS (classe .js ausente) o conteúdo aparece direto */
-.js .reveal {
-  opacity: 0;
-  transform: translateY(32px);
-  filter: blur(6px);
+.rail__fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  background: linear-gradient(to bottom, var(--color-brand-400), var(--color-neon-magenta));
+}
+.rail__stop {
+  position: absolute;
+  left: 50%;
+  top: var(--at);
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  translate: -50% -50%;
+}
+.rail__dot {
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgb(255 255 255 / 0.45);
+  border-radius: 50%;
+  background: var(--color-night);
   transition:
-    opacity 0.9s var(--ease-out-expo),
-    transform 0.9s var(--ease-out-expo),
-    filter 0.9s var(--ease-out-expo);
-  transition-delay: var(--d, 0ms);
+    scale 0.35s var(--ease-spring),
+    background-color 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
-.js .reveal.is-in {
+.rail__stop:hover .rail__dot,
+.rail__stop:focus-visible .rail__dot {
+  scale: 1.5;
+  border-color: var(--color-glow);
+}
+.rail__stop[aria-current] .rail__dot {
+  scale: 1.45;
+  border-color: var(--color-ember);
+  background: var(--color-ember);
+  box-shadow: 0 0 12px var(--color-ember);
+}
+.rail__label {
+  position: absolute;
+  right: calc(100% + 0.35rem);
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.8);
+  font-size: 0.62rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--color-mist);
+  opacity: 0;
+  translate: 8px 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s,
+    translate 0.35s var(--ease-out-expo),
+    color 0.25s;
+}
+.rail:hover .rail__label,
+.rail:focus-within .rail__label {
   opacity: 1;
-  transform: none;
-  filter: none;
+  translate: 0 0;
+}
+.rail__stop:hover .rail__label,
+.rail__stop:focus-visible .rail__label,
+.rail__stop[aria-current] .rail__label {
+  color: var(--color-paper);
 }
 
-/* Título dividido em letras: cada letra sobe e desfoca para nítido */
+/* Botão "voltar ao topo" do celular: aparece quando a navbar sai de cena */
+.to-top {
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 12px;
+  transition:
+    opacity 0.3s,
+    translate 0.4s var(--ease-out-expo),
+    scale 0.2s,
+    visibility 0s 0.4s;
+}
+.to-top[data-show] {
+  opacity: 1;
+  visibility: visible;
+  translate: 0 0;
+  transition-delay: 0s;
+}
+.to-top:active {
+  scale: 0.9;
+}
+
+/* ---------- Animações de entrada ----------
+   useReveal (src/motion/hooks.js) grava data-seen: "in" ao aparecer e "done"
+   quando a entrada termina. Sem JS (classe .js ausente) o conteúdo aparece direto. */
+.js .reveal:not([data-seen]) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+/* a transição de entrada sai de cena no "done", e a do próprio elemento volta a valer */
+.js .reveal:not([data-seen="done"]) {
+  transition:
+    opacity 0.8s var(--ease-out-expo) var(--d, 0ms),
+    transform 0.8s var(--ease-out-expo) var(--d, 0ms);
+}
+
+/* Título dividido em letras: cada letra sobe por trás de um recorte.
+   O recorte só existe embaixo (o brilho do título não é cortado nos lados)
+   e se abre de vez quando a entrada termina. */
 .split .ch {
   display: inline-block;
-  overflow: hidden;
   vertical-align: top;
 }
 .split .ch > span {
   display: inline-block;
 }
+.js .split .ch {
+  clip-path: inset(-1em -1em -0.02em -1em);
+  transition: clip-path 0.6s ease-out;
+}
+.js .split[data-seen="done"] .ch {
+  clip-path: inset(-1em);
+}
 .js .split .ch > span {
   transform: translateY(110%);
   opacity: 0;
-  filter: blur(8px);
   transition:
     transform 0.9s var(--ease-out-expo),
-    opacity 0.9s var(--ease-out-expo),
-    filter 0.9s var(--ease-out-expo);
+    opacity 0.9s var(--ease-out-expo);
   transition-delay: calc(var(--i) * 35ms);
 }
-.js .split.is-in .ch > span {
+.js .split[data-seen] .ch > span {
   transform: none;
   opacity: 1;
-  filter: none;
 }
 
 /* Seta do processo que se desenha */
@@ -398,12 +791,12 @@
   stroke-dashoffset: 1;
   transition: stroke-dashoffset 1.6s var(--ease-out-expo) 0.3s;
 }
-.js .draw.is-in path,
-.js .draw.is-in line {
+.js .draw[data-seen] path,
+.js .draw[data-seen] line {
   stroke-dashoffset: 0;
 }
 
-/* Abertura: a marca aparece e a cortina sobe */
+/* Abertura: a marca aparece e a cortina sobe. A hero espera por ela (--boot). */
 .intro {
   animation: intro-out 0.8s var(--ease-out-expo) 1.3s forwards;
 }
@@ -423,15 +816,91 @@
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.85);
-    filter: blur(10px);
   }
 }
 @keyframes intro-word {
   from {
     opacity: 0;
     letter-spacing: 0.6em;
-    filter: blur(8px);
   }
+}
+
+/* Hero: os blocos de texto entram em sequência, depois da abertura */
+.hero-seq > * {
+  animation: rise 0.9s var(--ease-out-expo) both;
+  animation-delay: calc(var(--boot, 0s) + var(--n, 0) * 90ms);
+}
+.hero-seq > :nth-child(2) {
+  --n: 1;
+}
+.hero-seq > :nth-child(3) {
+  --n: 2;
+}
+.hero-seq > :nth-child(4) {
+  --n: 3;
+}
+.hero-seq > :nth-child(5) {
+  --n: 4;
+}
+.hero-seq > :nth-child(6) {
+  --n: 5;
+}
+
+/* ---------- Processo: três etapas que acendem conforme a página rola ----------
+   --p (0..1) vem de useScrollProgress; cada etapa tem o seu ponto --at. */
+.steps {
+  --p: 0;
+  position: relative;
+}
+.steps__track {
+  position: absolute;
+  left: calc((100% - 2rem) / 6);
+  right: calc((100% - 2rem) / 6);
+  top: 1.75rem;
+  height: 1px;
+  background: rgb(255 255 255 / 0.14);
+}
+.steps__fill {
+  position: absolute;
+  inset: -0.5px 0;
+  transform: scaleX(var(--p));
+  transform-origin: 0 50%;
+  background: var(--gradient-neon);
+  box-shadow: 0 0 12px var(--color-ember);
+}
+.step {
+  --on: clamp(0, calc((var(--p) - var(--at)) * 7 + 1), 1);
+  position: relative;
+}
+.step__tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 1rem;
+  background: var(--color-surface-3);
+  font-size: 1.25rem;
+  color: color-mix(in srgb, var(--color-ember) calc(var(--on) * 100%), #7a7a7a);
+  scale: calc(0.9 + 0.1 * var(--on));
+}
+/* camada acesa por cima: borda, fundo e brilho neon, só opacidade */
+.step__tile::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid color-mix(in srgb, var(--color-ember) 55%, transparent);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--color-ember) 12%, var(--color-night));
+  box-shadow: 0 0 34px -6px var(--color-ember);
+  opacity: var(--on);
+}
+.step__tile > svg {
+  position: relative;
+}
+.step__name {
+  opacity: calc(0.5 + 0.5 * var(--on));
 }
 
 /* ---------- Abas da seção "Sobre mim" ---------- */
@@ -447,28 +916,44 @@
   line-height: 1.4;
   color: #8a8a8a;
   cursor: pointer;
-  transition: color 0.3s;
+  transition:
+    color 0.3s,
+    padding-left 0.45s var(--ease-out-expo);
 }
 .about-tab::after {
   content: "";
   flex: none;
-  width: 34px;
+  width: 64px;
   height: 2px;
-  background: rgb(255 255 255 / 0.1);
+  background: var(--gradient-neon);
+  transform: scaleX(0.5);
+  transform-origin: 100% 50%;
+  opacity: 0.18;
+  filter: grayscale(1);
   transition:
-    width 0.4s var(--ease-out-expo),
-    background 0.3s;
+    transform 0.45s var(--ease-out-expo),
+    opacity 0.3s,
+    filter 0.3s;
 }
 .about-tab:hover {
   color: var(--color-mist);
 }
+.about-tab:hover::after {
+  transform: scaleX(0.7);
+  opacity: 0.4;
+}
+.about-tab:active {
+  color: var(--color-paper);
+}
 .about-tab[aria-selected="true"] {
+  padding-left: 0.5rem;
   color: var(--color-paper);
   text-shadow: var(--text-shadow-title);
 }
 .about-tab[aria-selected="true"]::after {
-  width: 64px;
-  background: var(--gradient-neon);
+  transform: none;
+  opacity: 1;
+  filter: none;
 }
 .about-swap > * {
   animation: about-in 0.5s var(--ease-out-expo) both;
@@ -484,6 +969,19 @@
     opacity: 0;
     transform: translateX(14px);
   }
+}
+
+/* Texto que troca no lugar (botão de idioma, estado do envio): o novo sobe */
+.swap-in {
+  display: inline-block;
+  animation: rise 0.45s var(--ease-out-expo) both;
+}
+
+/* Seção fora da tela: as animações em laço dela ficam pausadas (src/motion/sections.js) */
+[data-idle] *,
+[data-idle] *::before,
+[data-idle] *::after {
+  animation-play-state: paused !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -508,6 +1006,8 @@
  * grade de grãos que encolhem enquanto ela sobe e se espalha (--dx/--dy e o
  * atraso --dd são sorteados por peça). Ao voltar, reaparece por igual, sem
  * grãos e sem atraso. O deslocamento soma ao translate que a peça já tenha.
+ * Os grãos encolhem em 6 degraus: a máscara é repintada 6 vezes por peça, e
+ * não a cada quadro; o resto (subida e fade) é só transform e opacity.
  */
 @property --dust {
   syntax: '<length>';
@@ -524,7 +1024,7 @@
   -webkit-mask-position: 0 0, 2px 3px;
   mask-position: 0 0, 2px 3px;
   animation:
-    dust-grain 0.55s cubic-bezier(0.2, 0.7, 0.4, 1) var(--dd) both,
+    dust-grain 0.55s steps(6, end) var(--dd) both,
     dust-drift 0.8s cubic-bezier(0.5, 0, 0.6, 1) var(--dd) both,
     dust-fade 0.75s ease-in var(--dd) both;
   animation-composition: replace, add, replace;

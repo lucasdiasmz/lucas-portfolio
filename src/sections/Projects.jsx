@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { FaArrowUpRightFromSquare, FaGithub, FaXmark } from 'react-icons/fa6'
 import GlassFolder from '../components/GlassFolder.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SplitTitle from '../components/SplitTitle.jsx'
 import { projects } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { useFlip } from '../motion/hooks.js'
 import { formatYearMonth } from '../utils/date.js'
 
 // Mais recente primeiro
@@ -33,7 +34,7 @@ function ProjectDetail({ project, onClose }) {
         type="button"
         onClick={onClose}
         aria-label={`${t.projects.close}: ${pick(project.name)}`}
-        className="absolute top-4 right-4 grid size-9 place-items-center rounded-full border border-white/10 text-neutral-400 transition-colors hover:border-brand-500/60 hover:text-white"
+        className="absolute top-4 right-4 z-10 grid size-9 place-items-center rounded-full border border-white/10 text-neutral-400 transition-[color,border-color,scale,rotate] duration-300 hover:rotate-90 hover:border-brand-500/60 hover:text-white active:scale-90"
       >
         <FaXmark aria-hidden="true" />
       </button>
@@ -89,6 +90,7 @@ export default function Projects() {
   const { pick, t } = useLanguage()
   const [filter, setFilter] = useState('all')
   const [openId, setOpenId] = useState(null)
+  const list = useRef(null)
 
   const visible = useMemo(
     () => (filter === 'all' ? ordered : ordered.filter((p) => groupsOf(p).includes(filter))),
@@ -100,6 +102,9 @@ export default function Projects() {
     () => Object.fromEntries(GROUPS.map((g) => [g, g === 'all' ? ordered.length : ordered.filter((p) => groupsOf(p).includes(g)).length])),
     [],
   )
+
+  // Trocar o filtro: as pastas que ficam deslizam até o novo lugar
+  useFlip(list, [filter])
 
   const showDetail = () =>
     requestAnimationFrame(() => document.getElementById('proj-detail')?.scrollIntoView({ behavior: 'smooth', block: 'center' }))
@@ -122,7 +127,7 @@ export default function Projects() {
             type="button"
             aria-pressed={filter === g}
             onClick={() => setFilter(g)}
-            className={`flex items-center gap-2 rounded-full border px-4 py-2 text-[0.65rem] transition-[background-color,border-color,color] duration-300 ${
+            className={`flex items-center gap-2 rounded-full border px-4 py-2 text-[0.68rem] transition-[background-color,border-color,color,scale] duration-300 active:scale-95 ${
               filter === g
                 ? 'border-brand-500 bg-brand-500 text-on-neon'
                 : 'border-white/10 bg-black/40 text-neutral-300 backdrop-blur hover:border-brand-500/60 hover:text-white'
@@ -134,11 +139,11 @@ export default function Projects() {
         ))}
       </Reveal>
 
-      <ul className="mx-auto mt-10 grid max-w-6xl justify-items-center gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
+      <ul ref={list} className="mx-auto mt-10 grid max-w-6xl justify-items-center gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
         {visible.map((p, i) => {
           const idx = ordered.indexOf(p)
           return (
-            <li key={p.id} className="w-full">
+            <li key={p.id} data-flip={p.id} className="w-full">
               <GlassFolder
                 label={pick(p.name)}
                 meta={`${num(p)} · ${p.period}`}
@@ -162,7 +167,7 @@ export default function Projects() {
       {openProject ? (
         <ProjectDetail key={openProject.id} project={openProject} onClose={() => setOpenId(null)} />
       ) : (
-        <p className="mt-8 text-center text-[0.6rem] uppercase tracking-[0.2em] text-neutral-500">{t.projects.hint}</p>
+        <p className="mt-8 text-center text-[0.65rem] uppercase tracking-[0.2em] text-neutral-400">{t.projects.hint}</p>
       )}
     </section>
   )

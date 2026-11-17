@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { FaPaperPlane } from 'react-icons/fa6'
+import { useEffect, useState } from 'react'
+import { FaCheck, FaEnvelope, FaPaperPlane, FaRegCopy } from 'react-icons/fa6'
 import ContactIcon from '../components/ContactIcon.jsx'
+import { linkProps } from '../components/ContactLinks.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SplitTitle from '../components/SplitTitle.jsx'
 import { contacts } from '../data/profile.js'
@@ -38,12 +39,53 @@ function validateField(field, value) {
 const initialValues = { name: '', email: '', message: '' }
 const fields = ['name', 'email', 'message']
 
-const inputClass = (hasError) =>
-  [
-    'w-full rounded-xl border bg-black/40 px-4 py-3 text-sm text-white placeholder:text-neutral-600 transition-colors',
-    'focus:border-brand-500 focus:bg-black/60 focus:outline-none',
-    hasError ? 'border-danger' : 'border-white/10',
-  ].join(' ')
+const mailTo = contacts.find((c) => c.type === 'email')?.value
+
+// Cartão de um canal de contato: o cartão inteiro é o link; o botão copia o endereço
+function ContactCard({ contact }) {
+  const { t } = useLanguage()
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    if (!copied) return
+    const timer = setTimeout(() => setCopied(false), 1800)
+    return () => clearTimeout(timer)
+  }, [copied])
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(contact.value)
+      setCopied(true)
+    } catch {
+      // sem permissão de área de transferência: o endereço continua visível para copiar à mão
+    }
+  }
+
+  return (
+    <div className="glass glass-hover group relative flex h-full flex-col p-6">
+      <ContactIcon type={contact.type} className="text-2xl text-brand-500 transition-transform duration-500 ease-[var(--ease-spring)] group-hover:scale-125" />
+      {/* o ::after do link cobre o cartão: clicar em qualquer ponto abre o canal */}
+      <a href={contact.href} {...linkProps(contact)} className="mt-4 text-base text-white after:absolute after:inset-0 after:rounded-3xl">
+        {contact.label}
+      </a>
+      <span className="mt-1 text-xs text-neutral-400">{t.contact.hints[contact.type]}</span>
+      <span className="mt-3 flex items-center justify-between gap-3">
+        <span className="truncate text-xs text-brand-300/80 group-hover:text-brand-300">{contact.value}</span>
+        <button
+          type="button"
+          onClick={copy}
+          aria-label={`${t.contact.copy}: ${contact.value}`}
+          className="relative z-10 flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-[0.65rem] text-neutral-300 transition-[color,border-color,scale] duration-200 hover:border-brand-500/60 hover:text-white active:scale-90"
+        >
+          {copied ? <FaCheck aria-hidden="true" className="text-success" /> : <FaRegCopy aria-hidden="true" />}
+          <span key={copied} className="swap-in" aria-live="polite">
+            {copied ? t.contact.copied : t.contact.copy}
+          </span>
+        </button>
+      </span>
+    </div>
+  )
+}
 
 function Field({ id, label, error, children }) {
   return (
@@ -53,7 +95,7 @@ function Field({ id, label, error, children }) {
       </label>
       {children}
       {error && (
-        <p id={`${id}-erro`} role="alert" className="mt-1.5 text-xs text-danger">
+        <p id={`${id}-erro`} role="alert" className="mt-1.5 animate-rise text-xs text-danger">
           {error}
         </p>
       )}
@@ -79,6 +121,13 @@ function ContactForm() {
     }
     if (status === 'success' || status === 'error') setStatus('idle')
   }
+
+  // Saída quando o envio pelo site não está disponível: a mesma mensagem, no e-mail da pessoa
+  const mailHref = `mailto:${mailTo}?subject=${encodeURIComponent(t.contact.mailSubject)}&body=${encodeURIComponent(
+    `${values.message.trim()}
+
+${values.name.trim()}`,
+  )}`
 
   function handleBlur(e) {
     const { name, value } = e.target
@@ -134,7 +183,7 @@ function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="glass relative overflow-hidden p-6 sm:p-10">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-brand-500/15 blur-[100px]" />
+      <div aria-hidden="true" className="aura -right-64 -top-64 size-[40rem] [--aura-a:0.1]" />
       <h3 id="formulario" className="relative text-xl text-white">
         {t.contact.formTitle}
       </h3>
@@ -152,7 +201,7 @@ function ContactForm() {
             placeholder={t.contact.namePlaceholder}
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? 'name-erro' : undefined}
-            className={inputClass(errors.name)}
+            className="field"
           />
         </Field>
 
@@ -168,7 +217,7 @@ function ContactForm() {
             placeholder={t.contact.emailPlaceholder}
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? 'email-erro' : undefined}
-            className={inputClass(errors.email)}
+            className="field"
           />
         </Field>
 
@@ -184,7 +233,7 @@ function ContactForm() {
               placeholder={t.contact.messagePlaceholder}
               aria-invalid={Boolean(errors.message)}
               aria-describedby={errors.message ? 'message-erro' : undefined}
-              className={`${inputClass(errors.message)} resize-y`}
+              className="field min-h-32 resize-y"
             />
           </Field>
         </div>
@@ -209,14 +258,30 @@ function ContactForm() {
         disabled={sending}
         className="btn-fire relative mt-8 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {sending ? t.contact.sending : t.contact.send}
-        <FaPaperPlane aria-hidden="true" className={sending ? 'animate-pulse' : ''} />
+        <span key={sending} className="swap-in">
+          {sending ? t.contact.sending : t.contact.send}
+        </span>
+        {sending ? (
+          <span aria-hidden="true" className="size-3.5 animate-spin rounded-full border-2 border-black/25 border-t-black" />
+        ) : (
+          <FaPaperPlane aria-hidden="true" />
+        )}
       </button>
 
       <div aria-live="polite" className="relative mt-4 min-h-6 text-xs">
-        {status === 'success' && <p className="animate-rise text-success">{t.contact.success}</p>}
-        {status === 'error' && <p className="text-danger">{t.contact.error}</p>}
-        {status === 'notConfigured' && <p className="text-warning">{t.contact.notConfigured}</p>}
+        {status === 'success' && (
+          <p className="flex animate-rise items-center gap-2 text-success">
+            <FaCheck aria-hidden="true" /> {t.contact.success}
+          </p>
+        )}
+        {(status === 'error' || status === 'notConfigured') && (
+          <div className="flex animate-rise flex-wrap items-center gap-x-4 gap-y-3">
+            <p className={status === 'error' ? 'text-danger' : 'text-warning'}>{t.contact[status]}</p>
+            <a href={mailHref} className="btn-ghost px-4 py-2 text-[0.7rem]">
+              <FaEnvelope aria-hidden="true" /> {t.contact.openMail}
+            </a>
+          </div>
+        )}
       </div>
     </form>
   )
@@ -236,17 +301,7 @@ export default function Contact() {
         <ul className="grid gap-5 sm:grid-cols-2">
           {contacts.map((c, i) => (
             <Reveal as="li" key={c.type} delay={(i % 2) * 110}>
-              <a
-                href={c.href}
-                target={c.type === 'email' ? undefined : '_blank'}
-                rel="noopener noreferrer"
-                className="glass glass-hover group flex h-full flex-col p-6"
-              >
-                <ContactIcon type={c.type} className="text-2xl text-brand-500 transition-transform duration-500 group-hover:scale-110" />
-                <span className="mt-4 text-base text-white">{c.label}</span>
-                <span className="mt-1 text-xs text-neutral-400">{t.contact.hints[c.type]}</span>
-                <span className="mt-3 truncate text-xs text-brand-300/80 group-hover:text-brand-300">{c.value}</span>
-              </a>
+              <ContactCard contact={c} />
             </Reveal>
           ))}
         </ul>

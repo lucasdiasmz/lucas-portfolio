@@ -1,5 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import './GlassFolder.css'
+import { usePointerVars } from '../motion/hooks.js'
 import { cssVar, rgbOf } from '../theme.js'
 
 /*
@@ -403,37 +404,7 @@ export default function GlassFolder({
   }, [appearDelay])
 
   // Luz e paralaxe seguem o cursor, sem re-render
-  useEffect(() => {
-    const el = rootRef.current
-    if (!el) return
-    let raf = 0
-    let px = 0
-    let py = 0
-    const write = () => {
-      raf = 0
-      el.style.setProperty('--gf-px', px.toFixed(3))
-      el.style.setProperty('--gf-py', py.toFixed(3))
-    }
-    const move = (e) => {
-      if (e.pointerType === 'touch') return
-      const r = el.getBoundingClientRect()
-      px = ((e.clientX - r.left) / r.width) * 2 - 1
-      py = ((e.clientY - r.top) / r.height) * 2 - 1
-      if (!raf) raf = requestAnimationFrame(write)
-    }
-    const leave = () => {
-      px = 0
-      py = 0
-      if (!raf) raf = requestAnimationFrame(write)
-    }
-    el.addEventListener('pointermove', move)
-    el.addEventListener('pointerleave', leave)
-    return () => {
-      el.removeEventListener('pointermove', move)
-      el.removeEventListener('pointerleave', leave)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
+  usePointerVars(rootRef, '--gf-px', '--gf-py')
 
   // Folhas da pasta fechada ficam fora da ordem de tabulação
   useEffect(() => {

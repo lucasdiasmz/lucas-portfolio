@@ -3,6 +3,8 @@ import { FaCode } from 'react-icons/fa6'
 import { SiJavascript, SiOpenjdk, SiReact, SiSpringboot } from 'react-icons/si'
 import { profile } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { reducedMotion } from '../motion/env.js'
+import { usePointerVars } from '../motion/hooks.js'
 import './HeroPortrait.css'
 
 // Tecnologias que flutuam em volta da moldura (posição definida no CSS)
@@ -21,7 +23,8 @@ const LEAVE_MS = 550 // tempo para o rastro sumir depois que o mouse sai
  * Retrato do hero: o recorte da foto (PNG sem fundo) é mais alto que a
  * moldura, então a cabeça "sai" pela borda de cima. Atrás gira um anel de
  * órbita; em volta flutuam as tecnologias. O conjunto inclina de leve
- * seguindo o mouse (só transform, gravado uma vez por frame).
+ * seguindo o mouse (só transform, gravado uma vez por quadro pelo núcleo
+ * de movimento).
  *
  * Máscara fluida: um canvas por cima da foto desenha a versão cyberpunk só
  * onde o mouse passou. O rastro vem de círculos com borda suave carimbados
@@ -34,39 +37,18 @@ export default function HeroPortrait() {
   const stage = useRef(null)
   const person = useRef(null)
   const canvas = useRef(null)
-  const raf = useRef(0)
-  const pointer = useRef({ tx: 0, ty: 0 })
   const reveal = useRef(null) // { start(x, y, touch), move(x, y), leave() }
   const [photoOk, setPhotoOk] = useState(true)
 
-  const write = () => {
-    raf.current = 0
-    const p = pointer.current
-    stage.current?.style.setProperty('--tx', p.tx.toFixed(3))
-    stage.current?.style.setProperty('--ty', p.ty.toFixed(3))
-  }
-  const schedule = () => {
-    if (!raf.current) raf.current = requestAnimationFrame(write)
-  }
-
-  const onStageMove = (e) => {
-    if (e.pointerType === 'touch') return
-    const s = stage.current.getBoundingClientRect()
-    pointer.current.tx = ((e.clientX - s.left) / s.width) * 2 - 1
-    pointer.current.ty = ((e.clientY - s.top) / s.height) * 2 - 1
-    schedule()
-  }
-  const onStageLeave = () => {
-    Object.assign(pointer.current, { tx: 0, ty: 0 })
-    schedule()
-  }
+  // inclinação: posição do ponteiro no palco em --tx/--ty
+  usePointerVars(stage, '--tx', '--ty')
 
   // ---- máscara fluida (canvas) ----
   useEffect(() => {
     const el = person.current
     const cv = canvas.current
     if (!photoOk || !el || !cv) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (reducedMotion.get()) return
 
     const ctx = cv.getContext('2d')
     const mask = document.createElement('canvas')
@@ -225,7 +207,7 @@ export default function HeroPortrait() {
   const alt = pick({ pt: `Foto de ${profile.name}`, en: `Photo of ${profile.name}` })
 
   return (
-    <div ref={stage} className="hp animate-rise [animation-delay:150ms]" onPointerMove={onStageMove} onPointerLeave={onStageLeave}>
+    <div ref={stage} className="hp">
       <div className="hp__tilt">
         <span aria-hidden="true" className="hp__orbit" />
 
