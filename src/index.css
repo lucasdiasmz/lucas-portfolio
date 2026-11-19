@@ -771,6 +771,164 @@ canvas.site-bg__video:not([data-live]),
   opacity: 0;
 }
 
+/* ---------- Carrossel escalonado (src/components/ui/StaggerCards.jsx) ----------
+   --pos vem do React (0 = centro); tamanho e passo ficam aqui. Só transform,
+   opacidade e cores animam. */
+.stagger {
+  --size: 17rem;
+  --step: calc(var(--size) / 1.45);
+  --cut: 2.5rem;
+  position: relative;
+  height: 31rem;
+  overflow: clip;
+  touch-action: pan-y;
+  outline: none;
+}
+@media (min-width: 640px) {
+  .stagger {
+    --size: 21rem;
+    height: 35rem;
+  }
+}
+.stagger:focus-visible .stagger__card[data-center] {
+  outline: 2px solid var(--color-glow);
+  outline-offset: 6px;
+}
+.stagger__card {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  display: flex;
+  width: var(--size);
+  height: var(--size);
+  flex-direction: column;
+  padding: 1.75rem;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: var(--color-surface-3);
+  color: var(--color-neutral-200);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  transform: translate(-50%, -50%) translateX(calc(var(--step) * var(--pos))) translateY(calc(var(--tilt) * 14px))
+    rotate(calc(var(--tilt) * 2.5deg));
+  transition:
+    transform 0.6s var(--ease-out-expo),
+    opacity 0.4s,
+    background-color 0.4s,
+    border-color 0.3s,
+    color 0.4s;
+}
+.stagger__card:hover {
+  border-color: color-mix(in srgb, var(--color-ember) 45%, transparent);
+}
+.stagger__card[data-center] {
+  z-index: 1;
+  cursor: default;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--color-ember), var(--color-glow) 55%, var(--color-neon-magenta) 140%);
+  color: var(--color-on-neon);
+  transform: translate(-50%, -50%) translateY(-2.5rem);
+}
+.stagger__card[data-far] {
+  opacity: 0;
+  pointer-events: none;
+}
+.stagger__card[data-jump] {
+  transition: opacity 0.4s;
+}
+/* a aresta cortada perde a borda; esta linha fecha o desenho */
+.stagger__corner {
+  position: absolute;
+  top: calc(var(--cut) - 1px);
+  right: -1px;
+  width: calc(var(--cut) * 1.4142);
+  height: 1px;
+  background: rgb(255 255 255 / 0.18);
+  transform-origin: 100% 0;
+  transform: rotate(45deg);
+}
+.stagger__card[data-center] .stagger__corner {
+  background: rgb(0 0 0 / 0.35);
+}
+.stagger__icon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border-radius: 0.6rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(0 0 0 / 0.4);
+  font-size: 1.3rem;
+  transition: background-color 0.4s, border-color 0.4s;
+}
+.stagger__card[data-center] .stagger__icon {
+  border-color: rgb(0 0 0 / 0.2);
+  background: rgb(0 0 0 / 0.12);
+}
+.stagger__title {
+  margin-top: 1.25rem;
+  font-size: clamp(1rem, 2.6vw, 1.3rem);
+  line-height: 1.3;
+  color: var(--color-paper);
+  transition: color 0.4s;
+}
+.stagger__card[data-center] .stagger__title {
+  color: var(--color-on-neon);
+}
+.stagger__text {
+  margin-top: 0.75rem;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--color-neutral-400);
+  transition: color 0.4s;
+}
+.stagger__card[data-center] .stagger__text {
+  color: rgb(0 0 0 / 0.78);
+}
+.stagger__num {
+  margin-top: auto;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--color-neutral-400);
+}
+.stagger__card[data-center] .stagger__num {
+  color: rgb(0 0 0 / 0.6);
+}
+.stagger__controls {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  display: flex;
+  gap: 0.6rem;
+  transform: translateX(-50%);
+}
+.stagger__btn {
+  display: grid;
+  width: 3.25rem;
+  height: 3.25rem;
+  place-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  background: rgb(0 0 0 / 0.7);
+  color: var(--color-paper);
+  translate: var(--mx, 0px) var(--my, 0px);
+  transition:
+    translate var(--mag-t, 0.55s) var(--mag-e, var(--ease-spring)),
+    background-color 0.25s,
+    color 0.25s,
+    border-color 0.25s,
+    scale 0.2s var(--ease-out-expo);
+}
+.stagger__btn:hover,
+.stagger__btn:focus-visible {
+  border-color: transparent;
+  background: var(--color-ember);
+  color: var(--color-on-neon);
+}
+.stagger__btn:active {
+  scale: 0.92;
+}
+
 /* ---------- Trilho lateral: progresso de leitura + índice das seções ---------- */
 .rail {
   position: fixed;

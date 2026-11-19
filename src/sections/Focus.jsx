@@ -1,5 +1,6 @@
 import { FaBrain, FaCubes, FaGamepad, FaGraduationCap, FaLaptopCode, FaRocket, FaServer } from 'react-icons/fa6'
 import Reveal from '../components/Reveal.jsx'
+import StaggerCards from '../components/ui/StaggerCards.jsx'
 import SplitTitle from '../components/SplitTitle.jsx'
 import { profile } from '../data/profile.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -14,27 +15,35 @@ const icons = {
   api: { Icon: FaGraduationCap, color: 'text-rose-400' },
 }
 
-// Equivalente à seção de serviços do modelo: as áreas que estudo e pratico
+// As áreas que estudo e pratico, num carrossel escalonado
 export default function Focus() {
   const { pick, t } = useLanguage()
+  const items = profile.focusAreas.map((area, i) => {
+    const { Icon, color } = icons[area.icon] ?? icons.frontend
+    return { id: i, Icon, iconClass: color, title: pick(area.title), text: pick(area.text) }
+  })
 
   return (
-    <section id="foco" aria-labelledby="foco-titulo" className="relative px-6 py-14 md:px-16 md:py-16">
+    <section id="foco" aria-labelledby="foco-titulo" className="relative py-14 md:py-16">
       <div aria-hidden="true" className="aura -left-[26rem] top-[12%] size-[56rem] [--aura-a:0.08]" />
-      <SplitTitle id="foco-titulo" text={t.focus.title} />
+      <div className="px-6 md:px-16">
+        <SplitTitle id="foco-titulo" text={t.focus.title} />
+        <Reveal as="p" delay={100} className="mx-auto mt-6 max-w-xl text-center text-xs text-neutral-400">
+          {t.focus.hint}
+        </Reveal>
+      </div>
 
-      <ul className="relative mx-auto mt-10 grid max-w-6xl gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
-        {profile.focusAreas.map((area, i) => {
-          const { Icon, color } = icons[area.icon] ?? icons.frontend
-          return (
-            <Reveal as="li" key={i} delay={(i % 3) * 110} className="glass glass-hover group p-8">
-              <Icon aria-hidden="true" className={`text-2xl ${color} transition-transform duration-500 ease-[var(--ease-spring)] group-hover:-rotate-6 group-hover:scale-125`} />
-              <h3 className="mt-6 text-lg leading-snug text-white">{pick(area.title)}</h3>
-              <p className="mt-3 text-xs leading-relaxed text-neutral-400">{pick(area.text)}</p>
-            </Reveal>
-          )
-        })}
-      </ul>
+      <Reveal delay={150} className="relative mt-6">
+        <StaggerCards
+          items={items}
+          labels={{
+            region: t.focus.title,
+            prev: t.focus.prev,
+            next: t.focus.next,
+            position: (i, n) => `${i} / ${n}`,
+          }}
+        />
+      </Reveal>
     </section>
   )
 }

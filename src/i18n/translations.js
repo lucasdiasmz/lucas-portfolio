@@ -53,6 +53,9 @@ export const translations = {
     },
     focus: {
       title: 'O que estudo',
+      hint: 'Clique num cartão, use as setas ou arraste para o lado.',
+      prev: 'Área anterior',
+      next: 'Próxima área',
     },
     projects: {
       title: 'Meus projetos',
@@ -184,6 +187,9 @@ export const translations = {
     },
     focus: {
       title: 'What I work on',
+      hint: 'Click a card, use the arrows or swipe sideways.',
+      prev: 'Previous area',
+      next: 'Next area',
     },
     projects: {
       title: 'My projects',
