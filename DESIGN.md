@@ -34,7 +34,7 @@ Os tokens de cor vivem no `@theme` de `src/index.css`; o JS lê por `src/theme.j
 - **Fundo (`.site-bg`):** quadro parado desfocado, trocado pelo vídeo desenhado num canvas de 256 × 144 ampliado (sem filtro de blur em tela cheia), grade de 56px a 4% de branco, brilho ciano no topo e uma esfera magenta em degradê radial.
 - **Vidro (`.glass`):** borda branca a 8%, `backdrop-filter: blur(6px)`, raio 24px. A borda acende perto do cursor (`--lx/--ly`). Com `.glass-hover`, sobe 6px.
 - **Brilhos de seção (`.aura`):** degradê radial, nunca `blur()` grande.
-- **Navbar:** pílula de vidro, visível só na hero. Depois dela, a navegação é o trilho lateral (`.rail`): linha de progresso com um ponto por seção. No celular, botão de voltar ao topo.
+- **Menu cinético (`src/components/ui/KineticMenu.jsx`):** barra fixa com logo, idioma e botão "Menu". Abre um painel lateral em três camadas (ciano, magenta, fundo escuro) com os links subindo de trás de uma máscara e uma forma abstrata por link. Animado com GSAP, baixado sob demanda. No desktop também há o trilho lateral (`.rail`); no celular, botão de voltar ao topo.
 
 ## Ações
 

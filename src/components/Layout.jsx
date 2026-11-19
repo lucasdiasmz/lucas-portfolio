@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import Navbar from './Navbar.jsx'
+import KineticMenu from './ui/KineticMenu.jsx'
 import SectionRail from './SectionRail.jsx'
 import Footer from './Footer.jsx'
 import Cursor from './Cursor.jsx'
@@ -32,7 +32,7 @@ export default function Layout() {
   useEffect(() => startPointerEffects(), [])
 
   // Seções da página atual: pausa o que está fora da tela e diz qual está ativa.
-  // Antes da pintura, para a navbar já nascer no estado certo ao trocar de página.
+  // Antes da pintura, para o menu já nascer no estado certo ao trocar de página.
   useLayoutEffect(() => trackSections(document.getElementById('conteudo')), [pathname])
 
   // Conteúdo que passa do topo da tela pulveriza; volta ao rolar de volta
@@ -49,7 +49,7 @@ export default function Layout() {
       </a>
       <Intro />
       <Cursor />
-      <Navbar />
+      <KineticMenu />
       <SectionRail />
       <main id="conteudo" className="flex-1">
         <Outlet />
